@@ -67,4 +67,7 @@ module.exports = function (app) {
 	app.use(flash());
 	app.use(nocache());
 	app.use(express.static(config.get('path.public')));
+
+	// 서버 접속 시 연결 page 관련
+	// require(path.join(__dirname, 'app/pages/router.js'))(app);
 };

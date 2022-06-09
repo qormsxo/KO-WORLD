@@ -16,6 +16,22 @@ var server = http.createServer(app);
 
 // 서버 접속 시 연결 page 관련
 require(path.join(__dirname, 'app/pages/router.js'))(app);
+
+//정의된 경로 중 아무것도 타지 않았을때
+app.get('*', function(req, res){
+	var main_path = path.join(__dirname, '/public/views/404.ejs');
+
+	res.render(main_path);   
+});
+
+app.use((req, res, next) => {
+	if (!allowedMethods.includes(req.method)) return res.send(405, 'Method Not Allowed')
+	if (req.session.passport) {
+		req.session.passport.user.session_timeout = req.session.cookie.expires;
+	}
+	return next();
+});
+
 //console.log("PATH:", __dirname)
 app.use('/node_modules', express.static(path.join(__dirname, '/node_modules')));
 //포트 설정(config에서 가져오기)
