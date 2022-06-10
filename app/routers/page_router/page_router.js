@@ -21,10 +21,4 @@ module.exports = function (app) {
     app.get('/account/login', (req, res) => {
         res.render('./account/login');
     });
-
-    app.get('/test', (req, res) => {
-        //var main_path = path.join(__dirname, '/public/views/test.html');
-
-        res.render('test');
-    });
 };
