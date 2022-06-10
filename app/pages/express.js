@@ -17,7 +17,6 @@ const ejsLayouts = require('express-ejs-layouts');
 
 const allowedMethods = ['GET', 'HEAD', 'POST', 'DELETE', 'PATCH'];
 module.exports = function (app) {
-    // app.engine('html', mustache());
     //express-ejs-layouts 세팅
 
     // app.engine('html', require('ejs').renderFile);
