@@ -8,6 +8,5 @@ module.exports = function (app) {
     require('../routers/api/ApiControl')(app);
     require('../routers/login')(app);
     require('../routers/register_route')(app);
-
     require('../../passport/passport.js')(); // 로그인
 };
