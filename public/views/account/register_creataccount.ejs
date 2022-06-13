@@ -5,6 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="../assets/css/style.css" />
+        <script type="text/javascript" src="../assets/js/account/register_createaccount.js"></script>
         <title>Ko-World | creat account</title>
     </head>
     <!-- body -->
@@ -13,7 +14,25 @@
             <img src="../assets/images/icon_03.png" alt="Check icon" />
             <h2>Register - create account</h2>
             <!-- register form -->
-            <form>
+            <form id="regsiterForm" method="post" action="/register">
+                <!-- state -->
+                <div class="mb40">
+                    <ul class="radio">
+                        <li>
+                            <label for="highschool" class="label">High School Student</label>
+                            <input type="radio" id="highschool" name="state" value="highschool" checked />
+                        </li>
+                        <li>
+                            <label for="college" class="label">College Student</label>
+                            <input type="radio" id="college" name="state" value="college" />
+                        </li>
+                        <li>
+                            <label for="commitee" class="label">Commitee member</label>
+                            <input type="radio" id="commitee" name="state" value="commitee" />
+                        </li>
+                    </ul>
+                </div>
+                <!-- // state -->
                 <!-- Name -->
                 <div class="mb40">
                     <label for="name" class="label w200">Name</label>
@@ -44,42 +63,26 @@
                     <input type="email" id="email" name="email" class="input-style" />
                 </div>
                 <!-- // Email -->
-                <!-- state -->
-                <div class="mb40">
-                    <ul class="radio">
-                        <li>
-                            <label for="highschool" class="label">High School Student</label>
-                            <input type="radio" id="highschool" name="state" value="highschool" checked />
-                        </li>
-                        <li>
-                            <label for="college" class="label">College Student</label>
-                            <input type="radio" id="college" name="state" value="college" />
-                        </li>
-                        <li>
-                            <label for="commitee" class="label">Commitee member</label>
-                            <input type="radio" id="commitee" name="state" value="commitee" />
-                        </li>
-                    </ul>
+                <div id="studentItem">
+                    <!-- Date of birth -->
+                    <div class="mb40">
+                        <label for="birth" class="label w200">Date of birth</label>
+                        <input type="date" id="birth" name="birth" class="input-style" />
+                    </div>
+                    <!-- // Date of birth -->
+                    <!-- Nationality -->
+                    <div class="mb40">
+                        <label for="nationality" class="label w200">Nationality</label>
+                        <input type="text" id="nationality" name="nationality" class="input-style" />
+                    </div>
+                    <!-- // Nationality -->
+                    <!-- School Name -->
+                    <div class="mb40">
+                        <label for="schoolName" class="label w200">School Name</label>
+                        <input type="text" id="schoolName" name="schoolName" class="input-style" />
+                    </div>
+                    <!-- // School Name -->
                 </div>
-                <!-- // state -->
-                <!-- Date of birth -->
-                <div class="mb40">
-                    <label for="birth" class="label w200">Date of birth</label>
-                    <input type="date" id="birth" name="birth" class="input-style" />
-                </div>
-                <!-- // Date of birth -->
-                <!-- Nationality -->
-                <div class="mb40">
-                    <label for="nationality" class="label w200">Nationality</label>
-                    <input type="text" id="nationality" name="nationality" class="input-style" />
-                </div>
-                <!-- // Nationality -->
-                <!-- School Name -->
-                <div class="mb40">
-                    <label for="schoolName" class="label w200">School Name</label>
-                    <input type="text" id="schoolName" name="schoolName" class="input-style" />
-                </div>
-                <!-- // School Name -->
             </form>
             <!--  // register form -->
             <!-- subtext -->
@@ -91,10 +94,9 @@
             <!--  // subtext -->
             <!-- 등록버튼 -->
             <div class="btn-center">
-                <button class="btn-default">register</button>
+                <button class="btn-default" onclick="return registerNullChk()">register</button>
             </div>
             <!-- // 등록버튼 -->
         </div>
     </body>
-    <!-- // body -->
 </html>

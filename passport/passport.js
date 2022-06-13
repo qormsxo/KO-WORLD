@@ -1,10 +1,10 @@
-const passport = require("passport"),
-    LocalStrategy = require("passport-local").Strategy;
-const mariadb = require("mariadb"),
-    config = require("config"),
-    crud = require("../app/model/crud.js"),
-    requestIp = require("request-ip");
-const bcrypt = require("bcrypt");
+const passport = require('passport'),
+    LocalStrategy = require('passport-local').Strategy;
+const mariadb = require('mariadb'),
+    config = require('config'),
+    crud = require('../app/model/crud.js'),
+    requestIp = require('request-ip');
+const bcrypt = require('bcrypt');
 const rounds = 10;
 
 module.exports = () => {
@@ -23,22 +23,22 @@ module.exports = () => {
     passport.use(
         new LocalStrategy(
             {
-                usernameField: "username",
-                passwordField: "password",
+                usernameField: 'username',
+                passwordField: 'password',
                 session: true, // 세션에 저장 여부
                 passReqToCallback: true,
             },
             (req, username, password, done) => {
-                var sql = "SELECT * FROM tb_user WHERE user_id = ? ";
+                var sql = 'SELECT * FROM tb_user WHERE user_id = ? AND  ACCEPT ="0"';
 
                 var filter_data = {
                     query: sql,
                     params: [username],
                 };
-                crud.select(filter_data, (docs) => {
+                crud.sql(filter_data, (docs) => {
                     //console.log(docs[0]);
                     if (docs[0] == undefined) {
-                        return done(null, false, { message: "아이디를 다시 확인해주세요" });
+                        return done(null, false, { message: '아이디를 다시 확인해주세요' });
                     } else {
                         const encryptedPW = bcrypt.hashSync(password, 10);
                         console.log(encryptedPW, docs[0].USER_PWD);
@@ -48,7 +48,7 @@ module.exports = () => {
                         } else {
                             // pw 안맞음
                             return done(null, false, {
-                                message: "비밀번호를 잘못 입력하셨습니다.",
+                                message: '비밀번호를 잘못 입력하셨습니다.',
                             });
                         }
                     }
