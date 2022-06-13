@@ -4,7 +4,8 @@ module.exports = function (app) {
 
     require('../routers/main')(app);
     require('../routers/page_router/page_router')(app);
-
+    require('../routers/sub_router/sub_router')(app);
+    require('../routers/api/ApiControl')(app);
     require('../routers/login')(app);
     require('../routers/register_route')(app);
 

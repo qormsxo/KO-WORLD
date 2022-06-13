@@ -4,18 +4,29 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        <link rel="stylesheet" href="../assets/css/style.css" />
+        <style>
+            .dataTables_paginate {
+                text-align: center !important;
+                float: none !important;
+            }
+            th {
+                display: none;
+            }
+            .text-left {
+                text-align: left;
+            }
+        </style>
+        <link rel="stylesheet" href="/assets/css/style.css" />
         <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
-        <script type="text/javascript" src="/node_modules/jquery/dist/jquery.js"></script>
         <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
         <title>Ko-World | Q&A</title>
     </head>
     <!-- body -->
     <body>
         <div class="container">
-            <img src="../assets/images/icon_02.png" alt="question icon" />
+            <img src="/assets/images/icon_02.png" alt="question icon" />
             <h2>Q&A</h2>
+            <input type="text" id="search_keyword" name="search_keyword" class="input-style" placeholder="write keyword" />
             <table id="qa_table" class="table table-bordered">
                 <thead>
                     <tr>
@@ -27,19 +38,9 @@
                         <th>답변상태</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>쏼라</td>
-                        <td>이정호</td>
-                        <td>2022-03-03</td>
-                        <td>30</td>
-                        <td>답변완료</td>
-                    </tr>
-                </tbody>
             </table>
         </div>
     </body>
     <!-- // body -->
-    <script type="text/javascript" src="../assets/js/sub/qa.js"></script>
+    <script type="text/javascript" src="/assets/js/sub/qa.js"></script>
 </html>
