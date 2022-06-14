@@ -33,14 +33,25 @@ var pagefunction = function () {
             },
             columns: [
                 { data: 'IDX' },
-                { data: 'QA_TITLE' },
+                {
+                    data: 'QA_TITLE',
+                    render: function (data, type, row) {
+                        return '<a href="#">' + row['QA_TITLE'] + '</a>';
+                    },
+                },
                 { data: 'USER_NM' },
                 { data: 'REG_DTTM' },
                 { data: 'QA_VWS' },
                 {
                     data: 'QA_STS',
                     render: function (data, type, row) {
-                        return row['QA_STS'] === 'YES' ? '답변완료' : '답변예정';
+                        let answerCompletion = '답변완료';
+                        let answerExpected = '답변예정';
+                        //관리자일 경우 답변페이지 이동활성화
+                        if (perm_code === '0000') {
+                            answerExpected = '<a href="#" class="qa_status">답변예정</a>';
+                        }
+                        return row['QA_STS'] === 'YES' ? answerCompletion : answerExpected;
                     },
                 },
             ],
@@ -54,12 +65,11 @@ var pagefunction = function () {
                 {
                     targets: 0,
                     orderable: false,
-                    width: '100px',
                 },
                 {
                     targets: 1,
-                    className: 'text-left',
                     orderable: false,
+                    className: 'text-left',
                 },
                 {
                     targets: 2,
@@ -84,7 +94,21 @@ var pagefunction = function () {
             scrollX: true,
             iDisplayLength: 10,
             language: language,
-            drawCallback: function (settings) {},
+            drawCallback: function (settings) {
+                $('.text-left a').on('click', function () {
+                    // 현재 클릭된 Row(<tr>)
+                    var tr = $(this).parent().parent();
+                    var IDX = tr.children().eq(0).text();
+
+                    location.href = '/sub/qa/view?id=' + IDX;
+                });
+                $('.qa_status').on('click', function () {
+                    var tr = $(this).parent().parent();
+                    var IDX = tr.children().eq(0).text();
+
+                    location.href = '/sub/qa/answer?id=' + IDX;
+                });
+            },
         };
         qa_table = $('#qa_table').DataTable(table_option);
     }
@@ -103,11 +127,6 @@ $('#search_keyword').on('keyup', function (key) {
         qa_table.clear();
         qa_table.ajax.url(search_url).draw(); //조회 된 data reflash
     }
-});
-$('#qa_table').on('click', 'tbody tr', function () {
-    var row = $('#qa_table').DataTable().row(this).data();
-    row = row.IDX;
-    location.href = '/sub/qa/view?id=' + row;
 });
 
 pagefunction();

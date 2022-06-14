@@ -67,10 +67,10 @@ exports.get_qa_table_list = function (req, res) {
     });
 };
 
-// exports.select_adminCheck = (req, res) => {
-//     var adminCheck = req.user;
-//     res.send(adminCheck ? true : false);
-// };
+exports.select_adminCheck = (req, res) => {
+    var adminCheck = req.user;
+    res.send(adminCheck ? true : false);
+};
 
 // exports.delete_notice = (req, res) => {
 //     var notice_num = req.body.data;
