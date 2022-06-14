@@ -24,14 +24,6 @@ app.get('*', function (req, res) {
     res.render(main_path);
 });
 
-// app.use((req, res, next) => {
-//     if (!allowedMethods.includes(req.method)) return res.send(405, 'Method Not Allowed');
-//     if (req.session.passport) {
-//         req.session.passport.user.session_timeout = req.session.cookie.expires;
-//     }
-//     return next();
-// });
-
 //console.log("PATH:", __dirname)
 
 //포트 설정(config에서 가져오기)

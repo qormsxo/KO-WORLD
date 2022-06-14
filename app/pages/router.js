@@ -6,7 +6,8 @@ module.exports = function (app) {
     require('../routers/page_router/page_router')(app);
     require('../routers/sub_router/sub_router')(app);
     require('../routers/api/ApiControl')(app);
-    require('../routers/login')(app);
-    require('../routers/register_route')(app);
+    require('../routers/challenge_router')(app);
+    require('../routers/account_router/login_router')(app);
+    require('../routers/account_router/register_route')(app);
     require('../../passport/passport.js')(); // 로그인
 };

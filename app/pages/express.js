@@ -61,10 +61,26 @@ module.exports = function (app) {
     );
     app.use((req, res, next) => {
         if (!allowedMethods.includes(req.method)) return res.send(405, 'Method Not Allowed');
+
         if (req.session.passport) {
+            res.locals.isLogin = true;
+            res.locals.username = req.session.passport.user['USER_NM'];
+            res.locals.perm_code = req.session.passport.user['PERM_CODE'];
+            res.locals.grade_code = req.session.passport.user['GRADE_CODE'];
+            // console.log(res.locals);
             req.session.passport.user.session_timeout = req.session.cookie.expires;
+        } else {
+            res.locals.isLogin = false;
         }
-        if (req.url == '/' || req.url.indexOf('/login') != -1 || req.url.indexOf('/logout') != -1 || req.url.indexOf('/css') != -1 || req.url.indexOf('/img') != -1 || req.url.indexOf('/js') != -1) {
+
+        if (
+            req.url == '/' ||
+            req.url.indexOf('/login') != -1 ||
+            req.url.indexOf('/logout') != -1 ||
+            req.url.indexOf('/css') != -1 ||
+            req.url.indexOf('/img') != -1 ||
+            req.url.indexOf('/js') != -1
+        ) {
             return next();
         }
         // else {
