@@ -6,6 +6,10 @@ const fetch = require('node-fetch');
 
 exports.get_qa_view = function (req, res) {
     let qaId = req.query.id;
+    if (qaId === undefined) {
+        return res.send("<script> alert('error'); window.location.href = '/sub/qa'; </script>");
+    }
+
     let data = {};
 
     let query_conditon =
@@ -16,7 +20,7 @@ exports.get_qa_view = function (req, res) {
         'qa.QA_VWS, ' +
         'qa.QA_STS, ' +
         'ur.USER_NM, ' +
-        'qa.REG_DTTM ' +
+        "date_format(qa.REG_DTTM, '%Y-%m-%d') as REG_DTTM " +
         'from ' +
         'tb_qa qa ' +
         'join tb_user ur on ' +
@@ -29,11 +33,19 @@ exports.get_qa_view = function (req, res) {
     crud.sql(filter_count, function (calldata) {
         delete calldata.meta;
         if (calldata.length < 1) {
-            res.send("<script> alert('error'); window.location.href = '/sub/qa'; </script>");
+            return res.send("<script> alert('error'); window.location.href = '/sub/qa'; </script>");
         } else {
-            data.qaData = calldata;
+            data.qaData = calldata[0];
             let query_conditon =
-                'select ' + 'tqa.QA_ASR_TEXT, ' + 'ur.USER_NM, ' + 'tqa.REG_DTTM ' + 'from ' + 'tb_qa_asr tqa ' + 'join tb_user ur on ' + 'tqa.QA_ASR_UR_ID = ur.USER_ID ' + 'where tqa.QA_IDX = ?';
+                'select ' +
+                'tqa.QA_ASR_TEXT, ' +
+                'ur.USER_NM, ' +
+                "date_format(tqa.REG_DTTM, '%Y-%m-%d') as REG_DTTM " +
+                'from ' +
+                'tb_qa_asr tqa ' +
+                'join tb_user ur on ' +
+                'tqa.QA_ASR_UR_ID = ur.USER_ID ' +
+                'where tqa.QA_IDX = ?';
             var filter_count = {
                 query: query_conditon,
                 params: [qaId],
@@ -41,9 +53,93 @@ exports.get_qa_view = function (req, res) {
             crud.sql(filter_count, function (calldata) {
                 delete calldata.meta;
                 if (calldata.length > 0) {
-                    data.qaAnswerData = calldata;
+                    data.qaAnswerData = calldata[0];
                 }
-                res.render('./sub/qa_view', { data: data });
+                return res.render('./sub/qa_view', { data: data });
+            });
+        }
+    });
+};
+
+exports.post_qa_view = function (req, res) {
+    let title = req.body.title;
+    let content = req.body.content;
+
+    let sql = 'insert into ';
+    let table = 'tb_qa ';
+    let column = '(qa_title, QA_TEXT, QA_UR_ID, QA_VWS, QA_STS, REG_DTTM) ';
+    let values = "values(?, ?, ?, 0, 'NO', now()) ";
+
+    let query_conditon = sql + table + column + values;
+
+    var crud_query = {
+        query: query_conditon,
+        params: [title, content, 'tjsrsdqq'],
+    };
+
+    crud.sql(crud_query, function (calldata) {
+        if (calldata['affectedRows'] == 1) {
+            return res.json({
+                success: true,
+                message: 'request success!',
+            });
+        } else {
+            return res.json({
+                success: false,
+                message: 'error',
+            });
+        }
+    });
+};
+
+exports.get_qa_answer_view = function (req, res) {
+    let qaId = req.query.id;
+    // 해당 글이 아이디가 없는경우
+    if (qaId === undefined) {
+        return res.send("<script> alert('error'); window.location.href = '/sub/qa'; </script>");
+        // 로그인하지 않았을경우와 로그인 후 권한이 없는 유저가 접근하려 했을 시
+    } else if (req.user === undefined || req.user.PERM_CODE != '0000') {
+        return res.send("<script> alert('do not have permission to answer'); window.location.href = '/sub/qa'; </script>");
+    }
+
+    let data = {};
+
+    let query_conditon =
+        'select ' +
+        'qa.IDX, ' +
+        'qa.QA_TITLE, ' +
+        'qa.QA_TEXT, ' +
+        'qa.QA_VWS, ' +
+        'qa.QA_STS, ' +
+        'ur.USER_NM, ' +
+        "date_format(qa.REG_DTTM, '%Y-%m-%d') as REG_DTTM " +
+        'from ' +
+        'tb_qa qa ' +
+        'join tb_user ur on ' +
+        'qa.QA_UR_ID = ur.USER_ID ' +
+        'where qa.IDX = ?';
+    var filter_count = {
+        query: query_conditon,
+        params: [qaId],
+    };
+    crud.sql(filter_count, function (calldata) {
+        delete calldata.meta;
+        data = calldata[0];
+        if (calldata.length < 1) {
+            return res.send("<script> alert('error'); window.location.href = '/sub/qa'; </script>");
+        } else {
+            let query_conditon = 'select ' + '* ' + 'from ' + 'tb_qa_asr tqa ' + 'where tqa.QA_IDX = ?';
+            var filter_count = {
+                query: query_conditon,
+                params: [qaId],
+            };
+            crud.sql(filter_count, function (calldata) {
+                delete calldata.meta;
+                if (calldata.length > 0) {
+                    return res.send("<script> alert('Answered question'); window.location.href = '/sub/qa'; </script>");
+                } else {
+                    return res.render('./sub/qa_answer', { data: data });
+                }
             });
         }
     });
