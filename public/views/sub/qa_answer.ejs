@@ -5,15 +5,29 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <style></style>
-        <link rel="stylesheet" href="/assets/css/style.css" />
+        <script type="text/javascript" src="/assets/js/sub/qa_answer.js"></script>
         <title>Ko-World | Q&A</title>
     </head>
     <!-- body -->
     <body>
         <div class="container">
             <img src="/assets/images/icon_02.png" alt="question icon" />
-            <h2>Q&A</h2>
+            <h2>Q&A - Q&A answer</h2>
             <%=data.IDX%> <%=data.QA_TITLE%> <%=data.QA_TEXT%> <%=data.QA_VWS%> <%=data.QA_STS%> <%=data.USER_NM%> <%=data.REG_DTTM%>
+            <form id="qaAnswerForm">
+                <input type="hidden" value="<%=data.IDX%>" id="qaidx" name="qaidx" />
+                <!-- content -->
+                <div class="mb40">
+                    <label for="Text" class="label w200">Answer Content</label>
+                    <textarea class="input-style" id="content" name="content"></textarea>
+                </div>
+                <!-- // content -->
+            </form>
+            <!-- 등록버튼 -->
+            <div class="btn-center">
+                <button class="btn-default" onclick="qaAnswerPage.qaNullChk()">Answer</button>
+            </div>
+            <!-- // 등록버튼 -->
         </div>
     </body>
     <!-- // body -->

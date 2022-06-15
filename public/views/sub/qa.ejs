@@ -12,6 +12,9 @@
             th {
                 display: none;
             }
+            td {
+                height: 30px;
+            }
             .text-left {
                 text-align: left;
             }
@@ -19,13 +22,13 @@
                 width: 100px;
             }
             table tbody tr td:nth-child(2) {
-                width: 1000px;
+                width: 900px;
             }
             table tbody tr td:nth-child(3) {
                 width: 100px;
             }
             table tbody tr td:nth-child(4) {
-                width: 100px;
+                width: 170px;
             }
             table tbody tr td:nth-child(5) {
                 width: 70px;
@@ -33,8 +36,24 @@
             table tbody tr td:nth-child(6) {
                 width: 100px;
             }
+            table {
+                border-top: 1px solid #111 !important;
+            }
+            .btn-default {
+                margin: 0px !important;
+            }
+            #qa_table_wrapper {
+                bottom: 25px;
+            }
+            body {
+                overflow: hidden;
+            }
+            .btn_group {
+                position: relative;
+                float: right;
+                bottom: 40px;
+            }
         </style>
-        <link rel="stylesheet" href="/assets/css/style.css" />
         <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
         <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
         <title>Ko-World | Q&A</title>
@@ -44,8 +63,19 @@
         <div class="container">
             <img src="/assets/images/icon_02.png" alt="question icon" />
             <h2>Q&A</h2>
-            <input type="text" id="search_keyword" name="search_keyword" class="input-style" placeholder="write keyword" />
-            <table id="qa_table" class="table table-bordered">
+            <div class="row" style="justify-content: flex-end">
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <input type="text" id="search_keyword" name="search_keyword" class="form-control" placeholder="write keyword" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="serarch();"><i class="fa fa-search" aria-hidden="true"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <table id="qa_table" class="table">
                 <thead>
                     <tr>
                         <th>qa번호</th>
@@ -57,8 +87,14 @@
                     </tr>
                 </thead>
             </table>
-            <a href="/sub/qa/write"><button>글쓰기</button></a>
-            <a href="/"><button>내QNA보기</button></a>
+            <div class="btn_group" role="group" aria-label="Basic example">
+                <a href="/sub/qa/write"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>글쓰기</button></a
+                >
+                <a href="/"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>내QNA보기</button></a
+                >
+            </div>
         </div>
     </body>
     <!-- // body -->

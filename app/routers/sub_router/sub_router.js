@@ -20,4 +20,6 @@ module.exports = function (app) {
     app.post('/sub/qa/write', controller.post_qa_view);
 
     app.get('/sub/qa/answer', controller.get_qa_answer_view);
+
+    app.post('/sub/qa/answer', controller.post_qa_answer);
 };

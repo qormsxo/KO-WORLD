@@ -40,8 +40,18 @@ var pagefunction = function () {
                     },
                 },
                 { data: 'USER_NM' },
-                { data: 'REG_DTTM' },
-                { data: 'QA_VWS' },
+                {
+                    data: 'REG_DTTM',
+                    render: function (data, type, row) {
+                        return '<i class="fa fa-clock-o" style="margin-right: 10px" aria-hidden="true"></i>' + row['REG_DTTM'];
+                    },
+                },
+                {
+                    data: 'QA_VWS',
+                    render: function (data, type, row) {
+                        return '<i class="fa fa-eye" style="margin-right: 10px" aria-hidden="true"></i>' + row['QA_VWS'];
+                    },
+                },
                 {
                     data: 'QA_STS',
                     render: function (data, type, row) {
@@ -90,7 +100,7 @@ var pagefunction = function () {
             ],
             order: [[0, 'desc']],
             paging: true, //paging 사용 여부
-            scrollY: 430, //표 세로 사이즈
+            scrollY: 480, //표 세로 사이즈
             scrollX: true,
             iDisplayLength: 10,
             language: language,
@@ -122,11 +132,15 @@ var pagefunction = function () {
 
 $('#search_keyword').on('keyup', function (key) {
     if (key.keyCode == 13) {
-        var search_keyword = $('#search_keyword').val();
-        var search_url = '/api/qa_list?search_keyword=' + search_keyword;
-        qa_table.clear();
-        qa_table.ajax.url(search_url).draw(); //조회 된 data reflash
+        serarch();
     }
 });
+
+function serarch() {
+    var search_keyword = $('#search_keyword').val();
+    var search_url = '/api/qa_list?search_keyword=' + search_keyword;
+    qa_table.clear();
+    qa_table.ajax.url(search_url).draw(); //조회 된 data reflash
+}
 
 pagefunction();

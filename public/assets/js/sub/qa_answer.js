@@ -6,32 +6,33 @@ $(function () {
     });
 });
 
-let qaWritePage = {
+let qaAnswerPage = {
     fd: null,
     qaNullChk: () => {
-        qaWritePage.fd = new FormData($('#qaRequestForm')[0]);
+        qaAnswerPage.fd = new FormData($('#qaAnswerForm')[0]);
 
-        for (let key of qaWritePage.fd.keys()) {
-            if (qaWritePage.fd.get(key) === '') {
+        for (let key of qaAnswerPage.fd.keys()) {
+            if (qaAnswerPage.fd.get(key) === '') {
                 alert(`Please enter ${key}`);
                 return;
             }
         }
-        const data = new URLSearchParams(qaWritePage.fd);
-        qaWritePage.request(data);
+        const data = new URLSearchParams(qaAnswerPage.fd);
+        qaAnswerPage.request(data);
     },
     request: async (data) => {
         try {
-            let response = await fetch('/sub/qa/write', {
+            let response = await fetch('/sub/qa/answer', {
                 method: 'POST',
                 body: data,
             });
             let responseData = await response.json();
-            if (responseData.success) {
+            if (responseData.status) {
                 alert(responseData.message);
                 window.location.href = '/sub/qa';
-            } else {
+            } else if (!responseData.status) {
                 alert(responseData.message);
+                window.location.href = '/sub/qa';
             }
         } catch (err) {
             console.error(new Error('error'));
