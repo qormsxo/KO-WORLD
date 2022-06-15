@@ -20,7 +20,14 @@
                 </ul>
                 <% if(perm_code != 0000) {%>
                     <div class="select">
-                        
+                        <% for(var i =0 ; i<hosts.length ; i++){ %>
+                            <button class="server <%=  hosts[i].CURR_CON == hosts[i].MAX_CON ? "" : hosts[i].CURR_CON >= hosts[i].MAX_CON/2 ? "active orange" : hosts[i].CURR_CON < hosts[i].MAX_CON ? "active blue" : "error" %>"
+
+                                value= "<%=hosts[i].IDX %>">
+                                <%= hosts[i].HOST_NM_EN %> (<%= hosts[i].CURR_CON %>/<%= hosts[i].MAX_CON %>) 
+                            </button>
+                        <% } %> 
+
                     </div>
                 <%} else if(perm_code == 0000 ) {%>
                     <table class="table">
