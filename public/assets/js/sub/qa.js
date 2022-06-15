@@ -39,7 +39,12 @@ var pagefunction = function () {
                         return '<a href="#">' + row['QA_TITLE'] + '</a>';
                     },
                 },
-                { data: 'USER_NM' },
+                {
+                    data: 'USER_NM',
+                    render: function (data, type, row) {
+                        return '<i class="fa fa-pencil" style="margin-right: 10px" aria-hidden="true"></i>' + row['USER_NM'];
+                    },
+                },
                 {
                     data: 'REG_DTTM',
                     render: function (data, type, row) {
@@ -57,10 +62,6 @@ var pagefunction = function () {
                     render: function (data, type, row) {
                         let answerCompletion = '답변완료';
                         let answerExpected = '답변예정';
-                        //관리자일 경우 답변페이지 이동활성화
-                        if (perm_code === '0000') {
-                            answerExpected = '<a href="#" class="qa_status">답변예정</a>';
-                        }
                         return row['QA_STS'] === 'YES' ? answerCompletion : answerExpected;
                     },
                 },
@@ -84,6 +85,7 @@ var pagefunction = function () {
                 {
                     targets: 2,
                     orderable: false,
+                    className: 'text-left',
                 },
                 {
                     targets: 3,
@@ -92,6 +94,7 @@ var pagefunction = function () {
                 {
                     targets: 4,
                     orderable: false,
+                    className: 'text-left',
                 },
                 {
                     targets: 5,
@@ -109,14 +112,21 @@ var pagefunction = function () {
                     // 현재 클릭된 Row(<tr>)
                     var tr = $(this).parent().parent();
                     var IDX = tr.children().eq(0).text();
-
-                    location.href = '/sub/qa/view?id=' + IDX;
-                });
-                $('.qa_status').on('click', function () {
-                    var tr = $(this).parent().parent();
-                    var IDX = tr.children().eq(0).text();
-
-                    location.href = '/sub/qa/answer?id=' + IDX;
+                    $.ajax({
+                        type: 'patch',
+                        url: '/sub/qa/views',
+                        data: { qaidx: IDX },
+                        success: function (result) {
+                            if (result.status === true) {
+                                location.href = '/sub/qa/view?id=' + IDX;
+                            } else {
+                                alert('error');
+                            }
+                        },
+                        error: function (a, b, c) {
+                            alert(a + b + c);
+                        },
+                    });
                 });
             },
         };

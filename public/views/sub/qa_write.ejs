@@ -9,8 +9,13 @@
         <title>Ko-World | Q&A</title>
         <style>
             textarea {
-                width: 50%;
-                height: 100px;
+                width: 50% !important;
+                height: 100px !important;
+                display: inline-block !important;
+            }
+            #content_label {
+                position: relative;
+                bottom: 60px;
             }
         </style>
     </head>
@@ -18,8 +23,8 @@
     <body>
         <div class="container">
             <img src="/assets/images/icon_02.png" alt="question icon" />
-            <h2>Q&A - Q&A registration</h2>
-            <form id="qaRequestForm">
+            <h2>Q&A - Registration</h2>
+            <form id="qaRequestForm" onsubmit="return false;">
                 <!-- title -->
                 <div class="mb40">
                     <label for="title" class="label w200">Title</label>
@@ -28,8 +33,8 @@
                 <!-- // title -->
                 <!-- content -->
                 <div class="mb40">
-                    <label for="Text" class="label w200">Content</label>
-                    <textarea class="input-style" id="content" name="content"></textarea>
+                    <label for="Text" id="content_label" class="label w200">Content</label>
+                    <textarea class="form-control col-sm-5" rows="5" id="content" name="content"></textarea>
                 </div>
                 <!-- // content -->
             </form>
