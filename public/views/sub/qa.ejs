@@ -22,16 +22,16 @@
                 width: 100px;
             }
             table tbody tr td:nth-child(2) {
-                width: 900px;
+                width: 800px;
             }
             table tbody tr td:nth-child(3) {
-                width: 100px;
+                width: 250px;
             }
             table tbody tr td:nth-child(4) {
                 width: 170px;
             }
             table tbody tr td:nth-child(5) {
-                width: 70px;
+                width: 100px;
             }
             table tbody tr td:nth-child(6) {
                 width: 100px;
@@ -52,6 +52,9 @@
                 position: relative;
                 float: right;
                 bottom: 40px;
+            }
+            h2 {
+                margin-bottom: 0px !important;
             }
         </style>
         <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
@@ -87,6 +90,7 @@
                     </tr>
                 </thead>
             </table>
+            <%if(isLogin){%>
             <div class="btn_group" role="group" aria-label="Basic example">
                 <a href="/sub/qa/write"
                     ><button type="button" class="btn btn-secondary"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>글쓰기</button></a
@@ -95,6 +99,7 @@
                     ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>내QNA보기</button></a
                 >
             </div>
+            <%}%>
         </div>
     </body>
     <!-- // body -->
