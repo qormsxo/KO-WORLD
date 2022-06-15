@@ -206,10 +206,16 @@ input.input-style {
     cursor: pointer;
     border: none;
 }
-.select > .active {
+.select > .blue {
     background-color: #dcedff !important;
     color: #1565d1 !important;
 }
+
+.select > .orange {
+    background-color: #ff5733 !important;
+    color: #ffffff !important;
+}
+
 .table {
     text-align: center;
     width: 100%;

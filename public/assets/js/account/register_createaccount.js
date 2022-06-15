@@ -28,8 +28,8 @@ let registerPage = {
             }
             // console.log(`${key}:${fd.get(key)}`);
         }
-        // 아이디 영문자로 시작하는 영문자 또는 숫자 6~20자
-        let idReg = /^[a-z]+[a-z0-9]{5,19}$/g;
+        // 아이디 영문자로 시작하는 영문자 또는 숫자 6~16자
+        let idReg = /^[a-z]+[a-z0-9]{5,15}$/g;
         //8 ~ 16자 영문, 숫자, 특수문자를 최소 한가지씩 조합
         let passwordReg = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
         // 이메일 체크 정규식
@@ -76,7 +76,7 @@ let registerPage = {
                 }
             })
             .catch((error) => {
-                console.error(new Error('로그인 중 에러 발생'));
+                console.error(error);
             });
     },
     idCheck: (id) => {

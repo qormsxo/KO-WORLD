@@ -15,7 +15,7 @@ const mustache = require('mustache-express');
 const ejs = require('ejs');
 const ejsLayouts = require('express-ejs-layouts');
 
-const allowedMethods = ['GET', 'HEAD', 'POST', 'DELETE', 'PATCH'];
+const allowedMethods = ['GET', 'HEAD', 'POST', 'DELETE', 'PATCH', 'PUT'];
 module.exports = function (app) {
     //express-ejs-layouts 세팅
 
@@ -76,7 +76,14 @@ module.exports = function (app) {
             res.locals.grade_code = false;
         }
 
-        if (req.url == '/' || req.url.indexOf('/login') != -1 || req.url.indexOf('/logout') != -1 || req.url.indexOf('/css') != -1 || req.url.indexOf('/img') != -1 || req.url.indexOf('/js') != -1) {
+        if (
+            req.url == '/' ||
+            req.url.indexOf('/login') != -1 ||
+            req.url.indexOf('/logout') != -1 ||
+            req.url.indexOf('/css') != -1 ||
+            req.url.indexOf('/img') != -1 ||
+            req.url.indexOf('/js') != -1
+        ) {
             return next();
         }
         // else {
