@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            /* th {
+                display: none;
+            } */
+            table tbody tr td:nth-child(1) {
+                width: 100px;
+            }
+            table tbody tr td:nth-child(2) {
+                width: 1000px;
+            }
+            table tbody tr td:nth-child(3) {
+                width: 100px;
+            }
+            table tbody tr td:nth-child(4) {
+                width: 100px;
+            }
+            table tbody tr td:nth-child(5) {
+                width: 70px;
+            }
+            table tbody tr td:nth-child(6) {
+                width: 100px;
+            }
+        </style>
+        <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
+        <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
+        <title>Ko-World | Q&A</title>
+    </head>
+    <!-- body -->
+    <body>
+        <div class="container">
+            <img src="/assets/images/icon_02.png" alt="question icon" />
+            <h2>UserList</h2>
+            <input type="text" id="search_keyword" name="search_keyword" class="input-style" placeholder="write keyword" />
+            <table id="qa_table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>qa번호</th>
+                        <th>qa제목</th>
+                        <th>qa등록자</th>
+                        <th>qa등록일</th>
+                        <th>조회수</th>
+                        <th>답변상태</th>
+                    </tr>
+                </thead>
+            </table>
+            <a href="/sub/qa/write"><button>글쓰기</button></a>
+            <a href="/"><button>내QNA보기</button></a>
+        </div>
+    </body>
+    <!-- // body -->
+    <script>
+        const perm_code = '<%=perm_code%>';
+    </script>
+    <script type="text/javascript" src="/assets/js/user/user_list.js"></script>
+</html>

@@ -17,6 +17,7 @@
         "express": "^4.17.3",
         "express-ejs-layouts": "^2.5.1",
         "express-session": "^1.17.2",
+        "font-awesome": "^4.7.0",
         "forever": "^4.0.1",
         "fullpage": "^1.5.1",
         "jquery": "^3.6.0",

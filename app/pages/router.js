@@ -9,5 +9,6 @@ module.exports = function (app) {
     require('../routers/challenge_router')(app);
     require('../routers/account_router/login_router')(app);
     require('../routers/account_router/register_route')(app);
+    require('../routers/user_router/user_router')(app);
     require('../../passport/passport.js')(); // 로그인
 };
