@@ -24,6 +24,12 @@ app.get('*', function (req, res) {
     res.render(main_path);
 });
 
+app.put('/products', function (req, res) {
+    const { id, name, description } = req.body;
+    console.log(req.body);
+    res.send(`Name ${id} ${name}, desc ${description}`);
+});
+
 //console.log("PATH:", __dirname)
 
 //포트 설정(config에서 가져오기)

@@ -62,7 +62,7 @@ module.exports = {
         };
 
         crud.sql(checkData, (result) => {
-            console.log(result[0] == undefined);
+            //console.log(result[0] == undefined);
             if (result[0] == null) {
                 res.sendStatus(200);
             } else {
