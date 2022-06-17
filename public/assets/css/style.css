@@ -243,3 +243,7 @@ input.tb-input {
 .dataTables_wrapper.no-footer .dataTables_scrollBody {
     border-bottom: none;
 }
+#qa_table_info {
+    bottom: 20px !important;
+    position: relative !important;
+}

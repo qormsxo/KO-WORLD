@@ -27,7 +27,7 @@
         <!-- 등록, 로그인 -->
         <div class="btn-set">
             <% if(isLogin) { %>
-            <button class="phill blue" onclick="location.href = '/#'"><%=username %></button>
+            <button class="phill blue" onclick="location.href = '/user/user_profile'"><%=username %></button>
             <button class="phill blue" onclick="location.href = '/logout'">LogOut</button>
             <%} else {%>
             <button class="phill blue" onclick="location.href = '/account/register'">Register</button>
