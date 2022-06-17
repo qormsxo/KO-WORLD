@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- <link rel="stylesheet" href="../assets/css/style.css" /> -->
+        <script type="text/javascript" src="../../assets/js/challenge/first_challenge.js"></script>
+        <title>Ko-World | register</title>
+    </head>
+    <!-- body -->
+    <body>
+        <div class="container">
+            <img src="../assets/images/icon_04.png" alt="login icon" />
+            <h2>Login – 1st round challenge</h2>
+            <!-- Login form -->
+            <div class="form">
+                <ul  style="padding-left: 0px">
+                    <li><b>· Please, choose the one of the mirror servers to join 1st round challenge</b></li>
+                </ul>
+                <% if(perm_code != 0000) {%>
+                    <div class="select">
+                        <% for(var i =0 ; i<hosts.length ; i++){ %>
+                            <button class="server <%=  hosts[i].CURR_CON == hosts[i].MAX_CON ? "" : hosts[i].CURR_CON >= hosts[i].MAX_CON/2 ? "active orange" : hosts[i].CURR_CON < hosts[i].MAX_CON ? "active blue" : "error" %>"
+
+                                value= "<%=hosts[i].IDX %>">
+                                <%= hosts[i].HOST_NM_EN %> (<%= hosts[i].CURR_CON %>/<%= hosts[i].MAX_CON %>) 
+                            </button>
+                        <% } %> 
+
+                    </div>
+                <%} else if(perm_code == 0000 ) {%>
+                    <table class="table">
+                        <colgroup>
+                            <col width="10%" />
+                            <col width="15%" />
+                            <col width="15%" />
+                            <col width="15%" />
+                            <col width="15%" />
+                            <col width="30%" />
+                        </colgroup>
+                        <thead>
+                            <th>IDX</th>
+                            <th>Server Name(kor)</th>
+                            <th>Server Name</th>
+                            <th>Current Connections</th>
+                            <th>Max Connections</th>
+                            <th>Max Set</th>
+                        </thead>
+                        <tbody id ="serverTbody">
+                            <% for(var i =0 ; i<hosts.length ; i++){ %>
+                            <tr>
+                                <td><%= hosts[i].IDX %></td>
+                                <td><%= hosts[i].HOST_NM_KR %></td>
+                                <td><%= hosts[i].HOST_NM_EN %></td>
+                                <td><%= hosts[i].CURR_CON %></td>
+                                <td><%= hosts[i].MAX_CON %></td>
+                                <td>
+                                    <input type="button" class="btn-sm btn-default btn" style="font-size: 17px;" value="+" />
+                                    <input type="button" class="btn-sm btn-default btn" style="font-size: 17px;" value="-" />
+                                </td>
+                            </tr>
+                            <% } %> 
+                        </tbody>
+                    </table>
+                <% } %>  
+                    <!-- <button class="server active">Server01(12/30)</button> -->
+                
+            </div>
+
+
+            <!-- 등록버튼 -->
+            <% if(perm_code != 0000) {%>
+            <!-- form 여러개 생길 때 -->
+                <form class="mb100" id="answerForm" enctype="multipart/form-data" onsubmit="return false">
+                <% for(var i =1; i<= ques; i++){ %>
+                        <div class="mb40">
+                            <label for="answer<%=i%>" class="label w200">Input your answer</label>
+                            <input type="text" id="answer<%=i%>" name="answer<%=i%>" class="input-style" />
+                            <span>
+                                <button class="btn-sm btn-default" onclick="return false" >save</button>
+                            </span>
+                        </div>
+                        <div class="mb40">
+                            <label for="file<%=i%>" class="label w200">The file of solving</label>
+                            <input type="text" class="input-style" id="fileName<%=i%>" readonly/>
+                            <input type="file" id="file<%=i%>" name="file<%=i%>" class="file" />
+                            <span>
+                                <button class="btn-sm btn-default" ><label for="file<%=i%>">attatch</label> </button>
+                            </span>
+                        </div>
+                   
+                <% } %>      
+                </form>            
+                <div class="btn-center">
+                    <button class="btn-default" onclick="challenge.registerAnswer()" >Register</button>
+                </div>
+            <%} %>
+            <!-- // 등록버튼 -->
+        </div>
+    </body>
+    <!-- // body -->
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            .dataTables_paginate {
+                text-align: center !important;
+                float: none !important;
+            }
+            th {
+                display: none;
+            }
+            td {
+                height: 30px;
+            }
+            .text-left {
+                text-align: left;
+            }
+            table tbody tr td:nth-child(1) {
+                width: 100px;
+            }
+            table tbody tr td:nth-child(2) {
+                width: 800px;
+            }
+            table tbody tr td:nth-child(3) {
+                width: 250px;
+            }
+            table tbody tr td:nth-child(4) {
+                width: 170px;
+            }
+            table tbody tr td:nth-child(5) {
+                width: 100px;
+            }
+            table tbody tr td:nth-child(6) {
+                width: 100px;
+            }
+            table {
+                border-top: 1px solid #111 !important;
+            }
+            .btn-default {
+                margin: 0px !important;
+            }
+            #qa_table_wrapper {
+                bottom: 25px;
+            }
+            .btn_group {
+                position: relative;
+                float: right;
+                bottom: 40px;
+            }
+            h2 {
+                margin-bottom: 20px !important;
+            }
+            .btn-default {
+                padding: 6px 18px !important;
+            }
+            #qa_search_option {
+                justify-content: flex-end !important;
+                position: relative;
+                z-index: 30;
+            }
+            .profile_center_div {
+                justify-content: center !important;
+            }
+            #profile_info_div > .col-md-5 {
+                margin-right: 10%;
+            }
+            #profile_info_div > #studentItem > .row > .col-md-5 {
+                margin-right: 10%;
+            }
+        </style>
+        <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
+        <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
+        <title>Ko-World | Q&A</title>
+    </head>
+    <!-- body -->
+    <body>
+        <div class="container">
+            <img src="/assets/images/icon_02.png" alt="question icon" />
+            <h2>User ProFile</h2>
+            <div class="row profile_center_div">
+                <div class="col-sm-12 col-md-4">
+                    <img src="/assets/images/profile_image.jpg" alt="question icon" />
+                </div>
+            </div>
+            <form id="regsiterForm">
+                <div class="row profile_center_div" id="profile_info_div">
+                    <!-- Name -->
+                    <div class="col-md-5">
+                        <label for="name" class="label w200">Name</label>
+                        <input type="text" id="name" name="name" class="input-style" />
+                    </div>
+                    <!-- // Name -->
+                    <!-- ID -->
+                    <div class="col-md-5">
+                        <label for="id" class="label w200">ID</label>
+                        <input type="text" id="id" name="id" class="input-style" />
+                    </div>
+                    <!-- // ID -->
+                    <!-- Password -->
+                    <div class="col-md-5">
+                        <label for="password" class="label w200">Password</label>
+                        <input type="password" id="password" name="password" class="input-style" />
+                    </div>
+                    <!-- // Password -->
+                    <!-- Password Check -->
+                    <div class="col-md-5">
+                        <label for="passwordCheck" class="label w200">Password Check</label>
+                        <input type="passwordCheck" id="passwordCheck" name="passwordCheck" class="input-style" />
+                    </div>
+                    <!-- // Password Check -->
+                    <!-- Email -->
+                    <div class="col-md-5">
+                        <label for="email" class="label w200">Email</label>
+                        <input type="email" id="email" name="email" class="input-style" />
+                    </div>
+                    <!-- // Email -->
+                    <div id="studentItem">
+                        <!-- Date of birth -->
+                        <div class="row profile_center_div">
+                            <div class="col-md-5">
+                                <label for="birth" class="label w200">Date of birth</label>
+                                <input type="date" id="birth" name="birth" class="input-style" />
+                            </div>
+                            <!-- // Date of birth -->
+                            <!-- Nationality -->
+                            <div class="col-md-5">
+                                <label for="nationality" class="label w200">Nationality</label>
+                                <input type="text" id="nationality" name="nationality" class="input-style" />
+                            </div>
+                            <!-- // Nationality -->
+                            <!-- School Name -->
+                            <div class="col-md-5">
+                                <label for="schoolName" class="label w200">School Name</label>
+                                <input type="text" id="schoolName" name="schoolName" class="input-style" />
+                            </div>
+                            <!-- // School Name -->
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="row" id="qa_search_option">
+                <div class="col-sm-2">
+                    <select id="search_option" class="form-select" aria-label="Default select example">
+                        <option value="TaC" selected>Title and Content</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <input type="text" id="search_keyword" name="search_keyword" class="form-control" placeholder="Write Keyword" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="serarch();"><i class="fa fa-search" aria-hidden="true"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <table id="qa_table" class="table">
+                <thead>
+                    <tr>
+                        <th>qa번호</th>
+                        <th>qa제목</th>
+                        <th>qa등록자</th>
+                        <th>qa등록일</th>
+                        <th>조회수</th>
+                        <th>답변상태</th>
+                    </tr>
+                </thead>
+            </table>
+            <%if(isLogin){%>
+            <div class="btn_group" role="group" aria-label="Basic example">
+                <a href="/sub/qa/write"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>글쓰기</button></a
+                >
+                <a href="/"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>내QNA보기</button></a
+                >
+            </div>
+            <%}%>
+        </div>
+    </body>
+    <!-- // body -->
+    <script>
+        const perm_code = '<%=perm_code%>';
+    </script>
+    <script type="text/javascript" src="/assets/js/sub/qa.js"></script>
+</html>

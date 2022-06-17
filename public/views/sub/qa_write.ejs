@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style></style>
+        <script type="text/javascript" src="/assets/js/sub/qa_write.js"></script>
+        <title>Ko-World | Q&A</title>
+        <style>
+            textarea {
+                width: 50% !important;
+                height: 100px !important;
+                display: inline-block !important;
+            }
+            #content_label {
+                position: relative;
+                bottom: 60px;
+            }
+            .btn_group {
+                position: relative;
+                float: right;
+                margin-top: 30px;
+            }
+        </style>
+    </head>
+    <!-- body -->
+    <body>
+        <div class="container">
+            <img src="/assets/images/icon_02.png" alt="question icon" />
+            <h2>Q&A - Registration</h2>
+            <form id="qaRequestForm" onsubmit="return false;">
+                <!-- title -->
+                <div class="mb40">
+                    <label for="title" class="label w200">Title</label>
+                    <input type="text" id="title" name="title" class="input-style" />
+                </div>
+                <!-- // title -->
+                <!-- content -->
+                <div class="mb40">
+                    <label for="Text" id="content_label" class="label w200">Content</label>
+                    <textarea class="form-control col-sm-5" rows="5" id="content" name="content"></textarea>
+                </div>
+                <!-- // content -->
+            </form>
+            <!-- 등록버튼 -->
+            <div class="btn_group" role="group" aria-label="Basic example">
+                <a href="/sub/qa"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>목록</button></a
+                >
+                <a href="#" onclick="qaWritePage.qaNullChk();"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-plus-square me-lg-2" aria-hidden="true"></i>등록</button></a
+                >
+            </div>
+            <!-- // 등록버튼 -->
+        </div>
+    </body>
+    <!-- // body -->
+    <script></script>
+</html>

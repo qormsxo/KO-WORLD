@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            .dataTables_paginate {
+                text-align: center !important;
+                float: none !important;
+            }
+            /* th {
+                display: none;
+            } */
+            td {
+                height: 20px;
+            }
+            .text-left {
+                text-align: left;
+            }
+            table tbody tr td:nth-child(1) {
+                width: 100px;
+            }
+            table tbody tr td:nth-child(2) {
+                width: 130px;
+            }
+            table tbody tr td:nth-child(3) {
+                width: 130px;
+            }
+            table tbody tr td:nth-child(4) {
+                width: 50px;
+            }
+            table tbody tr td:nth-child(5) {
+                width: 120px;
+            }
+            table tbody tr td:nth-child(6) {
+                width: 150px;
+            }
+            table tbody tr td:nth-child(7) {
+                width: 170px;
+            }
+            table tbody tr td:nth-child(8) {
+                width: 50px;
+            }
+            table tbody tr td:nth-child(9) {
+                width: 50px;
+            }
+            table tbody tr td:nth-child(10) {
+                width: 50px;
+            }
+            table tbody tr td:nth-child(11) {
+                width: 100px;
+                padding: 0 !important;
+            }
+            table {
+                border-top: 1px solid #111 !important;
+            }
+            .btn-default {
+                margin: 0px !important;
+            }
+            #qa_table_wrapper {
+                bottom: 25px;
+            }
+            body {
+                overflow: hidden;
+            }
+            .btn_group {
+                position: relative;
+                float: right;
+                bottom: 40px;
+            }
+            h2 {
+                margin-bottom: 20px !important;
+            }
+            .container {
+                padding: 100px 0 0 !important;
+            }
+            #flexSwitchCheckDefault {
+                width: 4em;
+                height: 1.5em;
+            }
+            .form-switch {
+                padding-left: 4.5em !important;
+            }
+            .btn-default {
+                padding: 6px 18px !important;
+            }
+        </style>
+        <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
+        <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
+        <title>Ko-World | Q&A</title>
+    </head>
+    <!-- body -->
+    <body>
+        <div class="container">
+            <img src="/assets/images/icon_02.png" alt="question icon" />
+            <h2>UserList</h2>
+            <!-- /.row -->
+        </div>
+        <div class="row" style="justify-content: flex-end">
+            <div class="col-sm-2">
+                <select id="select_option" class="form-select" aria-label="Default select example">
+                    <option value="IaU" selected>Id and User name</option>
+                    <option value="email">Email</option>
+                    <option value="PaG">Perm name and Grade name</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <div class="input-group">
+                    <input type="text" id="search_keyword" name="search_keyword" class="form-control" placeholder="write keyword" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="serarch();"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <table id="user_list_table" class="table table-sm">
+            <thead>
+                <tr>
+                    <th>IDX</th>
+                    <th>userid</th>
+                    <th>username</th>
+                    <th>birthday</th>
+                    <th>nationnality</th>
+                    <th>schoolname</th>
+                    <th>email</th>
+                    <th>perm_code_kr</th>
+                    <!-- <th>perm_code_en</th> -->
+                    <th>grade_code_kr</th>
+                    <!-- <th>grade_code_en</th> -->
+                    <th>reg_dttm</th>
+                    <th>accept</th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+    <!-- // body -->
+    <script>
+        const perm_code = '<%=perm_code%>';
+    </script>
+    <script type="text/javascript" src="/assets/js/user/user_list.js"></script>
+</html>

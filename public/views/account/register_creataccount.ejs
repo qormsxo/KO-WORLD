@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script type="text/javascript" src="../assets/js/account/register_createaccount.js"></script>
+        <title>Ko-World | creat account</title>
+    </head>
+    <!-- body -->
+    <body>
+        <div class="container">
+            <img src="../assets/images/icon_03.png" alt="Check icon" />
+            <h2>Register - create account</h2>
+            <!-- register form -->
+            <form id="regsiterForm">
+                <!-- state -->
+                <div class="mb40">
+                    <ul class="radio">
+                        <li>
+                            <label for="highschool" class="label">High School Student</label>
+                            <input type="radio" id="highschool" name="state" value="highschool" checked />
+                        </li>
+                        <li>
+                            <label for="college" class="label">College Student</label>
+                            <input type="radio" id="college" name="state" value="college" />
+                        </li>
+                        <li>
+                            <label for="commitee" class="label">Commitee member</label>
+                            <input type="radio" id="commitee" name="state" value="commitee" />
+                        </li>
+                    </ul>
+                </div>
+                <!-- // state -->
+                <!-- Name -->
+                <div class="mb40">
+                    <label for="name" class="label w200">Name</label>
+                    <input type="text" id="name" name="name" class="input-style" />
+                </div>
+                <!-- // Name -->
+                <!-- ID -->
+                <div class="mb40">
+                    <label for="id" class="label w200">ID</label>
+                    <input type="text" id="id" name="id" class="input-style" />
+                </div>
+                <!-- // ID -->
+                <!-- Password -->
+                <div class="mb40">
+                    <label for="password" class="label w200">Password</label>
+                    <input type="password" id="password" name="password" class="input-style" />
+                </div>
+                <!-- // Password -->
+                <!-- Password Check -->
+                <div class="mb40">
+                    <label for="passwordCheck" class="label w200">Password Check</label>
+                    <input type="passwordCheck" id="passwordCheck" name="passwordCheck" class="input-style" />
+                </div>
+                <!-- // Password Check -->
+                <!-- Email -->
+                <div class="mb40">
+                    <label for="email" class="label w200">Email</label>
+                    <input type="email" id="email" name="email" class="input-style" />
+                </div>
+                <!-- // Email -->
+                <div id="studentItem">
+                    <!-- Date of birth -->
+                    <div class="mb40">
+                        <label for="birth" class="label w200">Date of birth</label>
+                        <input type="date" id="birth" name="birth" class="input-style" />
+                    </div>
+                    <!-- // Date of birth -->
+                    <!-- Nationality -->
+                    <div class="mb40">
+                        <label for="nationality" class="label w200">Nationality</label>
+                        <input type="text" id="nationality" name="nationality" class="input-style" />
+                    </div>
+                    <!-- // Nationality -->
+                    <!-- School Name -->
+                    <div class="mb40">
+                        <label for="schoolName" class="label w200">School Name</label>
+                        <input type="text" id="schoolName" name="schoolName" class="input-style" />
+                    </div>
+                    <!-- // School Name -->
+                </div>
+            </form>
+            <!--  // register form -->
+            <!-- subtext -->
+            <div class="form">
+                <ul>
+                    <li class="txt-red">※ 관련 서류는 4라운드 시작 전 제출 필수</li>
+                </ul>
+            </div>
+            <!--  // subtext -->
+            <!-- 등록버튼 -->
+            <div class="btn-center">
+                <button class="btn-default" onclick="registerPage.registerNullChk()">register</button>
+            </div>
+            <!-- // 등록버튼 -->
+        </div>
+    </body>
+</html>

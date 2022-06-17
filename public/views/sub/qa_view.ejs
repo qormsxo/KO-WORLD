@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            .qa-box-content {
+                min-height: 300px;
+                padding: 50px 70px 70px;
+                line-height: 100%;
+                border-bottom: 1px solid #333;
+            }
+            .qa-answer-box-content {
+                min-height: 300px;
+                padding: 50px 70px 70px;
+                line-height: 100%;
+                border-bottom: 1px solid;
+            }
+            .btn_group {
+                position: relative;
+                float: right;
+                margin-top: 30px;
+            }
+            #qa_header {
+                padding: 70px;
+                padding-top: 30px;
+                padding-bottom: 30px;
+                border-top: 1px solid #333;
+                border-bottom: 1px solid #c4c4c4;
+            }
+            #qa_answer_header {
+                padding: 70px;
+                padding-top: 30px;
+                padding-bottom: 30px;
+                border-bottom: 1px solid #c4c4c4;
+            }
+        </style>
+        <title>Ko-World | Q&A</title>
+    </head>
+    <!-- body -->
+    <body>
+        <div class="container">
+            <img src="/assets/images/icon_02.png" alt="question icon" />
+            <h2>Q&A</h2>
+            <input type="hidden" value="<%=data.qaData.IDX%>" id="IDX" />
+            <div id="qa_header">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div><h3><%=data.qaData.QA_TITLE%></h3></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div>작성자 : <%=data.qaData.USER_NM%></div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div>작성일 : <i class="fa fa-clock-o me-lg-2" aria-hidden="true"></i><%=data.qaData.REG_DTTM%></div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div>조회수 : <i class="fa fa-eye me-lg-2" aria-hidden="true"></i><%=data.qaData.QA_VWS%></div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div>답변상태 : <%if(data.qaData.QA_STS === "YES") {%> 답변완료 <%} else {%> 답변예정 <%}%></div>
+                    </div>
+                </div>
+            </div>
+            <div class="qa-box-content"><%=data.qaData.QA_TEXT%></div>
+            <% if(data.qaAnswerData) {%>
+            <div id="qa_answer_header">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div>답변자 : <%=data.qaAnswerData.USER_NM%></div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div>답변일 : <i class="fa fa-clock-o me-lg-2" aria-hidden="true"></i><%=data.qaAnswerData.REG_DTTM%></div>
+                    </div>
+                </div>
+            </div>
+            <div class="qa-answer-box-content"><%=data.qaAnswerData.QA_ASR_TEXT%></div>
+            <%}%>
+            <div class="btn_group" role="group" aria-label="Basic example">
+                <%if(isLogin){%>
+                <a href="/sub/qa/write"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>글쓰기</button></a
+                >
+                <%}%>
+                <a href="/sub/qa"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>목록</button></a
+                >
+                <!-- 관리자일경우 답변하기 버튼 활성화 -->
+                <%if(perm_code === "0000") { %> <%if(data.qaData.QA_STS === "YES") {%>
+                <a href="#" onclick="qaViewPage.qaAnswerModifyPageMove();"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>답변수정</button></a
+                >
+                <%} else {%>
+                <a href="#" onclick="qaViewPage.qaAnswerPageMove();"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>답변작성</button></a
+                >
+                <%}%>
+                <a href="#" onclick="qaViewPage.qaDelete();"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-trash me-lg-2" aria-hidden="true"></i>질문삭제</button></a
+                >
+                <%}%>
+            </div>
+        </div>
+    </body>
+    <!-- // body -->
+    <script type="text/javascript" src="/assets/js/sub/qa_view.js"></script>
+</html>
