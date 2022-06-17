@@ -29,10 +29,11 @@
             <% if(isLogin) { %>
             <button class="phill blue" onclick="location.href = '/user/user_profile'"><%=username %></button>
             <button class="phill blue" onclick="location.href = '/logout'">LogOut</button>
-            <%} else {%>
+            <% if(perm_code === "0000") {%>
+            <button class="phill blue" onclick="location.href = '/user/user_list'">UserList</button>
+            <%}%> <%} else {%>
             <button class="phill blue" onclick="location.href = '/account/register'">Register</button>
             <button class="phill blue" onclick="location.href = '/account/login'">Login</button>
-            <button class="phill blue" onclick="location.href = '/user/user_list'">UserList</button>
             <%}%>
         </div>
         <!-- // 등록, 로그인 -->
