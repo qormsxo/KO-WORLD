@@ -18,9 +18,11 @@
         <nav class="nav">
             <a href="/sub/about" class="">About Ko-World 2022</a>
             <a href="/sub/qa">Q&A</a>
-            <% if(isLogin) { %>
+            <% if(isLogin) { %> <% if(perm_code != 0002){ %>
+            <a href="/teamscore">Team Score</a>
+            <% } else {%>
             <a href="/challenge">Challenge</a>
-            <%} else {%> <%}%>
+            <%}%> <%} else {%> <%}%>
         </nav>
         <!-- 등록, 로그인 -->
         <div class="btn-set">

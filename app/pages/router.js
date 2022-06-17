@@ -7,6 +7,7 @@ module.exports = function (app) {
     require('../routers/sub_router/sub_router')(app);
     require('../routers/api/ApiControl')(app);
     require('../routers/challenge/challenge_router')(app);
+    require('../routers/challenge/teamscore_router')(app);
     require('../routers/account_router/login_router')(app);
     require('../routers/account_router/register_route')(app);
     require('../routers/user_router/user_router')(app);

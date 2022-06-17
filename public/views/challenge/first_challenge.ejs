@@ -71,28 +71,27 @@
 
             <!-- 등록버튼 -->
             <% if(perm_code != 0000) {%>
-                            <!-- form 여러개 생길 때 -->
-            <div class="all-forms">
+            <!-- form 여러개 생길 때 -->
+                <form class="mb100" id="answerForm" enctype="multipart/form-data" onsubmit="return false">
                 <% for(var i =1; i<= ques; i++){ %>
-                    <form class="mb100" id="answerForm<%=i%>">
                         <div class="mb40">
-                            <label for="answer" class="label w200">Input your answer</label>
-                            <input type="text" id="answer<%=i%>" name="answer" class="input-style" />
+                            <label for="answer<%=i%>" class="label w200">Input your answer</label>
+                            <input type="text" id="answer<%=i%>" name="answer<%=i%>" class="input-style" />
                             <span>
-                                <button class="btn-sm btn-default">save</button>
+                                <button class="btn-sm btn-default" onclick="return false" >save</button>
                             </span>
                         </div>
                         <div class="mb40">
-                            <label for="file" class="label w200">The file of solving</label>
-                            <input type="text" id="file<%=i%>" name="file" class="input-style" />
+                            <label for="file<%=i%>" class="label w200">The file of solving</label>
+                            <input type="text" class="input-style" id="fileName<%=i%>" readonly/>
+                            <input type="file" id="file<%=i%>" name="file<%=i%>" class="file" />
                             <span>
-                                <button class="btn-sm btn-default">attatch</button>
+                                <button class="btn-sm btn-default" ><label for="file<%=i%>">attatch</label> </button>
                             </span>
                         </div>
-                    </form>
-                    
-                <% } %>                  
-                </div>
+                   
+                <% } %>      
+                </form>            
                 <div class="btn-center">
                     <button class="btn-default" onclick="challenge.registerAnswer()" >Register</button>
                 </div>

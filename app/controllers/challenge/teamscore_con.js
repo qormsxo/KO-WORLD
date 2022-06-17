@@ -5,47 +5,8 @@ const zipper = require('multer-zip').default;
 const fs = require('fs');
 
 module.exports = {
-    challenge: (req, res) => {
-        if (req.session.passport) {
-            console.log(req.user);
-
-            let hostQuery = `SELECT IDX , HOST_NM_KR ,HOST_NM_EN, CURR_CON ,MAX_CON FROM tb_host  `;
-
-            let hostSelect = {
-                query: hostQuery,
-            };
-            crud.sql(hostSelect, (hosts) => {
-                let { PERM_CODE, GRADE_CODE } = req.user;
-
-                if (PERM_CODE == 0000) {
-                    if (req.query.admin) {
-                        res.send({ hosts: hosts });
-                    } else {
-                        res.render('./challenge/first_challenge', { hosts: hosts });
-                        res.end();
-                    }
-                } else {
-                    let quesQuery = 'SELECT ques_num FROM tb_grade WHERE perm_code = ? AND grade_code = ?';
-                    let params = [PERM_CODE, GRADE_CODE];
-
-                    let quesSelect = {
-                        query: quesQuery,
-                        params: params,
-                    };
-
-                    crud.sql(quesSelect, (ques) => {
-                        console.log(ques);
-                        if (ques[0] != undefined) {
-                            res.render('./challenge/first_challenge', { hosts: hosts, ques: ques[0].ques_num });
-                        } else {
-                            res.send(404);
-                        }
-                    });
-                }
-            });
-        } else {
-            res.redirect('/');
-        }
+    teamscore: (req, res) => {
+        res.render('./challenge/teamscore');
     },
     serverClick: (req, res) => {
         //console.log(req.body);
