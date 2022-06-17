@@ -17,6 +17,11 @@
                 position: relative;
                 bottom: 60px;
             }
+            .btn_group {
+                position: relative;
+                float: right;
+                margin-top: 30px;
+            }
         </style>
     </head>
     <!-- body -->
@@ -38,12 +43,17 @@
                 </div>
                 <!-- // content -->
             </form>
+            <!-- 등록버튼 -->
+            <div class="btn_group" role="group" aria-label="Basic example">
+                <a href="/sub/qa"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>목록</button></a
+                >
+                <a href="#" onclick="qaWritePage.qaNullChk();"
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-plus-square me-lg-2" aria-hidden="true"></i>등록</button></a
+                >
+            </div>
+            <!-- // 등록버튼 -->
         </div>
-        <!-- 등록버튼 -->
-        <div class="btn-center">
-            <button class="btn-default" onclick="qaWritePage.qaNullChk()">Request</button>
-        </div>
-        <!-- // 등록버튼 -->
     </body>
     <!-- // body -->
     <script></script>

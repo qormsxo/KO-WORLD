@@ -45,9 +45,6 @@
             #qa_table_wrapper {
                 bottom: 25px;
             }
-            body {
-                overflow: hidden;
-            }
             .btn_group {
                 position: relative;
                 float: right;
@@ -64,6 +61,15 @@
                 position: relative;
                 z-index: 30;
             }
+            .profile_center_div {
+                justify-content: center !important;
+            }
+            #profile_info_div > .col-md-5 {
+                margin-right: 10%;
+            }
+            #profile_info_div > #studentItem > .row > .col-md-5 {
+                margin-right: 10%;
+            }
         </style>
         <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
         <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
@@ -73,12 +79,72 @@
     <body>
         <div class="container">
             <img src="/assets/images/icon_02.png" alt="question icon" />
-            <h2>Q&A</h2>
+            <h2>User ProFile</h2>
+            <div class="row profile_center_div">
+                <div class="col-sm-12 col-md-4">
+                    <img src="/assets/images/profile_image.jpg" alt="question icon" />
+                </div>
+            </div>
+            <form id="regsiterForm">
+                <div class="row profile_center_div" id="profile_info_div">
+                    <!-- Name -->
+                    <div class="col-md-5">
+                        <label for="name" class="label w200">Name</label>
+                        <input type="text" id="name" name="name" class="input-style" />
+                    </div>
+                    <!-- // Name -->
+                    <!-- ID -->
+                    <div class="col-md-5">
+                        <label for="id" class="label w200">ID</label>
+                        <input type="text" id="id" name="id" class="input-style" />
+                    </div>
+                    <!-- // ID -->
+                    <!-- Password -->
+                    <div class="col-md-5">
+                        <label for="password" class="label w200">Password</label>
+                        <input type="password" id="password" name="password" class="input-style" />
+                    </div>
+                    <!-- // Password -->
+                    <!-- Password Check -->
+                    <div class="col-md-5">
+                        <label for="passwordCheck" class="label w200">Password Check</label>
+                        <input type="passwordCheck" id="passwordCheck" name="passwordCheck" class="input-style" />
+                    </div>
+                    <!-- // Password Check -->
+                    <!-- Email -->
+                    <div class="col-md-5">
+                        <label for="email" class="label w200">Email</label>
+                        <input type="email" id="email" name="email" class="input-style" />
+                    </div>
+                    <!-- // Email -->
+                    <div id="studentItem">
+                        <!-- Date of birth -->
+                        <div class="row profile_center_div">
+                            <div class="col-md-5">
+                                <label for="birth" class="label w200">Date of birth</label>
+                                <input type="date" id="birth" name="birth" class="input-style" />
+                            </div>
+                            <!-- // Date of birth -->
+                            <!-- Nationality -->
+                            <div class="col-md-5">
+                                <label for="nationality" class="label w200">Nationality</label>
+                                <input type="text" id="nationality" name="nationality" class="input-style" />
+                            </div>
+                            <!-- // Nationality -->
+                            <!-- School Name -->
+                            <div class="col-md-5">
+                                <label for="schoolName" class="label w200">School Name</label>
+                                <input type="text" id="schoolName" name="schoolName" class="input-style" />
+                            </div>
+                            <!-- // School Name -->
+                        </div>
+                    </div>
+                </div>
+            </form>
             <div class="row" id="qa_search_option">
                 <div class="col-sm-2">
                     <select id="search_option" class="form-select" aria-label="Default select example">
                         <option value="TaC" selected>Title and Content</option>
-                        <option value="Writer">Writer</option>
                     </select>
                 </div>
                 <div class="col-sm-3">
