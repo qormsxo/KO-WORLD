@@ -12,6 +12,7 @@ module.exports = {
                 res.redirect('/');
             }
             res.render('./challenge/teamscore');
+            //res.render('./challenge/test', { layout: false });
         } else {
             res.redirect('/');
         }
@@ -126,6 +127,6 @@ module.exports = {
             }
         });
     },
-    maxConSet: (req, res) => {},
-    answer: (req, res) => {},
+    maxConSet: (req, res) => { },
+    answer: (req, res) => { },
 };

@@ -42,7 +42,7 @@ let registerPage = {
         // 아이디검사
         if (!idReg.test(id)) {
             alert('ID must be at least 6 to 20 characters and must be lowercase.');
-        } else if (registerPage.idCheck(id)) {
+        } else if (!registerPage.idCheck(id)) {
             //아이디 중복확인
             alert('ID is already taken');
         } else if (!passwordReg.test(pw)) {
