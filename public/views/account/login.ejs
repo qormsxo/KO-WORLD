@@ -6,13 +6,38 @@
         <title>Page Title</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script type="text/javascript" src="../../assets/js/account/login.js"></script>
+        <link rel="stylesheet" href="../../assets/css/login.css" />
     </head>
     <body>
-        <form action="/login" method="post" id="loginForm">
-            <input type="text" name="id" placeholder="ID" />
-            <input type="password" name="password" placeholder="password" />
-            <input type="submit" value="로그인" onclick="return loginNullChk()" />
-        </form>
+        <section id="section">
+            <div class="container py-5 h-100">
+                <div class="row d-flex align-items-center justify-content-center h-100">
+                    <div class="col-md-8 col-lg-7 col-xl-6">
+                        <img src="../../assets/images/draw2.svg" class="img-fluid" alt="Phone image" />
+                    </div>
+                    <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+                        <form action="/login" method="post" id="loginForm">
+                            <h3><b>Ko-Wrold International</b></h3>
+                            <h3 class="loginh"><b>Hacking Competition</b></h3>
+                            <br />
+                            <!--id input -->
+                            <div class="form-outline mb-4">
+                                <input type="text" id="id" name="id" class="form-control form-control-lg" />
+                                <label class="form-label" for="id">ID</label>
+                            </div>
+
+                            <!-- Password input -->
+                            <div class="form-outline mb-4">
+                                <input type="password" id="password" name="password" class="form-control form-control-lg" />
+                                <label class="form-label" for="password">Password</label>
+                            </div>
+                            <!-- Submit button -->
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" onclick="return loginNullChk()">Log in</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
     </body>
     <% var errorMsg %>
     <script>

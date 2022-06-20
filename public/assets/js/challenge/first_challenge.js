@@ -81,23 +81,27 @@ let challenge = {
     serverInfo: () => {
         let response = fetch('/challenge?' + new URLSearchParams({ admin: true }));
         const hosts = response.then((res) => res.json());
-        hosts.then((response) => {
-            let hosts = response.hosts;
-            let tbody = '';
-            for (var i = 0; i < hosts.length; i++) {
-                tbody += '<tr>';
-                for (var key in hosts[i]) {
-                    tbody += `<td>${hosts[i][key]}</td>`;
+        hosts
+            .then((response) => {
+                let hosts = response.hosts;
+                let tbody = '';
+                for (var i = 0; i < hosts.length; i++) {
+                    tbody += '<tr>';
+                    for (var key in hosts[i]) {
+                        tbody += `<td>${hosts[i][key]}</td>`;
+                    }
+                    tbody +=
+                        ' <td>' +
+                        '<input type="button" class="btn-sm btn-default btn" style="font-size: 17px;" value="+" />' +
+                        '<input type="button" class="btn-sm btn-default btn" style="font-size: 17px;" value="-" />' +
+                        '</td></tr>';
                 }
-                tbody +=
-                    ' <td>' +
-                    '<input type="button" class="btn-sm btn-default btn" style="font-size: 17px;" value="+" />' +
-                    '<input type="button" class="btn-sm btn-default btn" style="font-size: 17px;" value="-" />' +
-                    '</td></tr>';
-            }
-            $('#serverTbody').children().remove();
-            $('#serverTbody').append(tbody);
-        });
+                $('#serverTbody').children().remove();
+                $('#serverTbody').append(tbody);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     },
 };
 $(function () {
