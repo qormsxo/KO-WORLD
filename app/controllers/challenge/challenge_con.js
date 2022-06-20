@@ -94,7 +94,7 @@ module.exports = {
             res.status(404).send({ message: 'not admin' });
         }
         const { idx, val } = req.body;
-        //console.log(idx, val);
+        console.log(idx, val);
 
         let state;
 
@@ -114,9 +114,9 @@ module.exports = {
         };
 
         crud.sql(updateMax, (result) => {
-            //console.log(result);
+            console.log(result);
             if (result['affectedRows'] == 1) {
-                res.status(200);
+                res.status(200).send({ success: true });
             } else {
                 res.status(404).send({ message: 'error' });
             }
@@ -151,7 +151,7 @@ module.exports = {
 
         const today = new Date().toISOString().substring(0, 10); // 오늘 날짜 yy-mm-dd
 
-        const zipname = `${Math.random() * 10}_${today}_${USER_NM}.zip`; // zip 파일 이름
+        const zipname = `${Math.ceil(Math.random() * 10)}_${today}_${USER_NM}.zip`; // zip 파일 이름
 
         const filenamer = ({ originalname }) => `${today}_${originalname}`; // 파일 이름 짓기
 
