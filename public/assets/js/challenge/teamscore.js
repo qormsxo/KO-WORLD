@@ -174,16 +174,17 @@ $(function () {
         } else {
             console.error('error');
         }
-        $('#answerModal').modal('show')
-        // $.ajax({
-        //     type: 'get',
-        //     url: '/answer/user',
-        //     data: { user: rowData.USER_ID },
-        //     dataType: 'json',
-        //     success: function (response) {
 
-        //     },
-        // });
+        $.ajax({
+            type: 'get',
+            url: '/answer/user',
+            data: { user: rowData.USER_ID },
+            dataType: 'json',
+            success: function (response) {
+                console.log(response)
+                $('#answerModal').modal('show')
+            },
+        });
     });
 });
 

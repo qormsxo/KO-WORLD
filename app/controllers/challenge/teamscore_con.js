@@ -128,5 +128,24 @@ module.exports = {
         });
     },
     maxConSet: (req, res) => { },
-    answer: (req, res) => { },
+    getAnswer: (req, res) => {
+        let { user } = req.query;
+
+        const sql = "SELECT ANSWER FROM tb_answer WHERE user_id = ?"
+
+        const data = {
+            query: sql,
+            params: [user]
+        }
+
+        crud.sql(data, (result) => {
+            console.log(result)
+            if (result[0] == null) {
+                res.status(200).send({ message: "answer is null" })
+            } else {
+                res.send(result[0])
+            }
+        })
+
+    },
 };

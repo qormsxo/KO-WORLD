@@ -61,8 +61,8 @@ let challenge = {
             });
     },
     // server 최대 인원 증감 함수
-    maxConSet: (obj, td) => {
-        fetch('/challenge/server/max-con', {
+    currConSet: (obj, td) => {
+        fetch('/challenge/server/curr-con', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ $(function () {
         const td = $(event.target).parent().parent().find('td').eq(0);
         const num = td.text();
         const val = $(event.target).val();
-        challenge.maxConSet({ idx: num, val: val }, td);
+        challenge.currConSet({ idx: num, val: val }, td);
     });
 
     $('.file').hide();
