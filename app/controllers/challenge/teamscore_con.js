@@ -54,8 +54,7 @@ module.exports = {
         //테이블 count
         let table_name = ' tb_answer ta  INNER JOIN tb_user tu ON ta.USER_ID = tu.USER_ID ';
         let column_select =
-            " tu.USER_ID, tu.USER_NM ,date_format(tu.BIRTHDAY , '%Y-%m-%d') as BIRTHDAY,tu.NATIONALITY , tu.EMAIL ," +
-            " CONCAT(ta.ANS_FILE_PATH, ta.ANS_FILE_NAME) as 'ANS_FILE_PATH', ta.ANS_SCORE ," +
+            " tu.USER_ID, tu.USER_NM ,date_format(tu.BIRTHDAY , '%Y-%m-%d') as BIRTHDAY,tu.NATIONALITY , tu.EMAIL , ta.ANS_SCORE ," +
             'DENSE_RANK() OVER(ORDER BY ta.ANS_SCORE  DESC ) AS ranking ';
         let query_conditon = 'SELECT count(*) FROM ' + table_name + where_condition;
         let filter_count = {
@@ -103,7 +102,30 @@ module.exports = {
             });
         });
     },
-    serverClick: (req, res) => {},
+    fileDownload: (req, res) => {
+        const { user } = req.query;
+        const sql = 'SELECT ANS_FILE_PATH , ANS_FILE_NAME FROM tb_answer WHERE USER_ID = ?';
+
+        const data = {
+            query: sql,
+            params: [user],
+        };
+
+        crud.sql(data, (result) => {
+            console.log(result);
+            if (result[0] != undefined) {
+                let filePath = result[0].ANS_FILE_PATH + '/' + result[0].ANS_FILE_NAME;
+                let fileName = result[0].ANS_FILE_NAME;
+                let mimetype = 'application/json';
+                res.setHeader('Content-disposition', 'attachment; filename=' + encodeURIComponent(fileName));
+                res.setHeader('Content-type', mimetype);
+                let filestream = fs.createReadStream(filePath);
+                filestream.pipe(res);
+            } else {
+                res.status(404);
+            }
+        });
+    },
     maxConSet: (req, res) => {},
     answer: (req, res) => {},
 };

@@ -12,7 +12,7 @@ let challenge = {
             .then((response) => response.json())
             .then((response) => {
                 if (response.possibility) {
-                    window.location.href = 'https://www.google.com/';
+                    window.location.href = response.address;
                 } else {
                     console.log(response.message);
                     alert(response.message);

@@ -19,7 +19,6 @@ let teamscore = {
     highTable: undefined,
     collegeTable: undefined,
     url: '/answer',
-
     tableOption: {
         processing: true,
         serverSide: true,
@@ -90,9 +89,6 @@ let teamscore = {
                 //     return `<input type="text" value= ${data} />`;
                 // },
             },
-            {
-                data: 'ANS_FILE_PATH',
-            },
         ],
         rowCallback: function (row, data, index) {
             // $('.paginate_button ').removeClass('first last next prev');
@@ -104,11 +100,6 @@ let teamscore = {
             {
                 targets: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                 orderable: false,
-            },
-            {
-                targets: [9],
-                orderable: false,
-                visible: false,
             },
             // {
             //     targets: 1,
@@ -141,14 +132,7 @@ let teamscore = {
         iDisplayLength: 10,
         language: language,
         drawCallback: function (settings) {
-            // console.log('??');
-            // $('.download').on('click', function () {
-            //     console.log('??');
-            //     let tr = $(this).parent().parent('tr');
-            //     let id = tr.parent().attr('id');
-            //     console.log(id);
-            //     let row;
-            // });
+            //console.log(teamscore.tableOption.downloadType);
         },
     },
     highSchool: () => {
@@ -164,4 +148,38 @@ let teamscore = {
 $(function () {
     teamscore.highSchool();
     teamscore.college();
+    $(document).on('click', '.download', function () {
+        let tr = $(this).parent().parent('tr');
+        let id = tr.parent().attr('id');
+        console.log(id);
+        let rowData;
+        if (id == 'highSchool') {
+            rowData = teamscore.highTable.row(tr).data();
+        } else if (id == 'college') {
+            rowData = teamscore.collegeTable.row(tr).data();
+        } else {
+            console.error('error');
+        }
+        window.location.href = `/answer/file?user=${rowData.USER_ID}`;
+    });
+    $(document).on('click', '.answer', function () {
+        let tr = $(this).parent().parent('tr');
+        let id = tr.parent().attr('id');
+        console.log(id);
+        let rowData;
+        if (id == 'highSchool') {
+            rowData = teamscore.highTable.row(tr).data();
+        } else if (id == 'college') {
+            rowData = teamscore.collegeTable.row(tr).data();
+        } else {
+            console.error('error');
+        }
+        $.ajax({
+            type: 'get',
+            url: '/answer/user',
+            data: { user: rowData.USER_ID },
+            dataType: 'json',
+            success: function (response) {},
+        });
+    });
 });
