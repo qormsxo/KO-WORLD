@@ -30,13 +30,13 @@ module.exports = () => {
             },
             (req, username, password, done) => {
                 var sql = `SELECT * FROM tb_user WHERE user_id = ? AND  ACCEPT ='1'`;
-                console.log(username, password);
+                //console.log(username, password);
                 var filter_data = {
                     query: sql,
                     params: [username],
                 };
                 crud.sql(filter_data, async (docs) => {
-                    console.log('passport', docs[0]);
+                    //console.log('passport', docs[0]);
                     if (docs[0] == undefined) {
                         return done(null, false, { message: 'Please check your ID' });
                     } else {

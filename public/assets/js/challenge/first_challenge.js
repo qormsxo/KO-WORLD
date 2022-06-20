@@ -54,6 +54,7 @@ let challenge = {
             .then((response) => response.json())
             .then((response) => {
                 alert(response.message);
+                window.location.href = '/';
             })
             .catch((error) => {
                 console.error(error);
