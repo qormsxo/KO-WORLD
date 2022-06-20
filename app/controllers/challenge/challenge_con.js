@@ -7,7 +7,15 @@ const fs = require('fs');
 module.exports = {
     challenge: (req, res) => {
         if (req.session.passport) {
-            console.log(req.user);
+            //console.log(req.user);
+
+            const { PERM_CODE, GRADE_CODE, ANSWER } = req.user;
+            console.log(ANSWER);
+            // 이미 제출한 사람
+            if (PERM_CODE == 0002 && ANSWER == '1') {
+                // alert('You are already Answer');
+                res.redirect('/');
+            }
 
             let hostQuery = `SELECT IDX , HOST_NM_KR ,HOST_NM_EN, CURR_CON ,MAX_CON FROM tb_host  `;
 
@@ -15,8 +23,6 @@ module.exports = {
                 query: hostQuery,
             };
             crud.sql(hostSelect, (hosts) => {
-                let { PERM_CODE, GRADE_CODE } = req.user;
-
                 if (PERM_CODE == 0000) {
                     if (req.query.admin) {
                         res.send({ hosts: hosts });
@@ -168,10 +174,23 @@ module.exports = {
                     query: answerSql,
                     params: params,
                 };
-
+                // 답변 insert
                 crud.sql(answerReg, (result) => {
                     if (result['affectedRows'] == 1) {
-                        res.status(200).send({ message: 'Good Luck!' });
+                        const userUpdate = `UPDATE tb_user SET answer = '1' WHERE user_id = ?`;
+
+                        const update = {
+                            query: userUpdate,
+                            params: [USER_ID],
+                        };
+
+                        crud.sql(update, (result) => {
+                            if (result['affectedRows'] == 1) {
+                                res.status(200).send({ message: 'Good Luck!' });
+                            } else {
+                                res.status(404).send({ message: 'User Update Error' });
+                            }
+                        });
                     } else {
                         res.status(404).send({ message: 'error' });
                     }

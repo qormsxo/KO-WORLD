@@ -5,142 +5,105 @@ const zipper = require('multer-zip').default;
 const fs = require('fs');
 
 module.exports = {
-    teamscore: (req, res) => {
-        res.render('./challenge/teamscore');
-    },
-    serverClick: (req, res) => {
-        //console.log(req.body);
-
-        let { idx } = req.body;
-
-        let selectQuery = 'SELECT CURR_CON  , MAX_CON  , HOST_ADDR  FROM tb_host WHERE idx = ? ';
-
-        let hostSelect = {
-            query: selectQuery,
-            params: [idx],
-        };
-
-        crud.sql(hostSelect, (host) => {
-            //console.log(host);
-            if (host[0].MAX_CON <= host[0].CURR_CON) {
-                res.json({
-                    possibility: false,
-                    message: '정원초과',
-                });
-            } else {
-                let increaseQuery = 'UPDATE tb_host SET curr_con = curr_con + 1 WHERE idx = ?';
-
-                let increaseData = {
-                    query: increaseQuery,
-                    params: [idx],
-                };
-                crud.sql(increaseData, (result) => {
-                    console.log(result);
-                    if (result['affectedRows'] == 1) {
-                        console.log('연결');
-                        res.json({
-                            possibility: true,
-                            address: host[0].HOST_ADDR,
-                        });
-                    } else {
-                        res.status(404);
-                    }
-                });
+    page: (req, res) => {
+        //const { PERM_CODE } = req.user;
+        if (req.session.passport) {
+            if (req.user.PERM_CODE == 0002) {
+                res.redirect('/');
             }
-        });
-    },
-    maxConSet: (req, res) => {
-        let { PERM_CODE } = req.user;
-        if (PERM_CODE != 0000) {
-            res.status(404).send({ message: 'not admin' });
-        }
-        const { idx, val } = req.body;
-        //console.log(idx, val);
-
-        let state;
-
-        if (val == '+') {
-            state = 'max_con+1';
-        } else if (val == '-') {
-            state = 'if(curr_con >= max_con , max_con , max_con-1)';
+            res.render('./challenge/teamscore');
         } else {
-            res.status(404).send({ message: 'val 이 없음' });
-        }
-
-        const sql = `UPDATE tb_host SET max_con =  ${state} WHERE idx = ?`;
-
-        const updateMax = {
-            query: sql,
-            params: [idx],
-        };
-
-        crud.sql(updateMax, (result) => {
-            //console.log(result);
-            if (result['affectedRows'] == 1) {
-                res.status(200);
-            } else {
-                res.status(404).send({ message: 'error' });
-            }
-        });
-    },
-    answer: (req, res) => {
-        const { USER_ID, USER_NM } = req.user;
-
-        if (!USER_ID) {
             res.redirect('/');
         }
 
-        const { files } = req;
-
-        // console.log(files);
-        // console.log(req.body);
-
-        let answer = [];
-
-        for (var key in req.body) {
-            answer += req.body[key] + ' |\\|';
-        }
-
-        answer = answer.slice(0, -4);
-        // console.log(answer);
-
-        const uploadPath = `uploadFiles/${USER_ID}`;
-
-        const dest = path.join(__dirname, `../../../${uploadPath}`); // zip 파일 담을 경로
-
-        fs.mkdirSync(dest, { recursive: true });
-
-        const today = new Date().toISOString().substring(0, 10); // 오늘 날짜 yy-mm-dd
-
-        const zipname = `${Math.random() * 10}_${today}_${USER_NM}.zip`; // zip 파일 이름
-
-        const filenamer = ({ originalname }) => `${today}_${originalname}`; // 파일 이름 짓기
-
-        //console.log(files, dest, zipname, filenamer);
-
-        zipper({ files, dest, zipname, filenamer })
-            .then(() => {
-                console.log('================zip=================');
-
-                const answerSql = 'INSERT INTO tb_answer (USER_ID, ANSWER, ANS_FILE_PATH, ANS_FILE_NAME, REG_DTTM)' + ' VALUES(?,?,?,?,NOW())';
-                const params = [USER_ID, answer, uploadPath, zipname];
-
-                const answerReg = {
-                    query: answerSql,
-                    params: params,
-                };
-
-                crud.sql(answerReg, (result) => {
-                    if (result['affectedRows'] == 1) {
-                        res.status(200).send({ message: 'Good Luck!' });
-                    } else {
-                        res.status(404).send({ message: 'error' });
-                    }
-                });
-            })
-            .catch((error) => {
-                console.log('=================error==============', error);
-                res.status(404).send({ message: error });
-            });
+        // const sql =
+        //     'SELECT tu.USER_ID,, tu.USER_NM ,tu.BIRTHDAY ,tu.NATIONALITY , tu.EMAIL ,ta.ANS_FILE_PATH, ta. ANS_SCORE , ' +
+        //     'DENSE_RANK() OVER(ORDER BY ta.ANS_SCORE  DESC ) AS ranking ' +
+        //     'FROM tb_answer ta  INNER JOIN tb_user tu ON ta.USER_ID = tu.USER_ID '+
+        //     `WHERE  tu.ACCEPT = '1' AND tu.GRADE_CODE  = ?  ORDER BY ANS_SCORE DESC, IDX `;
     },
+    score: (req, res) => {
+        //console.log('get_assets_table_list --------', req);
+
+        //console.log('get_assets_table_list --------', req.query);
+        let offset = req.query.start; //db 검색 시작
+        let limit = req.query.length; //페이지에 띄울 row 갯수
+        let order_cols = req.query.columns[req.query.order[0].column].data.trim(); //정렬
+        let order_asc = req.query.order[0].dir.trim();
+
+        let table = {};
+        let params = {};
+
+        let type = req.query.type;
+
+        console.log(type == 'high' ? '0000' : '0001');
+
+        table['draw'] = req.query.draw;
+
+        params['offset'] = offset; //start 지점
+        params['limit'] = limit; //출력 개수
+        params['order_cols'] = order_cols;
+        params['order_asc'] = order_asc;
+
+        //console.log('params: ', params);
+
+        let where_condition = "WHERE tu.ACCEPT = '1' AND tu.GRADE_CODE  = ?";
+
+        //===================================
+
+        //테이블 count
+        let table_name = ' tb_answer ta  INNER JOIN tb_user tu ON ta.USER_ID = tu.USER_ID ';
+        let column_select =
+            " tu.USER_ID, tu.USER_NM ,date_format(tu.BIRTHDAY , '%Y-%m-%d') as BIRTHDAY,tu.NATIONALITY , tu.EMAIL ," +
+            " CONCAT(ta.ANS_FILE_PATH, ta.ANS_FILE_NAME) as 'ANS_FILE_PATH', ta.ANS_SCORE ," +
+            'DENSE_RANK() OVER(ORDER BY ta.ANS_SCORE  DESC ) AS ranking ';
+        let query_conditon = 'SELECT count(*) FROM ' + table_name + where_condition;
+        let filter_count = {
+            query: query_conditon,
+            params: [type == 'high' ? '0000' : '0001'],
+        };
+        crud.sql(filter_count, function (calldata) {
+            //console.log("calldata: ", calldata)
+
+            table.recordsTotal = calldata[0]['count(*)'];
+            table.recordsFiltered = calldata[0]['count(*)'];
+            //console.log("table 1 ", table)
+
+            //===================================
+            //step 2 데이터 조회
+            // 조건 생성
+            var sql =
+                'select ' +
+                column_select +
+                ' from ' +
+                table_name +
+                where_condition +
+                ' order by  ' +
+                params.order_cols +
+                ' ' +
+                params.order_asc +
+                ' limit ' +
+                params.limit +
+                ' offset ' +
+                params.offset;
+
+            var filter_data = {
+                query: sql,
+                params: [type == 'high' ? '0000' : '0001'],
+            };
+
+            console.log(filter_data);
+
+            crud.sql(filter_data, (docs) => {
+                table.data = docs; //검색 데이터 넣기
+                //
+                //console.log('docs: ', docs);
+                console.log('table : ', table);
+                res.send(table);
+            });
+        });
+    },
+    serverClick: (req, res) => {},
+    maxConSet: (req, res) => {},
+    answer: (req, res) => {},
 };
