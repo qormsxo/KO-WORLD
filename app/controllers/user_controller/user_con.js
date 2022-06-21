@@ -72,7 +72,7 @@ exports.get_user_profile_view = (req, res) => {
         return res.send("<script> alert('do not have permission to answer'); window.location.href = '/'; </script>");
     }
     let user_id = req.user.USER_ID;
-    let query_select_column = "SELECT USER_ID,USER_NM,date_format(BIRTHDAY,'%Y-%m-%d') as BIRTHDAY,NATIONALITY,SCH_NM,EMAIL, tg.GRADE_NM_EN as GRADE ";
+    let query_select_column = "SELECT USER_ID,USER_NM,date_format(BIRTHDAY,'%Y-%m-%d') as BIRTHDAY,NATIONALITY,SCH_NM,EMAIL, tg.GRADE_NM_EN as GRADE, ANSWER, tg.GRADE_CODE ";
     let query_table = 'FROM TB_USER tu LEFT JOIN TB_GRADE tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
     let query_where = 'WHERE USER_ID = ?';
     let query_condition = query_select_column + query_table + query_where;
@@ -151,6 +151,52 @@ exports.update_user_password = async (req, res) => {
             return res.json({
                 status: false,
                 message: 'Failed to change password',
+            });
+        }
+    });
+};
+
+exports.update_user_info = (req, res) => {
+    // 로그인하지 않았을경우와 로그인 후 권한이 없는 유저가 접근하려 했을 시
+    if (req.user === undefined) {
+        return res.send("<script> alert('do not have permission to answer'); window.location.href = '/'; </script>");
+    }
+    let name = req.body.name;
+    let email = req.body.email;
+    let date = req.body.date;
+    let nationality = req.body.nationality;
+    let schoolname = req.body.schoolname;
+    let grade_code = req.body.grade_code;
+
+    const user_id = req.user.USER_ID;
+
+    let update_query_conditon;
+    var crud_query;
+
+    if (date !== undefined) {
+        update_query_conditon = 'update ' + 'tb_user ' + 'set USER_NM = ?, EMAIL = ?, BIRTHDAY = ?, NATIONALITY = ?, SCH_NM = ?, GRADE_CODE = ? ' + 'where USER_ID = ?; ';
+        crud_query = {
+            query: update_query_conditon,
+            params: [name, email, date, nationality, schoolname, grade_code, user_id],
+        };
+    } else {
+        update_query_conditon = 'update ' + 'tb_user ' + 'set USER_NM = ?, EMAIL = ? ' + 'where USER_ID = ?; ';
+        crud_query = {
+            query: update_query_conditon,
+            params: [name, email, user_id],
+        };
+    }
+
+    crud.sql(crud_query, function (calldata) {
+        if (calldata['affectedRows'] > 0) {
+            return res.json({
+                status: true,
+                message: 'You have successfully edited the information!',
+            });
+        } else {
+            return res.json({
+                status: false,
+                message: 'Failed to change information',
             });
         }
     });

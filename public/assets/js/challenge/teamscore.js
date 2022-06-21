@@ -65,22 +65,33 @@ let teamscore = {
                 // },
             },
             {
-                data: 'null',
+                data: 'isJug',
                 render: function (data, type, row) {
-                    return '<a class="answer">answer</a>';
+                    if (data == 1) {
+                        return '<a class="answer">answer</a>';
+                    } else {
+                        return 'answered';
+                    }
                 },
             },
             {
-                data: 'null',
+                data: 'isJug',
                 render: function (data, type, row) {
-                    return `<a class="download">download</a>`;
+                    if (data == 1) {
+                        return `<a class="download">download</a>`;
+                    } else {
+                        return 'submitted';
+                    }
                 },
             },
             {
                 data: 'ANS_SCORE',
                 render: function (data, type, row) {
-                    //console.log(data == null);
-                    return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;
+                    if (data != null && (data == 'Grading required' || data.slice(-1) == '>')) {
+                        return data;
+                    } else {
+                        return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;
+                    }
                 },
             },
             {
@@ -125,7 +136,7 @@ let teamscore = {
             //     orderable: false,
             // },
         ],
-        order: [[7, 'desc']],
+        order: [[8, 'asc']],
         paging: true, //paging 사용 여부
         scrollY: 200, //표 세로 사이즈
         scrollX: true,
@@ -145,7 +156,6 @@ let teamscore = {
     },
     // 점수 매기기
     scoring: (score, user) => {
-        console.log(score, user);
         const check = /^[0-9]+$/;
         if (!check.test(score)) {
             alert('Please enter a number only');
@@ -174,7 +184,7 @@ $(function () {
     $(document).on('click', '.download', function () {
         let tr = $(this).parent().parent('tr');
         let id = tr.parent().attr('id');
-        console.log(id);
+        //console.log(id);
         let rowData;
         if (id == 'highSchool') {
             rowData = teamscore.highTable.row(tr).data();
@@ -189,7 +199,6 @@ $(function () {
     $(document).on('click', '.answer', function () {
         let tr = $(this).parent().parent('tr');
         let id = tr.parent().attr('id');
-        console.log(id);
         let rowData;
         if (id == 'highSchool') {
             rowData = teamscore.highTable.row(tr).data();
@@ -205,7 +214,7 @@ $(function () {
             data: { user: rowData.USER_ID },
             dataType: 'json',
             success: function (response) {
-                console.log(response);
+                //console.log(response);
                 $('#userAnswer').children().remove();
                 let html = '';
                 for (let i = 0; i < response.length; i++) {
@@ -229,7 +238,7 @@ $(function () {
         if (e.key == 'Enter') {
             let tr = $(e.target).parent().parent('tr');
             let id = tr.parent().attr('id');
-            console.log(id);
+            // console.log(id);
             let rowData;
             if (id == 'highSchool') {
                 rowData = teamscore.highTable.row(tr).data();

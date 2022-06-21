@@ -323,7 +323,7 @@ exports.update_qa_answer = (req, res) => {
 
 exports.delete_qa = (req, res) => {
     const qaIdx = req.params.id;
-    let delete_query_conditon = 'delete from tb_qa where IDX = ?; ';
+    let delete_query_conditon = 'UPDATE tb_qa SET QA_DEL = 1  WHERE IDX = ?; ';
     var crud_query = {
         query: delete_query_conditon,
         params: [qaIdx],

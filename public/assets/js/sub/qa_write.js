@@ -1,7 +1,7 @@
 $(function () {
     $('#content').on('keyup', function () {
-        if ($(this).val().length > 500) {
-            $(this).val($(this).val().substring(0, 500));
+        if ($(this).val().length > 2000) {
+            $(this).val($(this).val().substring(0, 2000));
         }
     });
 });
