@@ -115,7 +115,7 @@ img {
     width: 1320px;
     height: 100%;
     margin: 0 auto;
-    padding: 100px 0 100px;
+    padding: 50px 0 100px;
 }
 .container h2 {
     font-size: 40px;
@@ -125,7 +125,7 @@ img {
 }
 .container .sub,
 .form {
-    margin-bottom: 100px;
+    margin-bottom: 25px;
 }
 .form > ul > li {
     font-size: 17px;

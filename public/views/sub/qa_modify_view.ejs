@@ -60,16 +60,16 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-2">
-                        <div>작성자 : <%=data.qaData.USER_NM%></div>
+                        <div>Writer : <%=data.qaData.USER_NM%></div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div>Date Created : <i class="fa fa-clock-o me-lg-2" aria-hidden="true"></i><%=data.qaData.REG_DTTM%></div>
                     </div>
                     <div class="col-sm-2">
-                        <div>작성일 : <i class="fa fa-clock-o me-lg-2" aria-hidden="true"></i><%=data.qaData.REG_DTTM%></div>
+                        <div>Views : <i class="fa fa-eye me-lg-2" aria-hidden="true"></i><%=data.qaData.QA_VWS%></div>
                     </div>
-                    <div class="col-sm-2">
-                        <div>조회수 : <i class="fa fa-eye me-lg-2" aria-hidden="true"></i><%=data.qaData.QA_VWS%></div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div>답변상태 : <%if(data.qaData.QA_STS === "YES") {%> 답변완료 <%} else {%> 답변예정 <%}%></div>
+                    <div class="col-sm-3">
+                        <div>Answer Status : <%if(data.qaData.QA_STS === "YES") {%> Answer complete <%} else {%> Answer pending <%}%></div>
                     </div>
                 </div>
             </div>
@@ -85,25 +85,12 @@
                     <!-- // content -->
                 </form>
             </div>
-            <!-- <% if(data.qaAnswerData) {%>
-            <div id="qa_answer_header">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <div>답변자 : <%=data.qaAnswerData.USER_NM%></div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div>답변일 : <i class="fa fa-clock-o me-lg-2" aria-hidden="true"></i><%=data.qaAnswerData.REG_DTTM%></div>
-                    </div>
-                </div>
-            </div>
-            <div class="qa-answer-box-content"><%=data.qaAnswerData.QA_ASR_TEXT%></div>
-            <%}%> -->
             <div class="btn_group" role="group" aria-label="Basic example">
                 <a href="/sub/qa"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>목록</button></a
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>Q&A List</button></a
                 >
                 <a href="#" onclick="qaModifyViewPage.qaAnswerModifyRequest();"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>수정</button></a
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>Q&A Modify</button></a
                 >
             </div>
         </div>
