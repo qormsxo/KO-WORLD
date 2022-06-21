@@ -127,25 +127,41 @@ module.exports = {
             }
         });
     },
-    maxConSet: (req, res) => { },
-    getAnswer: (req, res) => {
-        let { user } = req.query;
-
-        const sql = "SELECT ANSWER FROM tb_answer WHERE user_id = ?"
+    scoring: (req, res) => {
+        const { user, score } = req.body;
+        const sql = 'UPDATE tb_answer SET ANS_SCORE = ? WHERE USER_ID = ?';
 
         const data = {
             query: sql,
-            params: [user]
-        }
+            params: [score, user],
+        };
+        crud.sql(data, (result) => {
+            if (result['affectedRows'] == 1) {
+                res.send({ status: true });
+            } else {
+                res.send({ status: false });
+            }
+        });
+    },
+    getAnswer: (req, res) => {
+        let { user } = req.query;
+
+        const sql = 'SELECT ANSWER FROM tb_answer WHERE user_id = ?';
+
+        const data = {
+            query: sql,
+            params: [user],
+        };
 
         crud.sql(data, (result) => {
-            console.log(result)
+            console.log(result);
             if (result[0] == null) {
-                res.status(200).send({ message: "answer is null" })
+                res.status(200).send({ message: 'answer is null' });
             } else {
-                res.send(result[0])
+                let array = result[0]['ANSWER'].split(' |\\| ');
+                console.log(array);
+                res.send(array);
             }
-        })
-
+        });
     },
 };

@@ -1,61 +1,52 @@
 <!DOCTYPE html>
 <html lang="ko">
+    <head>
+        <%- meta %> <%- style %>
+        <title>Ko-World | About Ko-World 2022</title>
+        <script type="text/javascript" src="/node_modules/jquery/dist/jquery.js"></script>
+        <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css" />
+        <!-- <link rel="stylesheet" href="/node_modules/bootstrap/dist/js/bootstrap.js" /> -->
+        <script src="/assets/js/bootstrap.js"></script>
+        <link rel="stylesheet" href="/assets/css/style.css" />
+    </head>
+    <!-- header -->
+    <header class="header">
+        <h1>
+            <a href="/">
+                <img src="/assets/images/index.png" alt="Ko-World International Hacking Competition" />
+            </a>
+        </h1>
+        <nav class="nav">
+            <a href="/sub/about" class="">About Ko-World 2022</a>
+            <a href="/sub/qa">Q&A</a>
+            <% if(isLogin) { %> <% if(perm_code==0002){ %>
+            <a href="/challenge">Challenge</a>
 
-<head>
-    <%- meta %>
-        <%- style %>
-            <title>Ko-World | About Ko-World 2022</title>
-            <script type="text/javascript" src="/node_modules/jquery/dist/jquery.js"></script>
-            <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
-            <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css" />
-            <link rel="stylesheet" href="/node_modules/bootstrap/dist/js/bootstrap.js" />
-            <link rel="stylesheet" href="/assets/css/style.css" />
-
-</head>
-<!-- header -->
-<header class="header">
-    <h1>
-        <a href="/">
-            <img src="/assets/images/index.png" alt="Ko-World International Hacking Competition" />
-        </a>
-    </h1>
-    <nav class="nav">
-        <a href="/sub/about" class="">About Ko-World 2022</a>
-        <a href="/sub/qa">Q&A</a>
-        <% if(isLogin) { %>
-            <% if(perm_code==0002){ %>
-                <a href="/challenge">Challenge</a>
-
-                <% } else if(perm_code==0001) {%>
-                    <a href="/teamscore">Team Score</a>
-                    <%} else{%>
-                        <a href="/teamscore">Team Score</a>
-                        <a href="/challenge">Challenge</a>
-                        <%}%>
-                            <%} else {%>
-                                <%}%>
-    </nav>
-    <!-- 등록, 로그인 -->
-    <div class="btn-set">
-        <% if(isLogin) { %>
-            <button class="phill blue" onclick="location.href = '/user/user_profile'">
-                <%=username %>
-            </button>
+            <% } else if(perm_code==0001) {%>
+            <a href="/teamscore">Team Score</a>
+            <%} else{%>
+            <a href="/teamscore">Team Score</a>
+            <a href="/challenge">Challenge</a>
+            <%}%> <%} else {%> <%}%>
+        </nav>
+        <!-- 등록, 로그인 -->
+        <div class="btn-set">
+            <% if(isLogin) { %>
+            <button class="phill blue" onclick="location.href = '/user/user_profile'"><%=username %></button>
             <button class="phill blue" onclick="location.href = '/logout'">LogOut</button>
             <% if(perm_code==="0000" ) {%>
-                <button class="phill blue" onclick="location.href = '/user/user_list'">UserList</button>
-                <%}%>
-                    <%} else {%>
-                        <button class="phill blue" onclick="location.href = '/account/register'">Register</button>
-                        <button class="phill blue" onclick="location.href = '/account/login'">Login</button>
-                        <%}%>
-    </div>
-    <!-- // 등록, 로그인 -->
-</header>
-<!-- // header -->
+            <button class="phill blue" onclick="location.href = '/user/user_list'">UserList</button>
+            <%}%> <%} else {%>
+            <button class="phill blue" onclick="location.href = '/account/register'">Register</button>
+            <button class="phill blue" onclick="location.href = '/account/login'">Login</button>
+            <%}%>
+        </div>
+        <!-- // 등록, 로그인 -->
+    </header>
+    <!-- // header -->
 
-<body>
-    <%- body %>
-</body>
-
+    <body>
+        <%- body %>
+    </body>
 </html>

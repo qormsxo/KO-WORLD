@@ -5,5 +5,6 @@ module.exports = function (app) {
     app.get('/teamscore', controller.page);
     app.get('/answer', controller.score);
     app.get('/answer/file', controller.fileDownload);
-    app.get('/answer/user', controller.getAnswer)
+    app.get('/answer/user', controller.getAnswer);
+    app.post('/answer/score', controller.scoring);
 };

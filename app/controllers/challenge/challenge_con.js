@@ -143,10 +143,10 @@ module.exports = {
         let answer = [];
 
         for (var key in req.body) {
-            answer += req.body[key] + ' |\\|';
+            answer += req.body[key] + ' |\\| ';
         }
 
-        answer = answer.slice(0, -4);
+        answer = answer.slice(0, -6);
         // console.log(answer);
 
         const uploadPath = `uploadFiles/${USER_ID}`;
