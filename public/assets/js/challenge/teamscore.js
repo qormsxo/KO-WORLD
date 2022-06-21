@@ -166,10 +166,7 @@ let teamscore = {
                 data: { score: score, user: user },
                 success: function (response) {
                     if (response.status) {
-                        teamscore.highTable.clear();
-                        teamscore.highTable.ajax.url(teamscore.url + '?type=high').draw();
-                        teamscore.collegeTable.clear();
-                        teamscore.collegeTable.ajax.url(teamscore.url + '?type=college').draw();
+                        teamscore.search()
                     }
                 },
             });
