@@ -14,6 +14,12 @@
                 -webkit-appearance: none;
                 margin: 0;
             }
+            .btn-default {
+                padding: 6px 18px !important;
+            }
+            .btn-default {
+                margin: 0px !important;
+            }
         </style>
         <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
         <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
@@ -28,6 +34,24 @@
         <div class="container">
             <img src="../assets/images/icon_05.png" alt="login icon" />
             <h2>Team Score – 1st Round</h2>
+            <div class="row" style="justify-content: flex-end">
+                <div class="col-sm-2">
+                    <select id="select_option" class="form-select" aria-label="Default select example">
+                        <option value="userName" selected>User name</option>
+                        <option value="grading">grading required</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <div class="input-group">
+                        <input type="text" id="search_keyword" name="search_keyword" class="form-control" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="teamscore.serarch();">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
             <div class="form">
                 <ul>
                     <li><b>· Highschool Student</b></li>

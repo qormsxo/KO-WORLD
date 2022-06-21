@@ -175,6 +175,16 @@ let teamscore = {
             });
         }
     },
+    search: () => {
+        let search_keyword = $('#search_keyword').val();
+        let search_option = $('#select_option option:selected').val();
+        let hisearch_url = teamscore.url + '?type=high&search_keyword' + search_keyword + '&search_option=' + search_option;
+        let cosearch_url = teamscore.url + '?type=college&search_keyword' + search_keyword + '&search_option=' + search_option;
+        teamscore.highTable.clear();
+        teamscore.collegeTable.clear();
+        teamscore.highTable.ajax.url(hisearch_url).draw();
+        teamscore.collegeTable.ajax.url(cosearch_url).draw();
+    },
 };
 
 $(function () {
