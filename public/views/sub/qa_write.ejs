@@ -13,14 +13,25 @@
                 height: 100px !important;
                 display: inline-block !important;
             }
-            #content_label {
+            /* #content_label {
                 position: relative;
                 bottom: 60px;
-            }
+            } */
             .btn_group {
                 position: relative;
                 float: right;
                 margin-top: 30px;
+            }
+            .profile_center_div {
+                justify-content: center !important;
+            }
+            #profile_info_div > .col-md-5 {
+                margin-right: 10%;
+                margin-bottom: 10px;
+            }
+            .form-control {
+                width: 85% !important;
+                display: inline !important;
             }
         </style>
     </head>
@@ -30,27 +41,25 @@
             <img src="/assets/images/icon_02.png" alt="question icon" />
             <h2>Q&A - Registration</h2>
             <form id="qaRequestForm" onsubmit="return false;">
-                <!-- title -->
-                <div class="mb40">
-                    <label for="title" class="label w200">Title</label>
-                    <input type="text" id="title" name="title" class="input-style" />
+                <div class="row profile_center_div" id="profile_info_div">
+                    <!-- title -->
+                    <div class="col-md-7" style="margin-bottom: 50px">
+                        <label for="title" style="width: 100px" class="label">Title</label>
+                        <input type="text" id="title" name="title" class="form-control" />
+                    </div>
+                    <!-- // title -->
+                    <!-- content -->
+                    <div class="col-md-7">
+                        <label for="Text" style="width: 100px; position: relative; float: left" class="label w200">Content</label>
+                        <textarea style="min-height: calc(9.5em + 15.75rem + 2px)" class="form-control col-sm-5" rows="10" id="content" name="content"></textarea>
+                    </div>
+                    <!-- // content -->
                 </div>
-                <!-- // title -->
-                <!-- content -->
-                <div class="mb40">
-                    <label for="Text" id="content_label" class="label w200">Content</label>
-                    <textarea class="form-control col-sm-5" rows="10" id="content" name="content"></textarea>
-                </div>
-                <!-- // content -->
             </form>
             <!-- 등록버튼 -->
-            <div class="btn_group" role="group" aria-label="Basic example">
-                <a href="/sub/qa"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>Q&A List</button></a
-                >
-                <a href="#" onclick="qaWritePage.qaNullChk();"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-plus-square me-lg-2" aria-hidden="true"></i> Registration</button></a
-                >
+            <div class="btn-center">
+                <button type="button" class="btn-default" onclick="window.location.href='/sub/qa'"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>Q&A List</button>
+                <button type="button" class="btn-default" onclick="qaWritePage.qaNullChk();"><i class="fa fa-plus-square me-lg-2" aria-hidden="true"></i> Registration</button>
             </div>
             <!-- // 등록버튼 -->
         </div>

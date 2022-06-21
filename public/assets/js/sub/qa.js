@@ -1,13 +1,12 @@
 var language = {
-    emptyTable: '데이터가 없어요.',
-    lengthMenu: '페이지당 _MENU_ 개씩 보기',
+    emptyTable: 'no data.',
     info: '<span>Total </span> <span style = "color : #D02B0B;">_TOTAL_</span><span>Q&A | Page</span> <span style = "color : #D02B0B;">_START_</span> <span>/ _END_</span>',
-    infoEmpty: '데이터 없음',
+    infoEmpty: 'empty info',
     // infoFiltered: '( _MAX_건의 데이터에서 필터링됨 )',
-    search: '검색: ',
-    zeroRecords: '일치하는 데이터가 없어요.',
-    loadingRecords: '로딩중...',
-    processing: '잠시만 기다려 주세요...',
+    search: 'search: ',
+    zeroRecords: 'no data.',
+    loadingRecords: 'loading...',
+    processing: 'wait minute...',
     // paginate: {
     //     first: "<img src='/img/first.png' style='width:30px'>",
     //     last: "<img src='/img/last.png' style='width:30px'>",
@@ -28,6 +27,7 @@ var pagefunction = function () {
             pagingType: 'full_numbers',
             responsive: true,
             lengthChange: false,
+            stateSave: true,
             sDom: '<"top"if>rt<"bottom"p><"clear">',
             ajax: {
                 url: '/api/qa_list',
