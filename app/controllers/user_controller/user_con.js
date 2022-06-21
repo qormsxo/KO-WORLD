@@ -174,10 +174,10 @@ exports.update_user_info = (req, res) => {
     var crud_query;
 
     if (date !== undefined) {
-        update_query_conditon = 'update ' + 'tb_user ' + 'set USER_NM = ?, EMAIL = ?, BIRTHDAY = ?, NATIONALITY = ?, SCH_NM = ?, GRADE_CODE = ? ' + 'where USER_ID = ?; ';
+        update_query_conditon = 'update ' + 'tb_user ' + `set USER_NM = ?, EMAIL = ?, BIRTHDAY = ?, NATIONALITY = ?, SCH_NM = ? ${grade_code ? ', GRADE_CODE = ?' : ''} ` + 'where USER_ID = ?; ';
         crud_query = {
             query: update_query_conditon,
-            params: [name, email, date, nationality, schoolname, grade_code, user_id],
+            params: grade_code ? [name, email, date, nationality, schoolname, grade_code, user_id] : [name, email, date, nationality, schoolname, user_id],
         };
     } else {
         update_query_conditon = 'update ' + 'tb_user ' + 'set USER_NM = ?, EMAIL = ? ' + 'where USER_ID = ?; ';
