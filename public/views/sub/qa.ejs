@@ -22,7 +22,7 @@
                 width: 100px;
             }
             table tbody tr td:nth-child(2) {
-                width: 800px;
+                width: 700px;
             }
             table tbody tr td:nth-child(3) {
                 width: 250px;
@@ -34,7 +34,7 @@
                 width: 100px;
             }
             table tbody tr td:nth-child(6) {
-                width: 100px;
+                width: 200px;
             }
             table {
                 border-top: 1px solid #111 !important;
@@ -107,11 +107,10 @@
             <%if(isLogin){%>
             <div class="btn_group" role="group" aria-label="Basic example">
                 <a href="/sub/qa/write"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>글쓰기</button></a
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>Writing</button></a
                 >
-                <a href="/"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>내QNA보기</button></a
-                >
+                <button type="button" class="btn btn-secondary" id="myqa_btn"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>My Q&A</button>
+                <button type="button" class="btn btn-secondary" style="display: none" id="total_btn"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>All Q&A</button>
             </div>
             <%}%>
         </div>

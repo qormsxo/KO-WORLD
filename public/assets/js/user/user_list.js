@@ -41,7 +41,28 @@ var pagefunction = function () {
                 { data: 'EMAIL' },
                 { data: 'PERM_NM_KR' },
                 // { data: 'PERM_NM_EN' },
-                { data: 'GRADE_NM_KR' },
+                {
+                    data: 'GRADE_NM_KR',
+                    render: function (data, type, row) {
+                        if (row['PERM_NM_KR'] === '위원회') {
+                            let overseer = '';
+                            let judge = '';
+                            row['GRADE_NM_KR'] === '감독관' ? (overseer = 'selected') : (judge = 'selected');
+                            return (
+                                '<select id="committee_change_option" class="form-select committee_change_option" aria-label="Default select example"> ' +
+                                '<option value="0000" ' +
+                                overseer +
+                                '>감독관</option> ' +
+                                '<option value="0001" ' +
+                                judge +
+                                '>심사위원</option> ' +
+                                '</select>'
+                            );
+                        } else {
+                            return row['GRADE_NM_KR'];
+                        }
+                    },
+                },
                 // { data: 'GRADE_NM_EN' },
                 { data: 'REG_DTTM' },
                 {
@@ -132,6 +153,27 @@ var pagefunction = function () {
                     $.ajax({
                         type: 'patch',
                         url: '/user/accept',
+                        data: { qaidx: IDX, status: status },
+                        success: function (result) {
+                            if (result.status === true) {
+                                serarch();
+                            } else {
+                                alert('error');
+                            }
+                        },
+                        error: function (a, b, c) {
+                            alert(a + b + c);
+                        },
+                    });
+                });
+
+                $('.committee_change_option').on('change', function () {
+                    var status = $(this).val();
+                    var tr = $(this).parent().parent();
+                    var IDX = tr.children().eq(0).text();
+                    $.ajax({
+                        type: 'patch',
+                        url: '/user/committee/grade_code',
                         data: { qaidx: IDX, status: status },
                         success: function (result) {
                             if (result.status === true) {

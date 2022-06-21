@@ -66,12 +66,18 @@
             }
             #profile_info_div > .col-md-5 {
                 margin-right: 10%;
+                margin-bottom: 10px;
             }
             #profile_info_div > #studentItem > .row > .col-md-5 {
                 margin-right: 10%;
+                margin-bottom: 10px;
+            }
+            #profile_info_disabled_off_btn {
+                justify-content: end !important;
             }
         </style>
         <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
+        <script type="text/javascript" src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
         <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
         <title>Ko-World | Q&A</title>
     </head>
@@ -81,110 +87,143 @@
             <img src="/assets/images/icon_02.png" alt="question icon" />
             <h2>User ProFile</h2>
             <div class="row profile_center_div">
-                <div class="col-sm-12 col-md-4">
+                <!-- <div class="col-sm-12 col-md-4">
                     <img src="/assets/images/profile_image.jpg" alt="question icon" />
-                </div>
+                </div> -->
             </div>
             <form id="regsiterForm">
                 <div class="row profile_center_div" id="profile_info_div">
                     <!-- Name -->
                     <div class="col-md-5">
                         <label for="name" class="label w200">Name</label>
-                        <input type="text" id="name" name="name" class="input-style" />
+                        <h4 style="display: inline-block"><%=data.USER_NM%></h4>
                     </div>
                     <!-- // Name -->
-                    <!-- ID -->
-                    <div class="col-md-5">
-                        <label for="id" class="label w200">ID</label>
-                        <input type="text" id="id" name="id" class="input-style" />
-                    </div>
-                    <!-- // ID -->
-                    <!-- Password -->
-                    <div class="col-md-5">
-                        <label for="password" class="label w200">Password</label>
-                        <input type="password" id="password" name="password" class="input-style" />
-                    </div>
-                    <!-- // Password -->
-                    <!-- Password Check -->
-                    <div class="col-md-5">
-                        <label for="passwordCheck" class="label w200">Password Check</label>
-                        <input type="passwordCheck" id="passwordCheck" name="passwordCheck" class="input-style" />
-                    </div>
-                    <!-- // Password Check -->
                     <!-- Email -->
                     <div class="col-md-5">
                         <label for="email" class="label w200">Email</label>
-                        <input type="email" id="email" name="email" class="input-style" />
+                        <h4 style="display: inline-block"><%=data.EMAIL%></h4>
                     </div>
+                    <%if(perm_code === '0002') {%>
                     <!-- // Email -->
                     <div id="studentItem">
                         <!-- Date of birth -->
                         <div class="row profile_center_div">
                             <div class="col-md-5">
                                 <label for="birth" class="label w200">Date of birth</label>
-                                <input type="date" id="birth" name="birth" class="input-style" />
+                                <h4 style="display: inline-block"><%=data.BIRTHDAY%></h4>
                             </div>
                             <!-- // Date of birth -->
                             <!-- Nationality -->
                             <div class="col-md-5">
                                 <label for="nationality" class="label w200">Nationality</label>
-                                <input type="text" id="nationality" name="nationality" class="input-style" />
+                                <h4 style="display: inline-block"><%=data.NATIONALITY%></h4>
                             </div>
                             <!-- // Nationality -->
                             <!-- School Name -->
                             <div class="col-md-5">
                                 <label for="schoolName" class="label w200">School Name</label>
-                                <input type="text" id="schoolName" name="schoolName" class="input-style" />
+                                <h4 style="display: inline-block"><%=data.SCH_NM%></h4>
                             </div>
                             <!-- // School Name -->
                         </div>
                     </div>
+                    <%}%>
+                    <!-- grade_code -->
+                    <div class="col-md-5">
+                        <label for="grade_code" class="label w200">Grade</label>
+                        <h4 style="display: inline-block"><%=data.GRADE%></h4>
+                    </div>
+                    <!-- // grade_code -->
                 </div>
             </form>
-            <div class="row" id="qa_search_option">
-                <div class="col-sm-2">
-                    <select id="search_option" class="form-select" aria-label="Default select example">
-                        <option value="TaC" selected>Title and Content</option>
-                    </select>
+            <div class="row" id="profile_info_disabled_off_btn">
+                <%if(perm_code === '0000' && grade_code === '0000') {%>
+                <div class="col-sm-4 col-md-1">
+                    <button type="button" class="btn btn-primary" onclick="location.href = '/user/user_list'">UserList</button>
                 </div>
-                <div class="col-sm-3">
-                    <div class="input-group">
-                        <input type="text" id="search_keyword" name="search_keyword" class="form-control" placeholder="Write Keyword" />
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="serarch();"><i class="fa fa-search" aria-hidden="true"></i></button>
-                        </span>
+                <div class="col-sm-4 col-md-2">
+                    <button type="button" id="create_admin_modal_btn" class="btn btn-primary">Create Normal Admin</button>
+                </div>
+                <%}%>
+                <div class="col-sm-4 col-md-2">
+                    <button type="button" id="password_change_modal_btn" class="btn btn-primary">Password Change</button>
+                </div>
+            </div>
+        </div>
+        <!-- password_change_modal -->
+        <div class="modal fade" id="password_change_modal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalToggleLabel">Password Change</h5>
+                        <button type="button" class="btn-close modal_close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="name" class="label w200">Current Password</label>
+                                <div class="input-group mb-3">
+                                    <input type="password" id="current_password" name="current_password" class="form-control" />
+                                    <div class="input-group-append">
+                                        <button id="current_password_check" class="btn btn-outline-secondary" type="button">Check</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="name" class="label w200">Modify Password</label>
+                                <input type="password" id="modify_password" name="modify_password" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="modify_password_btn">Change Password</button>
                     </div>
                 </div>
             </div>
-            <!-- /.row -->
-
-            <table id="qa_table" class="table">
-                <thead>
-                    <tr>
-                        <th>qa번호</th>
-                        <th>qa제목</th>
-                        <th>qa등록자</th>
-                        <th>qa등록일</th>
-                        <th>조회수</th>
-                        <th>답변상태</th>
-                    </tr>
-                </thead>
-            </table>
-            <%if(isLogin){%>
-            <div class="btn_group" role="group" aria-label="Basic example">
-                <a href="/sub/qa/write"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>글쓰기</button></a
-                >
-                <a href="/"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>내QNA보기</button></a
-                >
-            </div>
-            <%}%>
         </div>
+        <!-- // password_change_modal-->
+        <!-- create_normal_admin_modal -->
+        <div class="modal fade" id="create_admin_modal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalToggleLabel">Create Normal Admin</h5>
+                        <button type="button" class="btn-close modal_close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createForm">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="name" class="label w200">User Id</label>
+                                    <input type="text" id="id" name="id" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="name" class="label w200">User Password</label>
+                                    <input type="password" id="password" name="password" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="name" class="label w200">User Name</label>
+                                    <input type="text" id="name" name="name" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="name" class="label w200">User Email</label>
+                                    <input type="text" id="email" name="email" class="form-control" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="create_normal_admin_btn">Create Normal Admin</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- // create_normal_admin_modal-->
     </body>
     <!-- // body -->
     <script>
         const perm_code = '<%=perm_code%>';
     </script>
-    <script type="text/javascript" src="/assets/js/sub/qa.js"></script>
+    <script type="text/javascript" src="/assets/js/user/user_profile.js"></script>
 </html>

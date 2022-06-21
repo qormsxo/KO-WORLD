@@ -52,16 +52,16 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-2">
-                        <div>작성자 : <%=data.qaData.USER_NM%></div>
+                        <div>Writer : <%=data.qaData.USER_NM%></div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div>Date Created : <i class="fa fa-clock-o me-lg-2" aria-hidden="true"></i><%=data.qaData.REG_DTTM%></div>
                     </div>
                     <div class="col-sm-2">
-                        <div>작성일 : <i class="fa fa-clock-o me-lg-2" aria-hidden="true"></i><%=data.qaData.REG_DTTM%></div>
+                        <div>Views : <i class="fa fa-eye me-lg-2" aria-hidden="true"></i><%=data.qaData.QA_VWS%></div>
                     </div>
-                    <div class="col-sm-2">
-                        <div>조회수 : <i class="fa fa-eye me-lg-2" aria-hidden="true"></i><%=data.qaData.QA_VWS%></div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div>답변상태 : <%if(data.qaData.QA_STS === "YES") {%> 답변완료 <%} else {%> 답변예정 <%}%></div>
+                    <div class="col-sm-3">
+                        <div>Answer Status : <%if(data.qaData.QA_STS === "YES") {%> Answer complete <%} else {%> Answer pending <%}%></div>
                     </div>
                 </div>
             </div>
@@ -82,24 +82,24 @@
             <div class="btn_group" role="group" aria-label="Basic example">
                 <%if(isLogin){%>
                 <a href="/sub/qa/write"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>글쓰기</button></a
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>Writing</button></a
                 >
                 <%}%>
                 <a href="/sub/qa"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>목록</button></a
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>Q&A List</button></a
                 >
                 <!-- 관리자일경우 답변하기 버튼 활성화 -->
                 <%if(perm_code === "0000") { %> <%if(data.qaData.QA_STS === "YES") {%>
                 <a href="#" onclick="qaViewPage.qaAnswerModifyPageMove();"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>답변수정</button></a
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>Answer Modify</button></a
                 >
                 <%} else {%>
                 <a href="#" onclick="qaViewPage.qaAnswerPageMove();"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>답변작성</button></a
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>Answer Write</button></a
                 >
                 <%}%>
                 <a href="#" onclick="qaViewPage.qaDelete();"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-trash me-lg-2" aria-hidden="true"></i>질문삭제</button></a
+                    ><button type="button" class="btn btn-secondary"><i class="fa fa-trash me-lg-2" aria-hidden="true"></i>Answer Hide</button></a
                 >
                 <%}%>
             </div>
