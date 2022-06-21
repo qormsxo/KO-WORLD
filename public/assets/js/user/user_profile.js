@@ -46,12 +46,15 @@ $('#current_password_check').on('click', function () {
 let passwordReg = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
 $('#modify_password_btn').on('click', function () {
     let pw = $('#modify_password').val();
+    let pwChk = $('#modify_password_check').val();
     if (password_check_status === 0) {
         alert('Please Check Your Current Password');
     } else if (pw === '') {
         alert('Please enter Modify Password');
     } else if (!passwordReg.test(pw)) {
         alert('Password must be 8 to 16 characters and contain special characters.');
+    } else if (pw !== pwChk) {
+        alert('password do not match');
     } else {
         $.ajax({
             type: 'patch',
@@ -90,6 +93,7 @@ $('#create_normal_admin_btn').on('click', function () {
 
     let id = $('#id').val();
     let pw = $('#password').val();
+    let pwChk = $('#password_check').val();
     let email = $('#email').val();
     // 아이디검사
     if (!idReg.test(id)) {
@@ -101,6 +105,8 @@ $('#create_normal_admin_btn').on('click', function () {
         alert('Password must be 8 to 16 characters and contain special characters.');
     } else if (!emailREg.test(email)) {
         alert('Invalid email');
+    } else if (pw !== pwChk) {
+        alert('password do not match');
     } else {
         const data = new URLSearchParams(fd);
         $.ajax({

@@ -81,26 +81,16 @@
             <%}%>
             <div class="btn_group" role="group" aria-label="Basic example">
                 <%if(isLogin){%>
-                <a href="/sub/qa/write"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>Writing</button></a
-                >
+                <button type="button" class="btn-default" onclick="window.location.href='/sub/qa/write'"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>Writing</button>
                 <%}%>
-                <a href="/sub/qa"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>Q&A List</button></a
-                >
+                <button type="button" class="btn-default" onclick="window.location.href='/sub/qa'"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>Q&A List</button>
                 <!-- 관리자일경우 답변하기 버튼 활성화 -->
                 <%if(perm_code === "0000") { %> <%if(data.qaData.QA_STS === "YES") {%>
-                <a href="#" onclick="qaViewPage.qaAnswerModifyPageMove();"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>Answer Modify</button></a
-                >
+                <button type="button" class="btn-default" onclick="qaViewPage.qaAnswerModifyPageMove();"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>Answer Modify</button>
                 <%} else {%>
-                <a href="#" onclick="qaViewPage.qaAnswerPageMove();"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>Answer Write</button></a
-                >
+                <button type="button" class="btn-default" onclick="qaViewPage.qaAnswerPageMove();"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>Answer Write</button>
                 <%}%>
-                <a href="#" onclick="qaViewPage.qaDelete();"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-trash me-lg-2" aria-hidden="true"></i>Answer Hide</button></a
-                >
+                <button type="button" class="btn-default" onclick="qaViewPage.qaDelete();"><i class="fa fa-trash me-lg-2" aria-hidden="true"></i>Answer Hide</button>
                 <%}%>
             </div>
         </div>

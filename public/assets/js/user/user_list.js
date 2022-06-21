@@ -27,6 +27,7 @@ var pagefunction = function () {
             pagingType: 'full_numbers',
             responsive: true,
             lengthChange: false,
+            // stateSave: true,
             sDom: '<"top"if>rt<"bottom"p><"clear">',
             ajax: {
                 url: '/api/user_list',
@@ -210,8 +211,6 @@ function serarch() {
     var search_option = $('#select_option').val();
 
     var search_url = '/api/user_list?search_keyword=' + search_keyword + '&search_option=' + search_option;
-    user_list_table.clear();
-    user_list_table.ajax.url(search_url).draw(); //조회 된 data reflash
 }
 
 pagefunction();

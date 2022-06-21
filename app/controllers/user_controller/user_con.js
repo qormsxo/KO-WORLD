@@ -72,7 +72,7 @@ exports.get_user_profile_view = (req, res) => {
         return res.send("<script> alert('do not have permission to answer'); window.location.href = '/'; </script>");
     }
     let user_id = req.user.USER_ID;
-    let query_select_column = "SELECT USER_ID,USER_NM,date_format(BIRTHDAY,'%Y-%m-%d') as BIRTHDAY,NATIONALITY,SCH_NM,EMAIL, tg.GRADE_NM_EN as GRADE ";
+    let query_select_column = "SELECT USER_ID,USER_NM,date_format(BIRTHDAY,'%Y-%m-%d') as BIRTHDAY,NATIONALITY,SCH_NM,EMAIL, tg.GRADE_NM_EN as GRADE, ANSWER, tg.GRADE_CODE ";
     let query_table = 'FROM TB_USER tu LEFT JOIN TB_GRADE tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
     let query_where = 'WHERE USER_ID = ?';
     let query_condition = query_select_column + query_table + query_where;
