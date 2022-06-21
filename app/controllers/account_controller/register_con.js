@@ -64,9 +64,9 @@ module.exports = {
         crud.sql(checkData, (result) => {
             //console.log(result[0] == undefined);
             if (result[0] == null) {
-                res.sendStatus(200);
+                res.status(200).send({ able: true });
             } else {
-                res.sendStatus(404);
+                res.status(200).send({ able: false });
             }
         });
     },

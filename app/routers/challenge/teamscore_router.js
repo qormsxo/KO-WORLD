@@ -4,7 +4,7 @@ const fs = require('fs');
 module.exports = function (app) {
     app.get('/teamscore', controller.page);
     app.get('/answer', controller.score);
-    // app.post('/challenge/server', controller.serverClick);
-    // app.put('/challenge/server/max-con', controller.maxConSet);
-    // app.post('/challenge/answer', upload.array('answerFile'), controller.answer);
+    app.get('/answer/file', controller.fileDownload);
+    app.get('/answer/user', controller.getAnswer);
+    app.post('/answer/score', controller.scoring);
 };
