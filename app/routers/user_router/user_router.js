@@ -25,4 +25,6 @@ module.exports = function (app) {
     app.patch('/user/password_modify', controller.update_user_password);
 
     app.post('/user/normal_admin', controller.post_normal_admin);
+
+    app.patch('/user/info_modify', controller.update_user_info);
 };

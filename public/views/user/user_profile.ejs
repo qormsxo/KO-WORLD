@@ -111,14 +111,14 @@
                     <!-- Name -->
                     <div class="col-md-5">
                         <label for="name" class="label w200">Name</label>
-                        <input type="text" id="user_name" class="form-control" value="<%=data.USER_NM%>" />
+                        <input type="text" id="user_name" name="name" class="form-control" value="<%=data.USER_NM%>" />
                         <!-- <h4 style="display: inline-block"><%=data.USER_NM%></h4> -->
                     </div>
                     <!-- // Name -->
                     <!-- Email -->
                     <div class="col-md-5">
                         <label for="email" class="label w200">Email</label>
-                        <input type="text" id="user_eamil" class="form-control" value="<%=data.EMAIL%>" />
+                        <input type="text" id="user_eamil" name="email" class="form-control" value="<%=data.EMAIL%>" />
                         <!-- <h4 style="display: inline-block"><%=data.EMAIL%></h4> -->
                     </div>
                     <%if(perm_code === '0002') {%>
@@ -128,21 +128,21 @@
                         <div class="row profile_center_div">
                             <div class="col-md-5">
                                 <label for="birth" class="label w200">Date of birth</label>
-                                <input type="date" id="user_date" class="form-control" value="<%=data.BIRTHDAY%>" />
+                                <input type="date" id="user_date" name="date" class="form-control" value="<%=data.BIRTHDAY%>" />
                                 <!-- <h4 style="display: inline-block"><%=data.BIRTHDAY%></h4> -->
                             </div>
                             <!-- // Date of birth -->
                             <!-- Nationality -->
                             <div class="col-md-5">
                                 <label for="nationality" class="label w200">Nationality</label>
-                                <input type="text" id="user_nationality" class="form-control" value="<%=data.NATIONALITY%>" />
+                                <input type="text" id="user_nationality" name="nationality" class="form-control" value="<%=data.NATIONALITY%>" />
                                 <!-- <h4 style="display: inline-block"><%=data.NATIONALITY%></h4> -->
                             </div>
                             <!-- // Nationality -->
                             <!-- School Name -->
                             <div class="col-md-5">
                                 <label for="schoolName" class="label w200">School Name</label>
-                                <input type="text" id="user_school_name" class="form-control" value="<%=data.SCH_NM%>" />
+                                <input type="text" id="user_school_name" name="schoolname" class="form-control" value="<%=data.SCH_NM%>" />
                                 <!-- <h4 style="display: inline-block"><%=data.SCH_NM%></h4> -->
                             </div>
                             <!-- // School Name -->
@@ -152,7 +152,7 @@
                                 <%if(data.ANSWER === "1"){%>
                                 <h4 style="display: inline-block"><%=data.GRADE%></h4>
                                 <%} else {%>
-                                <select id="user_grade_code" class="form-select">
+                                <select id="user_grade_code" name="grade_code" class="form-select">
                                     <%if(data.GRADE_CODE === "0000") {%>
                                     <option value="0000" selected>High School Student</option>
                                     <option value="0001">College Student</option>
@@ -190,7 +190,7 @@
                     <button type="button" id="password_change_modal_btn" class="btn-default">Password Change</button>
                 </div>
                 <div class="col-sm-4 col-md-3">
-                    <button type="button" id="my_infomation_modify_btn" class="btn-default">My Infomation Change</button>
+                    <button type="button" id="my_infomation_save_btn" class="btn-default">Save My Infomation</button>
                 </div>
             </div>
         </div>
@@ -271,6 +271,34 @@
             </div>
         </div>
         <!-- // create_normal_admin_modal-->
+        <!-- my_infomation_save_modal -->
+        <div class="modal fade" id="my_infomation_save_modal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalToggleLabel">Save My Infomation</h5>
+                        <button type="button" class="btn-close modal_close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="name" class="label w200">Current Password</label>
+                                <div class="input-group mb-3">
+                                    <input type="password" id="save_info_current_password" name="current_password" class="form-control" />
+                                    <div class="input-group-append">
+                                        <button id="save_info_current_password_check" class="btn btn-outline-secondary" type="button">Check</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="my_infomation_save_request_btn">Save My Infomation</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- // my_infomation_save_modal-->
     </body>
     <!-- // body -->
     <script>
