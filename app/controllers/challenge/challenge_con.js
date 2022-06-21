@@ -10,45 +10,45 @@ module.exports = {
             //console.log(req.user);
 
             const { PERM_CODE, GRADE_CODE, ANSWER } = req.user;
-            console.log(ANSWER);
+            //console.log(ANSWER);
             // 이미 제출한 사람
             if (PERM_CODE == 0002 && ANSWER == '1') {
                 // alert('You are already Answer');
-                res.redirect('/');
-            }
+                res.send("<script> alert('You are already Answered'); window.location.href = '/'; </script>");
+            } else {
+                let hostQuery = `SELECT IDX , HOST_NM_KR ,HOST_NM_EN, CURR_CON ,MAX_CON FROM tb_host  `;
 
-            let hostQuery = `SELECT IDX , HOST_NM_KR ,HOST_NM_EN, CURR_CON ,MAX_CON FROM tb_host  `;
-
-            let hostSelect = {
-                query: hostQuery,
-            };
-            crud.sql(hostSelect, (hosts) => {
-                if (PERM_CODE == 0000) {
-                    if (req.query.admin) {
-                        res.send({ hosts: hosts });
-                    } else {
-                        res.render('./challenge/first_challenge', { hosts: hosts });
-                        res.end();
-                    }
-                } else {
-                    let quesQuery = 'SELECT ques_num FROM tb_grade WHERE perm_code = ? AND grade_code = ?';
-                    let params = [PERM_CODE, GRADE_CODE];
-
-                    let quesSelect = {
-                        query: quesQuery,
-                        params: params,
-                    };
-
-                    crud.sql(quesSelect, (ques) => {
-                        console.log(ques);
-                        if (ques[0] != undefined) {
-                            res.render('./challenge/first_challenge', { hosts: hosts, ques: ques[0].ques_num });
+                let hostSelect = {
+                    query: hostQuery,
+                };
+                crud.sql(hostSelect, (hosts) => {
+                    if (PERM_CODE == 0000) {
+                        if (req.query.admin) {
+                            res.send({ hosts: hosts });
                         } else {
-                            res.send(404);
+                            res.render('./challenge/first_challenge', { hosts: hosts });
+                            res.end();
                         }
-                    });
-                }
-            });
+                    } else {
+                        let quesQuery = 'SELECT ques_num FROM tb_grade WHERE perm_code = ? AND grade_code = ?';
+                        let params = [PERM_CODE, GRADE_CODE];
+
+                        let quesSelect = {
+                            query: quesQuery,
+                            params: params,
+                        };
+
+                        crud.sql(quesSelect, (ques) => {
+                            console.log(ques);
+                            if (ques[0] != undefined) {
+                                res.render('./challenge/first_challenge', { hosts: hosts, ques: ques[0].ques_num });
+                            } else {
+                                res.send(404);
+                            }
+                        });
+                    }
+                });
+            }
         } else {
             res.redirect('/');
         }
