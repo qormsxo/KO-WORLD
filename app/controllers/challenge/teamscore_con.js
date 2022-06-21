@@ -63,7 +63,7 @@ module.exports = {
         let table_name = ' tb_answer ta  INNER JOIN tb_user tu ON ta.USER_ID = tu.USER_ID ';
         let column_select =
             " tu.USER_ID, tu.USER_NM ,date_format(tu.BIRTHDAY , '%Y-%m-%d') as BIRTHDAY,tu.NATIONALITY , tu.EMAIL ," +
-            ` if(${isJug} = 1 , ta.ANS_SCORE , concat('<b>', ta.ANS_SCORE , '<b>' ) )  as ANS_SCORE , ${isJug} as isJug , ` +
+            ` if(${isJug} = 1 , ta.ANS_SCORE ,IF( isnull(ta.ANS_SCORE)  , 'Grading required' , concat('<b>', ta.ANS_SCORE , '<b>' )))  as ANS_SCORE , ${isJug} as isJug , ` +
             'DENSE_RANK() OVER(ORDER BY ta.ANS_SCORE  DESC ) AS ranking ';
         let query_conditon = 'SELECT count(*) FROM ' + table_name + where_condition;
         let filter_count = {
