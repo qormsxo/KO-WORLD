@@ -35,9 +35,13 @@ module.exports = {
         let table = {};
         let params = {};
 
-        let type = req.query.type;
+        let { type, search_keyword, search_option } = req.query;
 
-        console.log(type == 'high' ? '0000' : '0001');
+        console.log(search_keyword, search_option)
+
+
+
+        //console.log(type == 'high' ? '0000' : '0001');
 
         table['draw'] = req.query.draw;
 
@@ -48,7 +52,22 @@ module.exports = {
 
         //console.log('params: ', params);
 
-        let where_condition = "WHERE tu.ACCEPT = '1' AND tu.GRADE_CODE  = ?";
+        let where_condition = " WHERE tu.ACCEPT = '1' AND tu.GRADE_CODE  = ? ";
+
+        if (search_option != undefined) {
+            console.log(search_option)
+            if (search_option == "all") {
+                where_condition += ``
+            } else if (search_option == "required") {
+                where_condition += ` AND ta.ANS_SCORE IS NULL `
+            } else if (search_option == "graded") {
+                where_condition += ` AND ta.ANS_SCORE IS NOT NULL `
+            }
+        }
+
+        if (search_keyword != undefined && search_keyword != '') {
+            where_condition += ` AND ta.USER_ID LIKE '%${search_keyword}%'`
+        }
 
         //
         const { PERM_CODE, GRADE_CODE } = req.user;
@@ -173,3 +192,4 @@ module.exports = {
         });
     },
 };
+
