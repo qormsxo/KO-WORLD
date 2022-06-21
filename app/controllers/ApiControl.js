@@ -26,7 +26,7 @@ exports.get_qa_table_list = function (req, res) {
 
     //console.log('params: ', params);
 
-    var where_condition = ' where 1=1';
+    var where_condition = ' where QA_DEL = 0 ';
 
     if (req.query.search_myqa != undefined && req.query.search_myqa != 'undefined') {
         where_condition += ' and qa.QA_UR_ID = ' + "'" + req.user.USER_ID + "'";
