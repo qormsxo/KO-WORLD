@@ -156,6 +156,52 @@ exports.update_user_password = async (req, res) => {
     });
 };
 
+exports.update_user_info = (req, res) => {
+    // 로그인하지 않았을경우와 로그인 후 권한이 없는 유저가 접근하려 했을 시
+    if (req.user === undefined) {
+        return res.send("<script> alert('do not have permission to answer'); window.location.href = '/'; </script>");
+    }
+    let name = req.body.name;
+    let email = req.body.email;
+    let date = req.body.date;
+    let nationality = req.body.nationality;
+    let schoolname = req.body.schoolname;
+    let grade_code = req.body.grade_code;
+
+    const user_id = req.user.USER_ID;
+
+    let update_query_conditon;
+    var crud_query;
+
+    if (date !== undefined) {
+        update_query_conditon = 'update ' + 'tb_user ' + 'set USER_NM = ?, EMAIL = ?, BIRTHDAY = ?, NATIONALITY = ?, SCH_NM = ?, GRADE_CODE = ? ' + 'where USER_ID = ?; ';
+        crud_query = {
+            query: update_query_conditon,
+            params: [name, email, date, nationality, schoolname, grade_code, user_id],
+        };
+    } else {
+        update_query_conditon = 'update ' + 'tb_user ' + 'set USER_NM = ?, EMAIL = ? ' + 'where USER_ID = ?; ';
+        crud_query = {
+            query: update_query_conditon,
+            params: [name, email, user_id],
+        };
+    }
+
+    crud.sql(crud_query, function (calldata) {
+        if (calldata['affectedRows'] > 0) {
+            return res.json({
+                status: true,
+                message: 'You have successfully edited the information!',
+            });
+        } else {
+            return res.json({
+                status: false,
+                message: 'Failed to change information',
+            });
+        }
+    });
+};
+
 exports.post_normal_admin = async (req, res) => {
     var id = req.body.id;
     var password = req.body.password;
