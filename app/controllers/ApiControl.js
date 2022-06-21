@@ -26,12 +26,19 @@ exports.get_qa_table_list = function (req, res) {
 
     //console.log('params: ', params);
 
-    var where_condition = ' where 1=1';
+    var where_condition = ' where QA_DEL = 0 ';
 
-    if (req.query.search_keyword != undefined) {
+    if (req.query.search_myqa != undefined && req.query.search_myqa != 'undefined') {
+        where_condition += ' and qa.QA_UR_ID = ' + "'" + req.user.USER_ID + "'";
+    }
+
+    console.log(req.query.search_keyword, req.query.search_option);
+
+    if (req.query.search_keyword != undefined && req.query.search_keyword != '') {
         if (req.query.search_option != undefined) {
             if (req.query.search_option === 'TaC') {
-                where_condition += " and qa.QA_TITLE LIKE '%" + req.query.search_keyword + "%' or qa.QA_TEXT LIKE '%" + req.query.search_keyword + "%'";
+                where_condition +=
+                    " and qa.QA_TITLE LIKE '%" + req.query.search_keyword + "%' or qa.QA_TEXT LIKE '%" + req.query.search_keyword + "%'";
             } else if (req.query.search_option === 'Writer') {
                 where_condition += " and ur.USER_NM LIKE '%" + req.query.search_keyword + "%'";
             }
@@ -58,7 +65,19 @@ exports.get_qa_table_list = function (req, res) {
         //step 2 데이터 조회
         // 조건 생성
         var sql =
-            'select ' + column_select + ' from ' + table_name + where_condition + ' order by ' + params.order_cols + ' ' + params.order_asc + ' limit ' + params.limit + ' offset ' + params.offset;
+            'select ' +
+            column_select +
+            ' from ' +
+            table_name +
+            where_condition +
+            ' order by ' +
+            params.order_cols +
+            ' ' +
+            params.order_asc +
+            ' limit ' +
+            params.limit +
+            ' offset ' +
+            params.offset;
 
         var filter_data = {
             query: sql,
@@ -98,18 +117,21 @@ exports.get_user_table_list = (req, res) => {
     if (req.query.search_keyword != undefined) {
         if (req.query.search_option != undefined) {
             if (req.query.search_option === 'IaU') {
-                where_condition += " and tu.USER_ID LIKE '%" + req.query.search_keyword + "%' or tu.USER_NM LIKE '%" + req.query.search_keyword + "%'";
+                where_condition +=
+                    " and tu.USER_ID LIKE '%" + req.query.search_keyword + "%' or tu.USER_NM LIKE '%" + req.query.search_keyword + "%'";
             } else if (req.query.search_option === 'email') {
                 where_condition += " and tu.EMAIL LIKE '%" + req.query.search_keyword + "%'";
             } else if (req.query.search_option === 'PaG') {
-                where_condition += " and tp.PERM_NM_KR LIKE '%" + req.query.search_keyword + "%' or tg.GRADE_NM_KR LIKE '%" + req.query.search_keyword + "%'";
+                where_condition +=
+                    " and tp.PERM_NM_KR LIKE '%" + req.query.search_keyword + "%' or tg.GRADE_NM_KR LIKE '%" + req.query.search_keyword + "%'";
             }
         }
     }
     //===================================
 
     //step 1 테이블 count 체크
-    var table_name = 'tb_user tu join tb_perm tp on tu.PERM_CODE = tp.PERM_CODE join tb_grade tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
+    var table_name =
+        'tb_user tu left join tb_perm tp on tu.PERM_CODE = tp.PERM_CODE left join tb_grade tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
     var column_select =
         "tu.IDX, tu.USER_ID, tu.USER_NM, date_format(tu.BIRTHDAY, '%Y-%m-%d') as BIRTHDAY , tu.NATIONALITY, tu.SCH_NM, tu.EMAIL, tp.PERM_NM_KR, tp.PERM_NM_EN, tg.GRADE_NM_KR, tg.GRADE_NM_EN, date_format(tu.REG_DTTM, '%Y-%m-%d') as REG_DTTM, tu.ACCEPT ";
     var query_conditon = 'SELECT count(*) FROM ' + table_name + where_condition;
@@ -127,11 +149,24 @@ exports.get_user_table_list = (req, res) => {
         //step 2 데이터 조회
         // 조건 생성
         var sql =
-            'select ' + column_select + ' from ' + table_name + where_condition + ' order by ' + params.order_cols + ' ' + params.order_asc + ' limit ' + params.limit + ' offset ' + params.offset;
+            'select ' +
+            column_select +
+            ' from ' +
+            table_name +
+            where_condition +
+            ' order by ' +
+            params.order_cols +
+            ' ' +
+            params.order_asc +
+            ' limit ' +
+            params.limit +
+            ' offset ' +
+            params.offset;
 
         var filter_data = {
             query: sql,
         };
+        console.log(filter_data);
 
         crud.sql(filter_data, function (docs) {
             table.data = docs; //검색 데이터 넣기

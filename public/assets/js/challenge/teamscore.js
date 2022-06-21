@@ -65,22 +65,33 @@ let teamscore = {
                 // },
             },
             {
-                data: 'null',
+                data: 'isJug',
                 render: function (data, type, row) {
-                    return '<a class="answer">answer</a>';
+                    if (data == 1) {
+                        return '<a class="answer">answer</a>';
+                    } else {
+                        return 'answered';
+                    }
                 },
             },
             {
-                data: 'null',
+                data: 'isJug',
                 render: function (data, type, row) {
-                    return `<a class="download">download</a>`;
+                    if (data == 1) {
+                        return `<a class="download">download</a>`;
+                    } else {
+                        return 'submitted';
+                    }
                 },
             },
             {
                 data: 'ANS_SCORE',
                 render: function (data, type, row) {
-                    //console.log(data == null);
-                    return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;
+                    if (data != null && (data == 'Grading required' || data.slice(-1) == '>')) {
+                        return data;
+                    } else {
+                        return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;
+                    }
                 },
             },
             {
@@ -125,7 +136,7 @@ let teamscore = {
             //     orderable: false,
             // },
         ],
-        order: [[7, 'desc']],
+        order: [[8, 'asc']],
         paging: true, //paging 사용 여부
         scrollY: 200, //표 세로 사이즈
         scrollX: true,
@@ -143,15 +154,47 @@ let teamscore = {
         teamscore.tableOption.ajax.url = teamscore.url + '?type=college';
         teamscore.collegeTable = $('#collegeTable').DataTable(teamscore.tableOption);
     },
+    // 점수 매기기
+    scoring: (score, user) => {
+        const check = /^[0-9]+$/;
+        if (!check.test(score)) {
+            alert('Please enter a number only');
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: '/answer/score',
+                data: { score: score, user: user },
+                success: function (response) {
+                    if (response.status) {
+                        teamscore.highTable.clear();
+                        teamscore.highTable.ajax.url(teamscore.url + '?type=high').draw();
+                        teamscore.collegeTable.clear();
+                        teamscore.collegeTable.ajax.url(teamscore.url + '?type=college').draw();
+                    }
+                },
+            });
+        }
+    },
+    search: () => {
+        let search_keyword = $('#search_keyword').val();
+        let search_option = $('#select_option option:selected').val();
+        let hisearch_url = teamscore.url + '?type=high&search_keyword' + search_keyword + '&search_option=' + search_option;
+        let cosearch_url = teamscore.url + '?type=college&search_keyword' + search_keyword + '&search_option=' + search_option;
+        teamscore.highTable.clear();
+        teamscore.collegeTable.clear();
+        teamscore.highTable.ajax.url(hisearch_url).draw();
+        teamscore.collegeTable.ajax.url(cosearch_url).draw();
+    },
 };
 
 $(function () {
     teamscore.highSchool();
     teamscore.college();
+    // 파일 다운로드
     $(document).on('click', '.download', function () {
         let tr = $(this).parent().parent('tr');
         let id = tr.parent().attr('id');
-        console.log(id);
+        //console.log(id);
         let rowData;
         if (id == 'highSchool') {
             rowData = teamscore.highTable.row(tr).data();
@@ -162,10 +205,10 @@ $(function () {
         }
         window.location.href = `/answer/file?user=${rowData.USER_ID}`;
     });
+    // 답 클릭시 모달 출력
     $(document).on('click', '.answer', function () {
         let tr = $(this).parent().parent('tr');
         let id = tr.parent().attr('id');
-        console.log(id);
         let rowData;
         if (id == 'highSchool') {
             rowData = teamscore.highTable.row(tr).data();
@@ -181,11 +224,40 @@ $(function () {
             data: { user: rowData.USER_ID },
             dataType: 'json',
             success: function (response) {
-                console.log(response)
-                $('#answerModal').modal('show')
+                //console.log(response);
+                $('#userAnswer').children().remove();
+                let html = '';
+                for (let i = 0; i < response.length; i++) {
+                    html += `<div class='col-12'> ${i + 1}. ${response[i]} </div>`;
+                }
+                $('#userAnswer').append(html);
+                $('#answerModal').modal('show');
             },
         });
     });
+    // score input
+    $(document).on('keyup', '.score-input', (e) => {
+        $(e.target).val(
+            $(e.target)
+                .val()
+                .replace(/[^0-9]$/g, '')
+        );
+        if ($(e.target).val() > 100) {
+            $(e.target).val(100);
+        }
+        if (e.key == 'Enter') {
+            let tr = $(e.target).parent().parent('tr');
+            let id = tr.parent().attr('id');
+            // console.log(id);
+            let rowData;
+            if (id == 'highSchool') {
+                rowData = teamscore.highTable.row(tr).data();
+            } else if (id == 'college') {
+                rowData = teamscore.collegeTable.row(tr).data();
+            } else {
+                console.error('error');
+            }
+            teamscore.scoring($(e.target).val(), rowData.USER_ID);
+        }
+    });
 });
-
-// 

@@ -14,7 +14,7 @@ let challenge = {
                 if (response.possibility) {
                     window.location.href = response.address;
                 } else {
-                    console.log(response.message);
+                    //console.log(response.message);
                     alert(response.message);
                 }
             })
@@ -32,8 +32,8 @@ let challenge = {
                 alert('Please enter answer');
                 return;
             } else if (key.slice(0, -1) == 'file' && !$(`#${key}`).val()) {
-                console.log(key);
-                console.log($(`#${key}`).val());
+                //console.log(key);
+                //console.log($(`#${key}`).val());
                 alert('Please attach the file');
                 return;
             }
@@ -75,7 +75,7 @@ let challenge = {
                 challenge.serverInfo();
             })
             .catch((error) => {
-                console.error('아니 왜안됨?');
+                console.error('error');
             });
     },
     // admin이 증감 이후에 실행하는 함수
@@ -108,7 +108,6 @@ let challenge = {
 $(function () {
     // 참가자가 서버 클릭
     $('.server').on('click', (event) => {
-        console.log();
         if ($(event.target).hasClass('active')) {
             challenge.serverClick(event.target.value);
         }

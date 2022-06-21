@@ -50,12 +50,20 @@ module.exports = {
 
         let where_condition = "WHERE tu.ACCEPT = '1' AND tu.GRADE_CODE  = ?";
 
-        //===================================
+        //
+        const { PERM_CODE, GRADE_CODE } = req.user;
+        let isJug;
+        if (PERM_CODE == '0001' && GRADE_CODE == '0001') {
+            isJug = 1;
+        } else {
+            isJug = 0;
+        }
 
         //테이블 count
         let table_name = ' tb_answer ta  INNER JOIN tb_user tu ON ta.USER_ID = tu.USER_ID ';
         let column_select =
-            " tu.USER_ID, tu.USER_NM ,date_format(tu.BIRTHDAY , '%Y-%m-%d') as BIRTHDAY,tu.NATIONALITY , tu.EMAIL , ta.ANS_SCORE ," +
+            " tu.USER_ID, tu.USER_NM ,date_format(tu.BIRTHDAY , '%Y-%m-%d') as BIRTHDAY,tu.NATIONALITY , tu.EMAIL ," +
+            ` if(${isJug} = 1 , ta.ANS_SCORE ,IF( isnull(ta.ANS_SCORE)  , 'Grading required' , concat('<b>', ta.ANS_SCORE , '<b>' )))  as ANS_SCORE , ${isJug} as isJug , ` +
             'DENSE_RANK() OVER(ORDER BY ta.ANS_SCORE  DESC ) AS ranking ';
         let query_conditon = 'SELECT count(*) FROM ' + table_name + where_condition;
         let filter_count = {
@@ -127,25 +135,41 @@ module.exports = {
             }
         });
     },
-    maxConSet: (req, res) => { },
-    getAnswer: (req, res) => {
-        let { user } = req.query;
-
-        const sql = "SELECT ANSWER FROM tb_answer WHERE user_id = ?"
+    scoring: (req, res) => {
+        const { user, score } = req.body;
+        const sql = 'UPDATE tb_answer SET ANS_SCORE = ? WHERE USER_ID = ?';
 
         const data = {
             query: sql,
-            params: [user]
-        }
+            params: [score, user],
+        };
+        crud.sql(data, (result) => {
+            if (result['affectedRows'] == 1) {
+                res.send({ status: true });
+            } else {
+                res.send({ status: false });
+            }
+        });
+    },
+    getAnswer: (req, res) => {
+        let { user } = req.query;
+
+        const sql = 'SELECT ANSWER FROM tb_answer WHERE user_id = ?';
+
+        const data = {
+            query: sql,
+            params: [user],
+        };
 
         crud.sql(data, (result) => {
-            console.log(result)
+            console.log(result);
             if (result[0] == null) {
-                res.status(200).send({ message: "answer is null" })
+                res.status(200).send({ message: 'answer is null' });
             } else {
-                res.send(result[0])
+                let array = result[0]['ANSWER'].split(' |\\| ');
+                console.log(array);
+                res.send(array);
             }
-        })
-
+        });
     },
 };

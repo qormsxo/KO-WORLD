@@ -22,7 +22,7 @@
                 width: 100px;
             }
             table tbody tr td:nth-child(2) {
-                width: 800px;
+                width: 700px;
             }
             table tbody tr td:nth-child(3) {
                 width: 250px;
@@ -34,13 +34,10 @@
                 width: 100px;
             }
             table tbody tr td:nth-child(6) {
-                width: 100px;
+                width: 200px;
             }
             table {
                 border-top: 1px solid #111 !important;
-            }
-            .btn-default {
-                margin: 0px !important;
             }
             #qa_table_wrapper {
                 bottom: 25px;
@@ -85,7 +82,7 @@
                     <div class="input-group">
                         <input type="text" id="search_keyword" name="search_keyword" class="form-control" placeholder="Write Keyword" />
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="serarch();"><i class="fa fa-search" aria-hidden="true"></i></button>
+                            <button class="btn-default" style="margin: 0px" type="button" onclick="serarch();"><i class="fa fa-search" aria-hidden="true"></i></button>
                         </span>
                     </div>
                 </div>
@@ -106,12 +103,9 @@
             </table>
             <%if(isLogin){%>
             <div class="btn_group" role="group" aria-label="Basic example">
-                <a href="/sub/qa/write"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>글쓰기</button></a
-                >
-                <a href="/"
-                    ><button type="button" class="btn btn-secondary"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>내QNA보기</button></a
-                >
+                <button type="button" class="btn-default" onclick="window.location.href='/sub/qa/write'"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>Writing</button>
+                <button type="button" class="btn-default" id="myqa_btn"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>My Q&A</button>
+                <button type="button" class="btn-default" style="display: none" id="total_btn"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>All Q&A</button>
             </div>
             <%}%>
         </div>
