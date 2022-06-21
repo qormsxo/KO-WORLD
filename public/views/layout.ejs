@@ -33,9 +33,7 @@
             <% if(isLogin) { %>
             <button class="phill blue" onclick="location.href = '/user/user_profile'"><%=username %></button>
             <button class="phill blue" onclick="location.href = '/logout'">LogOut</button>
-            <% if(perm_code === "0000") {%>
-            <button class="phill blue" onclick="location.href = '/user/user_list'">UserList</button>
-            <%}%> <%} else {%>
+            <%} else {%>
             <button class="phill blue" onclick="location.href = '/account/register'">Register</button>
             <button class="phill blue" onclick="location.href = '/account/login'">Login</button>
             <%}%>

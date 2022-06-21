@@ -28,7 +28,13 @@ exports.get_qa_table_list = function (req, res) {
 
     var where_condition = ' where 1=1';
 
-    if (req.query.search_keyword != undefined) {
+    if (req.query.search_myqa != undefined && req.query.search_myqa != 'undefined') {
+        where_condition += ' and qa.QA_UR_ID = ' + "'" + req.user.USER_ID + "'";
+    }
+
+    console.log(req.query.search_keyword, req.query.search_option);
+
+    if (req.query.search_keyword != undefined && req.query.search_keyword != '') {
         if (req.query.search_option != undefined) {
             if (req.query.search_option === 'TaC') {
                 where_condition += " and qa.QA_TITLE LIKE '%" + req.query.search_keyword + "%' or qa.QA_TEXT LIKE '%" + req.query.search_keyword + "%'";
@@ -109,7 +115,7 @@ exports.get_user_table_list = (req, res) => {
     //===================================
 
     //step 1 테이블 count 체크
-    var table_name = 'tb_user tu join tb_perm tp on tu.PERM_CODE = tp.PERM_CODE join tb_grade tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
+    var table_name = 'tb_user tu left join tb_perm tp on tu.PERM_CODE = tp.PERM_CODE left join tb_grade tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
     var column_select =
         "tu.IDX, tu.USER_ID, tu.USER_NM, date_format(tu.BIRTHDAY, '%Y-%m-%d') as BIRTHDAY , tu.NATIONALITY, tu.SCH_NM, tu.EMAIL, tp.PERM_NM_KR, tp.PERM_NM_EN, tg.GRADE_NM_KR, tg.GRADE_NM_EN, date_format(tu.REG_DTTM, '%Y-%m-%d') as REG_DTTM, tu.ACCEPT ";
     var query_conditon = 'SELECT count(*) FROM ' + table_name + where_condition;
