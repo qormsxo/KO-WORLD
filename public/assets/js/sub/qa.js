@@ -1,7 +1,7 @@
 var language = {
     emptyTable: '데이터가 없어요.',
     lengthMenu: '페이지당 _MENU_ 개씩 보기',
-    info: '<span>전체</span> <span style = "color : #D02B0B;">_TOTAL_</span><span>건 | 페이지</span> <span style = "color : #D02B0B;">_START_</span> <span>/ _END_</span>',
+    info: '<span>Total </span> <span style = "color : #D02B0B;">_TOTAL_</span><span>Q&A | Page</span> <span style = "color : #D02B0B;">_START_</span> <span>/ _END_</span>',
     infoEmpty: '데이터 없음',
     // infoFiltered: '( _MAX_건의 데이터에서 필터링됨 )',
     search: '검색: ',
@@ -15,6 +15,7 @@ var language = {
     //     previous: "<img src='/img/prev.png' style='width:30px'>",
     // },
 };
+var myqa = undefined;
 var qa_table;
 // main 수행 함수
 var pagefunction = function () {
@@ -60,8 +61,8 @@ var pagefunction = function () {
                 {
                     data: 'QA_STS',
                     render: function (data, type, row) {
-                        let answerCompletion = '답변완료';
-                        let answerExpected = '답변예정';
+                        let answerCompletion = 'Answer complete';
+                        let answerExpected = 'Answer pending';
                         return row['QA_STS'] === 'YES' ? answerCompletion : answerExpected;
                     },
                 },
@@ -146,11 +147,25 @@ $('#search_keyword').on('keyup', function (key) {
     }
 });
 
+$('#myqa_btn').on('click', function () {
+    myqa = true;
+    $('#myqa_btn').hide();
+    $('#total_btn').show();
+    serarch();
+});
+
+$('#total_btn').on('click', function () {
+    myqa = undefined;
+    $('#myqa_btn').show();
+    $('#total_btn').hide();
+    serarch();
+});
+
 function serarch() {
     var search_keyword = $('#search_keyword').val();
     var search_option = $('#search_option').val();
 
-    var search_url = '/api/qa_list?search_keyword=' + search_keyword + '&search_option=' + search_option;
+    var search_url = '/api/qa_list?search_keyword=' + search_keyword + '&search_option=' + search_option + '&search_myqa=' + myqa;
     qa_table.clear();
     qa_table.ajax.url(search_url).draw(); //조회 된 data reflash
 }
