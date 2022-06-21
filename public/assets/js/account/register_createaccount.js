@@ -81,17 +81,18 @@ let registerPage = {
     },
     idCheck: (id) => {
         fetch('/id/check?' + new URLSearchParams({ id: id }))
+            .then((response) => response.json())
             .then((response) => {
                 console.log(response);
-                console.log(response.ok);
-                if (response.ok) {
+                console.log(response.able);
+                if (response.able) {
                     return true;
                 } else {
                     return false;
                 }
             })
             .catch((error) => {
-                console.log(error);
+                //console.log(error);
                 return false;
             });
     },

@@ -19,7 +19,6 @@ let teamscore = {
     highTable: undefined,
     collegeTable: undefined,
     url: '/answer',
-
     tableOption: {
         processing: true,
         serverSide: true,
@@ -90,9 +89,6 @@ let teamscore = {
                 //     return `<input type="text" value= ${data} />`;
                 // },
             },
-            {
-                data: 'ANS_FILE_PATH',
-            },
         ],
         rowCallback: function (row, data, index) {
             // $('.paginate_button ').removeClass('first last next prev');
@@ -104,11 +100,6 @@ let teamscore = {
             {
                 targets: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                 orderable: false,
-            },
-            {
-                targets: [9],
-                orderable: false,
-                visible: false,
             },
             // {
             //     targets: 1,
@@ -141,14 +132,7 @@ let teamscore = {
         iDisplayLength: 10,
         language: language,
         drawCallback: function (settings) {
-            // console.log('??');
-            // $('.download').on('click', function () {
-            //     console.log('??');
-            //     let tr = $(this).parent().parent('tr');
-            //     let id = tr.parent().attr('id');
-            //     console.log(id);
-            //     let row;
-            // });
+            //console.log(teamscore.tableOption.downloadType);
         },
     },
     highSchool: () => {
@@ -159,9 +143,102 @@ let teamscore = {
         teamscore.tableOption.ajax.url = teamscore.url + '?type=college';
         teamscore.collegeTable = $('#collegeTable').DataTable(teamscore.tableOption);
     },
+    // 점수 매기기
+    scoring: (score, user) => {
+        console.log(score, user);
+        const check = /^[0-9]+$/;
+        if (!check.test(score)) {
+            alert('Please enter a number only');
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: '/answer/score',
+                data: { score: score, user: user },
+                success: function (response) {
+                    if (response.status) {
+                        teamscore.highTable.clear();
+                        teamscore.highTable.ajax.url(teamscore.url + '?type=high').draw();
+                        teamscore.collegeTable.clear();
+                        teamscore.collegeTable.ajax.url(teamscore.url + '?type=college').draw();
+                    }
+                },
+            });
+        }
+    },
 };
 
 $(function () {
     teamscore.highSchool();
     teamscore.college();
+    // 파일 다운로드
+    $(document).on('click', '.download', function () {
+        let tr = $(this).parent().parent('tr');
+        let id = tr.parent().attr('id');
+        console.log(id);
+        let rowData;
+        if (id == 'highSchool') {
+            rowData = teamscore.highTable.row(tr).data();
+        } else if (id == 'college') {
+            rowData = teamscore.collegeTable.row(tr).data();
+        } else {
+            console.error('error');
+        }
+        window.location.href = `/answer/file?user=${rowData.USER_ID}`;
+    });
+    // 답 클릭시 모달 출력
+    $(document).on('click', '.answer', function () {
+        let tr = $(this).parent().parent('tr');
+        let id = tr.parent().attr('id');
+        console.log(id);
+        let rowData;
+        if (id == 'highSchool') {
+            rowData = teamscore.highTable.row(tr).data();
+        } else if (id == 'college') {
+            rowData = teamscore.collegeTable.row(tr).data();
+        } else {
+            console.error('error');
+        }
+
+        $.ajax({
+            type: 'get',
+            url: '/answer/user',
+            data: { user: rowData.USER_ID },
+            dataType: 'json',
+            success: function (response) {
+                console.log(response);
+                $('#userAnswer').children().remove();
+                let html = '';
+                for (let i = 0; i < response.length; i++) {
+                    html += `<div class='col-12'> ${i + 1}. ${response[i]} </div>`;
+                }
+                $('#userAnswer').append(html);
+                $('#answerModal').modal('show');
+            },
+        });
+    });
+    // score input
+    $(document).on('keyup', '.score-input', (e) => {
+        $(e.target).val(
+            $(e.target)
+                .val()
+                .replace(/[^0-9]$/g, '')
+        );
+        if ($(e.target).val() > 100) {
+            $(e.target).val(100);
+        }
+        if (e.key == 'Enter') {
+            let tr = $(e.target).parent().parent('tr');
+            let id = tr.parent().attr('id');
+            console.log(id);
+            let rowData;
+            if (id == 'highSchool') {
+                rowData = teamscore.highTable.row(tr).data();
+            } else if (id == 'college') {
+                rowData = teamscore.collegeTable.row(tr).data();
+            } else {
+                console.error('error');
+            }
+            teamscore.scoring($(e.target).val(), rowData.USER_ID);
+        }
+    });
 });

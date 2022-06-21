@@ -94,7 +94,7 @@ module.exports = {
             }
         });
     },
-    maxConSet: (req, res) => {
+    curConSet: (req, res) => {
         let { PERM_CODE } = req.user;
         if (PERM_CODE != 0000) {
             res.status(404).send({ message: 'not admin' });
@@ -105,14 +105,14 @@ module.exports = {
         let state;
 
         if (val == '+') {
-            state = 'max_con+1';
+            state = 'if( curr_con >= max_con, curr_con , curr_con+1)';
         } else if (val == '-') {
-            state = 'if(curr_con >= max_con , max_con , max_con-1)';
+            state = 'if( curr_con <= 0, curr_con , curr_con-1)';
         } else {
             res.status(404).send({ message: 'val 이 없음' });
         }
 
-        const sql = `UPDATE tb_host SET max_con =  ${state} WHERE idx = ?`;
+        const sql = `UPDATE tb_host SET curr_con =  ${state} WHERE idx = ?`;
 
         const updateMax = {
             query: sql,
@@ -143,10 +143,10 @@ module.exports = {
         let answer = [];
 
         for (var key in req.body) {
-            answer += req.body[key] + ' |\\|';
+            answer += req.body[key] + ' |\\| ';
         }
 
-        answer = answer.slice(0, -4);
+        answer = answer.slice(0, -6);
         // console.log(answer);
 
         const uploadPath = `uploadFiles/${USER_ID}`;

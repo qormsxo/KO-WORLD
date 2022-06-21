@@ -3,10 +3,12 @@
     <head>
         <%- meta %> <%- style %>
         <title>Ko-World | About Ko-World 2022</title>
+        <script type="text/javascript" src="/node_modules/jquery/dist/jquery.js"></script>
         <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css" />
+        <!-- <link rel="stylesheet" href="/node_modules/bootstrap/dist/js/bootstrap.js" /> -->
+        <script src="/assets/js/bootstrap.js"></script>
         <link rel="stylesheet" href="/assets/css/style.css" />
-        <script type="text/javascript" src="/node_modules/jquery/dist/jquery.js"></script>
     </head>
     <!-- header -->
     <header class="header">
@@ -18,10 +20,10 @@
         <nav class="nav">
             <a href="/sub/about" class="">About Ko-World 2022</a>
             <a href="/sub/qa">Q&A</a>
-            <% if(isLogin) { %> <% if(perm_code == 0002){ %>
+            <% if(isLogin) { %> <% if(perm_code==0002){ %>
             <a href="/challenge">Challenge</a>
 
-            <% } else if(perm_code == 0001) {%>
+            <% } else if(perm_code==0001) {%>
             <a href="/teamscore">Team Score</a>
             <%} else{%>
             <a href="/teamscore">Team Score</a>

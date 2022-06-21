@@ -1,27 +1,33 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
     <head>
-        <meta charset="UTF-8" />
+        <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <style>
             /* .form {
                 background-color: #e9e9e9;
                 border-radius: 10px;
                 padding: 10px 20px 10px 20px;
             } */
+            input[type='number']::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
         </style>
         <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
         <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
+        <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css" />
+        <!--<link rel="stylesheet" href="/node_modules/bootstrap/dist/js/bootstrap.js" /> -->
         <script type="text/javascript" src="../../assets/js/challenge/teamscore.js"></script>
         <title>Ko-World | Team score</title>
     </head>
     <!-- body -->
+
     <body>
         <div class="container">
             <img src="../assets/images/icon_05.png" alt="login icon" />
             <h2>Team Score – 1st Round</h2>
-            <!-- HighSchool Student -->
             <div class="form">
                 <ul>
                     <li><b>· Highschool Student</b></li>
@@ -31,7 +37,6 @@
                         Highschool Student
                     </caption>
                     <colgroup>
-                        <!-- <col width="" /> -->
                         <col width="" />
                         <col width="" />
                         <col width="" />
@@ -43,7 +48,6 @@
                         <col width="" />
                     </colgroup>
                     <thead>
-                        <!-- <th>Number</th> -->
                         <th>ID</th>
                         <th>Name</th>
                         <th>Date of Birth</th>
@@ -57,8 +61,7 @@
                     <tbody id="highSchool"></tbody>
                 </table>
             </div>
-            <!-- // HighSchool Student -->
-            <!-- College Student -->
+
             <div class="form">
                 <ul>
                     <li><b>· College Student</b></li>
@@ -68,7 +71,6 @@
                         Highschool Student
                     </caption>
                     <colgroup>
-                        <!-- <col width="" /> -->
                         <col width="" />
                         <col width="" />
                         <col width="" />
@@ -80,7 +82,6 @@
                         <col width="" />
                     </colgroup>
                     <thead>
-                        <!-- <th>Number</th> -->
                         <th>ID</th>
                         <th>Name</th>
                         <th>Date of Birth</th>
@@ -94,13 +95,31 @@
                     <tbody id="college"></tbody>
                 </table>
             </div>
-            <!-- // College Student -->
-            <!-- 등록버튼 -->
-            <!-- <div class="btn-center">
-                <button class="btn-default">register</button>
-            </div> -->
-            <!-- // 등록버튼 -->
+        </div>
+        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#answerModal">
+        Launch demo modal
+    </button> -->
+        <div class="modal fade" id="answerModal" tabindex="-1" aria-labelledby="answerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="answerModal">Answer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" id="userAnswer">
+                            <!-- <div class="col-12">1. 답1</div>
+                            <div class="col-12">2. 답2</div> -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
+
     <!-- // body -->
 </html>

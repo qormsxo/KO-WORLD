@@ -17,6 +17,6 @@ const upload = multer({ storage: storage });
 module.exports = function (app) {
     app.get('/challenge', controller.challenge);
     app.post('/challenge/server', controller.serverClick);
-    app.put('/challenge/server/max-con', controller.maxConSet);
+    app.put('/challenge/server/curr-con', controller.curConSet);
     app.post('/challenge/answer', upload.array('answerFile'), controller.answer);
 };
