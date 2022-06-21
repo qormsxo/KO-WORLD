@@ -87,7 +87,7 @@ let teamscore = {
             {
                 data: 'ANS_SCORE',
                 render: function (data, type, row) {
-                    if (data == 'Grading required' || data.slice(-1) == '>') {
+                    if (data != null && (data == 'Grading required' || data.slice(-1) == '>')) {
                         return data;
                     } else {
                         return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;

@@ -186,6 +186,7 @@ module.exports = {
 
                         crud.sql(update, (result) => {
                             if (result['affectedRows'] == 1) {
+                                req.user.ANSWER = '1';
                                 res.status(200).send({ message: 'Good Luck!' });
                             } else {
                                 res.status(404).send({ message: 'User Update Error' });

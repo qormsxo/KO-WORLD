@@ -157,7 +157,7 @@ var pagefunction = function () {
                         data: { qaidx: IDX, status: status },
                         success: function (result) {
                             if (result.status === true) {
-                                serarch();
+                                search();
                             } else {
                                 alert('error');
                             }
@@ -178,7 +178,7 @@ var pagefunction = function () {
                         data: { qaidx: IDX, status: status },
                         success: function (result) {
                             if (result.status === true) {
-                                serarch();
+                                search();
                             } else {
                                 alert('error');
                             }
@@ -200,17 +200,18 @@ var pagefunction = function () {
     fn_init();
 };
 
-$('#search_keyword').on('keyup', function (key) {
-    if (key.keyCode == 13) {
-        serarch();
+$('#search_keyword').on('keyup', function (e) {
+    if (e.key == 'Enter') {
+        search();
     }
 });
 
-function serarch() {
+function search() {
     var search_keyword = $('#search_keyword').val();
-    var search_option = $('#select_option').val();
-
+    var search_option = $('#select_option option:selected').val();
     var search_url = '/api/user_list?search_keyword=' + search_keyword + '&search_option=' + search_option;
+    user_list_table.clear();
+    user_list_table.ajax.url(search_url).draw();
 }
 
 pagefunction();
