@@ -179,11 +179,12 @@
             </form>
             <div class="row" id="profile_info_disabled_off_btn">
                 <%if(perm_code === '0000' && grade_code === '0000') {%>
-                <div class="col-sm-4 col-md-1">
-                    <button type="button" class="btn-default" onclick="location.href = '/user/user_list'">UserList</button>
-                </div>
                 <div class="col-sm-4 col-md-3">
                     <button type="button" id="create_admin_modal_btn" class="btn-default">Create Normal Admin</button>
+                </div>
+                <%}%> <%if(perm_code === '0000') {%>
+                <div class="col-sm-4 col-md-1">
+                    <button type="button" class="btn-default" onclick="location.href = '/user/user_list'">UserList</button>
                 </div>
                 <%}%>
                 <div class="col-sm-4 col-md-2">

@@ -73,7 +73,7 @@ exports.get_user_profile_view = (req, res) => {
     }
     let user_id = req.user.USER_ID;
     let query_select_column = "SELECT USER_ID,USER_NM,date_format(BIRTHDAY,'%Y-%m-%d') as BIRTHDAY,NATIONALITY,SCH_NM,EMAIL, tg.GRADE_NM_EN as GRADE, ANSWER, tg.GRADE_CODE ";
-    let query_table = 'FROM TB_USER tu LEFT JOIN TB_GRADE tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
+    let query_table = 'FROM tb_user tu LEFT JOIN tb_grade tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
     let query_where = 'WHERE USER_ID = ?';
     let query_condition = query_select_column + query_table + query_where;
     var crud_query = {
@@ -92,7 +92,7 @@ exports.user_password_check = (req, res) => {
     let password = req.query.current_password;
 
     let query_select_column = 'SELECT USER_PWD ';
-    let query_table = 'FROM TB_USER ';
+    let query_table = 'FROM tb_user ';
     let query_where = 'WHERE USEr_ID = ?';
 
     let query_condition = query_select_column + query_table + query_where;
