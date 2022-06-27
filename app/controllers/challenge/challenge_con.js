@@ -4,48 +4,22 @@ const path = require('path'),
 const zipper = require('multer-zip').default;
 const fs = require('fs');
 
-module.exports = {
+const challenge = {
     challenge: (req, res) => {
         if (req.session.passport) {
             //console.log(req.user);
 
-            const { PERM_CODE, GRADE_CODE, ANSWER } = req.user;
-            //console.log(ANSWER);
-            // 이미 제출한 사람
-            if (PERM_CODE == 0002 && ANSWER == '1') {
-                // alert('You are already Answer');
-                res.send("<script> alert('You are already Answered'); window.location.href = '/'; </script>");
+            const { PERM_CODE, GRADE_CODE } = req.user;
+
+            if (PERM_CODE == 0000) {
+                res.render('./challenge/challenge_server');
+                res.end();
             } else {
-                let hostQuery = `SELECT IDX , HOST_NM_KR ,HOST_NM_EN, CURR_CON ,MAX_CON FROM tb_host  `;
-
-                let hostSelect = {
-                    query: hostQuery,
-                };
-                crud.sql(hostSelect, (hosts) => {
-                    if (PERM_CODE == 0000) {
-                        if (req.query.admin) {
-                            res.send({ hosts: hosts });
-                        } else {
-                            res.render('./challenge/first_challenge', { hosts: hosts });
-                            res.end();
-                        }
+                user((ques, hosts) => {
+                    if (ques[0] != undefined) {
+                        res.render('./challenge/first_challenge', { hosts: hosts, ques: ques[0].ques_num });
                     } else {
-                        let quesQuery = 'SELECT ques_num FROM tb_grade WHERE perm_code = ? AND grade_code = ?';
-                        let params = [PERM_CODE, GRADE_CODE];
-
-                        let quesSelect = {
-                            query: quesQuery,
-                            params: params,
-                        };
-
-                        crud.sql(quesSelect, (ques) => {
-                            console.log(ques);
-                            if (ques[0] != undefined) {
-                                res.render('./challenge/first_challenge', { hosts: hosts, ques: ques[0].ques_num });
-                            } else {
-                                res.send(404);
-                            }
-                        });
+                        res.send(404);
                     }
                 });
             }
@@ -53,6 +27,116 @@ module.exports = {
             res.redirect('/');
         }
     },
+    administrator: (req, res) => {
+        let offset = req.query.start; //db 검색 시작
+        let limit = req.query.length; //페이지에 띄울 row 갯수
+        let order_cols = req.query.columns[req.query.order[0].column].data.trim(); //정렬
+        let order_asc = req.query.order[0].dir.trim();
+
+        let table = {};
+        let params = {};
+
+        // let { type, search_keyword, search_option } = req.query;
+
+        //console.log(type == 'high' ? '0000' : '0001');
+
+        table['draw'] = req.query.draw;
+
+        params['offset'] = offset; //start 지점
+        params['limit'] = limit; //출력 개수
+        params['order_cols'] = order_cols;
+        params['order_asc'] = order_asc;
+
+        //console.log('params: ', params);
+
+        let where_condition = '  ';
+
+        const { PERM_CODE, GRADE_CODE } = req.user;
+
+        //테이블 count
+        let table_name = ' tb_host ';
+        let column_select = ' IDX , HOST_ADDR , HOST_NM_KR , HOST_NM_EN , CURR_CON , MAX_CON , ENABLE ';
+        let query_conditon = 'SELECT count(*) FROM ' + table_name + where_condition;
+        let filter_count = {
+            query: query_conditon,
+            params: [],
+        };
+        crud.sql(filter_count, function (calldata) {
+            //console.log("calldata: ", calldata)
+
+            table.recordsTotal = calldata[0]['count(*)'];
+            table.recordsFiltered = calldata[0]['count(*)'];
+            //console.log("table 1 ", table)
+
+            //===================================
+            //step 2 데이터 조회
+            // 조건 생성
+            let sql =
+                'SELECT ' +
+                column_select +
+                ' FROM ' +
+                table_name +
+                where_condition +
+                ' ORDER BY  ' +
+                params.order_cols +
+                ' ' +
+                params.order_asc +
+                ' LIMIT ' +
+                params.limit +
+                ' OFFSET ' +
+                params.offset;
+
+            let filter_data = {
+                query: sql,
+                params: [],
+            };
+
+            console.log(filter_data);
+
+            crud.sql(filter_data, (docs) => {
+                table.data = docs; //검색 데이터 넣기
+
+                //console.log('docs: ', docs);
+                //console.log('table : ', table);
+                res.send(table);
+            });
+        });
+    },
+    curConSet: (req, res) => {
+        let { PERM_CODE } = req.user;
+        if (PERM_CODE != 0000) {
+            res.status(404).send({ message: 'not admin' });
+        }
+        const { idx, val } = req.body;
+        console.log(idx, val);
+
+        let state;
+
+        if (val == '+') {
+            state = 'if( curr_con >= max_con, curr_con , curr_con+1)';
+        } else if (val == '-') {
+            state = 'if( curr_con <= 0, curr_con , curr_con-1)';
+        } else {
+            res.status(404).send({ message: 'val 이 없음' });
+        }
+
+        const sql = `UPDATE tb_host SET curr_con =  ${state} WHERE idx = ?`;
+
+        const updateCurr = {
+            query: sql,
+            params: [idx],
+        };
+        console.log(updateCurr);
+        crud.sql(updateCurr, (result) => {
+            console.log(result);
+            if (result['affectedRows'] == 1) {
+                res.status(200).send({ success: true });
+            } else {
+                res.status(404).send({ message: 'error' });
+            }
+        });
+    },
+
     serverClick: (req, res) => {
         //console.log(req.body);
 
@@ -94,32 +178,16 @@ module.exports = {
             }
         });
     },
-    curConSet: (req, res) => {
-        let { PERM_CODE } = req.user;
-        if (PERM_CODE != 0000) {
-            res.status(404).send({ message: 'not admin' });
-        }
-        const { idx, val } = req.body;
-        console.log(idx, val);
-
-        let state;
-
-        if (val == '+') {
-            state = 'if( curr_con >= max_con, curr_con , curr_con+1)';
-        } else if (val == '-') {
-            state = 'if( curr_con <= 0, curr_con , curr_con-1)';
-        } else {
-            res.status(404).send({ message: 'val 이 없음' });
-        }
-
-        const sql = `UPDATE tb_host SET curr_con =  ${state} WHERE idx = ?`;
-
-        const updateMax = {
-            query: sql,
+    enable: (req, res) => {
+        //console.log(req.body);
+        const { idx, status } = req.body;
+        let enableSql = `UPDATE tb_host SET ENABLE = ${status == 'true' ? '1' : '0'}  WHERE IDX = ? `;
+        const enableData = {
+            query: enableSql,
             params: [idx],
         };
-
-        crud.sql(updateMax, (result) => {
+        ///console.log(enableData);
+        crud.sql(enableData, (result) => {
             console.log(result);
             if (result['affectedRows'] == 1) {
                 res.status(200).send({ success: true });
@@ -203,3 +271,29 @@ module.exports = {
             });
     },
 };
+
+const user = (func) => {
+    let hostQuery = `SELECT IDX , HOST_NM_KR ,HOST_NM_EN, CURR_CON ,MAX_CON FROM tb_host  `;
+
+    let hostSelect = {
+        query: hostQuery,
+    };
+    crud.sql(hostSelect, (hosts) => {
+        let quesQuery = 'SELECT ques_num FROM tb_grade WHERE perm_code = ? AND grade_code = ?';
+        let params = [PERM_CODE, GRADE_CODE];
+
+        let quesSelect = {
+            query: quesQuery,
+            params: params,
+        };
+
+        crud.sql(quesSelect, (ques) => {
+            //console.log(ques);
+            func(ques, hosts);
+        });
+    });
+};
+
+// exports.challenge = challenge;
+
+module.exports = challenge;

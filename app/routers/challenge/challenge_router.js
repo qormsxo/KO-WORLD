@@ -16,7 +16,9 @@ const upload = multer({ storage: storage });
 
 module.exports = function (app) {
     app.get('/challenge', controller.challenge);
-    app.post('/challenge/server', controller.serverClick);
-    app.put('/challenge/server/curr-con', controller.curConSet);
+    app.get('/challenge/administrator', controller.administrator);
+    app.post('/challenge/server', controller.serverClick); // 유저가 서버 클릭했을때
+    app.put('/challenge/server/curr-con', controller.curConSet); // curr_con 증감 함수
+    app.put('/challenge/server/enable', controller.enable); //
     app.post('/challenge/answer', upload.array('answerFile'), controller.answer);
 };

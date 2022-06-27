@@ -60,50 +60,6 @@ let challenge = {
                 console.error(error);
             });
     },
-    // server 최대 인원 증감 함수
-    currConSet: (obj, td) => {
-        fetch('/challenge/server/curr-con', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(obj),
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                //console.log(response);
-                challenge.serverInfo();
-            })
-            .catch((error) => {
-                console.error('error');
-            });
-    },
-    // admin이 증감 이후에 실행하는 함수
-    serverInfo: () => {
-        let response = fetch('/challenge?' + new URLSearchParams({ admin: true }));
-        const hosts = response.then((res) => res.json());
-        hosts
-            .then((response) => {
-                let hosts = response.hosts;
-                let tbody = '';
-                for (var i = 0; i < hosts.length; i++) {
-                    tbody += '<tr>';
-                    for (var key in hosts[i]) {
-                        tbody += `<td>${hosts[i][key]}</td>`;
-                    }
-                    tbody +=
-                        ' <td>' +
-                        '<input type="button" class="btn-sm btn-default btn" style="font-size: 17px;" value="+" />' +
-                        '<input type="button" class="btn-sm btn-default btn" style="font-size: 17px;" value="-" />' +
-                        '</td></tr>';
-                }
-                $('#serverTbody').children().remove();
-                $('#serverTbody').append(tbody);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    },
 };
 $(function () {
     // 참가자가 서버 클릭
@@ -112,15 +68,6 @@ $(function () {
             challenge.serverClick(event.target.value);
         }
     });
-    // 관리자가 증감 버튼 클릭
-    $(document).on('click', '.btn', (event) => {
-        //console.log(event.target);
-        const td = $(event.target).parent().parent().find('td').eq(0);
-        const num = td.text();
-        const val = $(event.target).val();
-        challenge.currConSet({ idx: num, val: val }, td);
-    });
-
     $('.file').hide();
     // 파일 이름 매핑
     $('.file').on('change', (e) => {
