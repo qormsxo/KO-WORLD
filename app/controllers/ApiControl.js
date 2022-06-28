@@ -37,8 +37,7 @@ exports.get_qa_table_list = function (req, res) {
     if (req.query.search_keyword != undefined && req.query.search_keyword != '') {
         if (req.query.search_option != undefined) {
             if (req.query.search_option === 'TaC') {
-                where_condition +=
-                    " and qa.QA_TITLE LIKE '%" + req.query.search_keyword + "%' or qa.QA_TEXT LIKE '%" + req.query.search_keyword + "%'";
+                where_condition += " and qa.QA_TITLE LIKE '%" + req.query.search_keyword + "%' or qa.QA_TEXT LIKE '%" + req.query.search_keyword + "%'";
             } else if (req.query.search_option === 'Writer') {
                 where_condition += " and ur.USER_NM LIKE '%" + req.query.search_keyword + "%'";
             }
@@ -65,19 +64,7 @@ exports.get_qa_table_list = function (req, res) {
         //step 2 데이터 조회
         // 조건 생성
         var sql =
-            'select ' +
-            column_select +
-            ' from ' +
-            table_name +
-            where_condition +
-            ' order by ' +
-            params.order_cols +
-            ' ' +
-            params.order_asc +
-            ' limit ' +
-            params.limit +
-            ' offset ' +
-            params.offset;
+            'select ' + column_select + ' from ' + table_name + where_condition + ' order by ' + params.order_cols + ' ' + params.order_asc + ' limit ' + params.limit + ' offset ' + params.offset;
 
         var filter_data = {
             query: sql,
@@ -110,28 +97,27 @@ exports.get_user_table_list = (req, res) => {
 
     //console.log('params: ', params);
 
-    var where_condition = ' where 1=1';
+    var where_condition = " where 1=1 and tu.PERM_CODE = '0002' ";
 
-    var where_condition = ' where 1=1';
+    if (req.query.search_user_perm != undefined && req.query.search_user_perm != '') {
+        if (req.query.search_user_perm != 'all') {
+            where_condition += " and tu.GRADE_CODE = '" + req.query.search_user_perm + "'";
+        }
+    }
 
-    if (req.query.search_keyword != undefined) {
-        if (req.query.search_option != undefined) {
+    if (req.query.search_keyword != undefined && req.query.search_keyword != '') {
+        if (req.query.search_option != undefined && req.query.search_option != '') {
             if (req.query.search_option === 'IaU') {
-                where_condition +=
-                    " and tu.USER_ID LIKE '%" + req.query.search_keyword + "%' or tu.USER_NM LIKE '%" + req.query.search_keyword + "%'";
+                where_condition += " and (tu.USER_ID LIKE '%" + req.query.search_keyword + "%' or tu.USER_NM LIKE '%" + req.query.search_keyword + "%') ";
             } else if (req.query.search_option === 'email') {
                 where_condition += " and tu.EMAIL LIKE '%" + req.query.search_keyword + "%'";
-            } else if (req.query.search_option === 'PaG') {
-                where_condition +=
-                    " and tp.PERM_NM_KR LIKE '%" + req.query.search_keyword + "%' or tg.GRADE_NM_KR LIKE '%" + req.query.search_keyword + "%'";
             }
         }
     }
     //===================================
 
     //step 1 테이블 count 체크
-    var table_name =
-        'tb_user tu left join tb_perm tp on tu.PERM_CODE = tp.PERM_CODE left join tb_grade tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
+    var table_name = 'tb_user tu left join tb_perm tp on tu.PERM_CODE = tp.PERM_CODE left join tb_grade tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
     var column_select =
         "tu.IDX, tu.USER_ID, tu.USER_NM, date_format(tu.BIRTHDAY, '%Y-%m-%d') as BIRTHDAY , tu.NATIONALITY, tu.SCH_NM, tu.EMAIL, tp.PERM_NM_KR, tp.PERM_NM_EN, tg.GRADE_NM_KR, tg.GRADE_NM_EN, date_format(tu.REG_DTTM, '%Y-%m-%d') as REG_DTTM, tu.ACCEPT ";
     var query_conditon = 'SELECT count(*) FROM ' + table_name + where_condition;
@@ -149,19 +135,85 @@ exports.get_user_table_list = (req, res) => {
         //step 2 데이터 조회
         // 조건 생성
         var sql =
-            'select ' +
-            column_select +
-            ' from ' +
-            table_name +
-            where_condition +
-            ' order by ' +
-            params.order_cols +
-            ' ' +
-            params.order_asc +
-            ' limit ' +
-            params.limit +
-            ' offset ' +
-            params.offset;
+            'select ' + column_select + ' from ' + table_name + where_condition + ' order by ' + params.order_cols + ' ' + params.order_asc + ' limit ' + params.limit + ' offset ' + params.offset;
+
+        var filter_data = {
+            query: sql,
+        };
+        console.log(filter_data);
+
+        crud.sql(filter_data, function (docs) {
+            table.data = docs; //검색 데이터 넣기
+            res.send(table);
+        });
+    });
+};
+
+exports.get_committee_user_table_list = (req, res) => {
+    var offset = req.query.start; //db 검색 시작
+    var limit = req.query.length; //페이지에 띄울 row 갯수
+    var order_cols = req.query.columns[req.query.order[0].column].data.trim(); //정렬
+    var order_asc = req.query.order[0].dir.trim();
+
+    var table = {};
+    var params = {};
+
+    table['draw'] = req.query.draw;
+
+    params['offset'] = offset; //start 지점
+    params['limit'] = limit; //출력 개수
+    params['order_cols'] = order_cols;
+    params['order_asc'] = order_asc;
+
+    //console.log('params: ', params);
+
+    var where_condition = " where 1=1 and tu.USER_ID != 'admin'";
+
+    if (req.query.search_user_perm != undefined && req.query.search_user_perm != '') {
+        if (req.query.search_user_perm === 'all') {
+            where_condition += " and tu.PERM_CODE IN ('0000', '0001') ";
+        } else if (req.query.search_user_perm === '0002') {
+            where_condition += " and tu.PERM_CODE = '0000' ";
+        } else if (req.query.search_user_perm === '0000') {
+            where_condition += " and tu.PERM_CODE = '0001' and tu.GRADE_CODE = '0000' ";
+        } else if (req.query.search_user_perm === '0001') {
+            where_condition += " and tu.PERM_CODE = '0001' and tu.GRADE_CODE = '0001' ";
+        }
+    } else {
+        where_condition += "and tu.PERM_CODE IN ('0000','0001') ";
+    }
+
+    if (req.query.search_keyword != undefined && req.query.search_keyword != '') {
+        if (req.query.search_option != undefined && req.query.search_option != '') {
+            if (req.query.search_option === 'IaU') {
+                where_condition += " and (tu.USER_ID LIKE '%" + req.query.search_keyword + "%' or tu.USER_NM LIKE '%" + req.query.search_keyword + "%') ";
+            } else if (req.query.search_option === 'email') {
+                where_condition += " and tu.EMAIL LIKE '%" + req.query.search_keyword + "%'";
+            }
+        }
+    }
+    //===================================
+
+    //step 1 테이블 count 체크
+    var table_name = 'tb_user tu left join tb_perm tp on tu.PERM_CODE = tp.PERM_CODE left join tb_grade tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
+    var column_select =
+        "tu.IDX, tu.USER_ID, tu.USER_NM, date_format(tu.BIRTHDAY, '%Y-%m-%d') as BIRTHDAY , tu.NATIONALITY, tu.SCH_NM, tu.EMAIL, tp.PERM_NM_KR, tp.PERM_NM_EN, tg.GRADE_NM_KR, tg.GRADE_NM_EN, date_format(tu.REG_DTTM, '%Y-%m-%d') as REG_DTTM, tu.ACCEPT ";
+    var query_conditon = 'SELECT count(*) FROM ' + table_name + where_condition;
+    var filter_count = {
+        query: query_conditon,
+    };
+    crud.sql(filter_count, function (calldata) {
+        //console.log("calldata: ", calldata)
+
+        table.recordsTotal = calldata[0]['count(*)'];
+        table.recordsFiltered = calldata[0]['count(*)'];
+        //console.log("table 1 ", table)
+
+        //===================================
+        //step 2 데이터 조회
+        // 조건 생성
+        var sql =
+            'select ' + column_select + ' from ' + table_name + where_condition + ' order by ' + params.order_cols + ' ' + params.order_asc + ' limit ' + params.limit + ' offset ' + params.offset;
 
         var filter_data = {
             query: sql,

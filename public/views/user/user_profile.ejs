@@ -72,7 +72,7 @@
                 margin-right: 10%;
                 margin-bottom: 10px;
             }
-            #profile_info_disabled_off_btn {
+            .profile_info_disabled_off_btn {
                 justify-content: end !important;
             }
             .container > #regsiterForm > .profile_center_div > .col-md-5 > .form-control {
@@ -83,6 +83,10 @@
             .form-select {
                 display: inline !important;
                 width: 50% !important;
+            }
+
+            .profile_info_disabled_off_btn > .col-md-3 > button {
+                float: right;
             }
         </style>
         <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
@@ -177,21 +181,27 @@
                     <%}%>
                 </div>
             </form>
-            <div class="row" id="profile_info_disabled_off_btn">
-                <%if(perm_code === '0000' && grade_code === '0000') {%>
+            <div class="row profile_info_disabled_off_btn" style="margin-bottom: 30px">
+                <%if(perm_code === '0000') {%>
                 <div class="col-sm-4 col-md-3">
-                    <button type="button" id="create_admin_modal_btn" class="btn-default">Create Normal Admin</button>
+                    <button type="button" class="btn-default" onclick="location.href = '/user/user_list'">Participant List Page</button>
                 </div>
-                <%}%> <%if(perm_code === '0000') {%>
-                <div class="col-sm-4 col-md-1">
-                    <button type="button" class="btn-default" onclick="location.href = '/user/user_list'">UserList</button>
+                <div class="col-sm-4 col-md-3">
+                    <button type="button" class="btn-default" onclick="location.href = '/user/committee_list'">Committee and Admin List Page</button>
                 </div>
                 <%}%>
-                <div class="col-sm-4 col-md-2">
-                    <button type="button" id="password_change_modal_btn" class="btn-default">Password Change</button>
+            </div>
+            <div class="row profile_info_disabled_off_btn">
+                <%if(perm_code === '0000' && grade_code === '0000') {%>
+                <div class="col-sm-4 col-md-3">
+                    <button type="button" id="create_admin_modal_btn" class="btn-default">Create Normal Admin Modal</button>
+                </div>
+                <%}%>
+                <div class="col-sm-4 col-md-3">
+                    <button type="button" id="password_change_modal_btn" class="btn-default">Password Change Modal</button>
                 </div>
                 <div class="col-sm-4 col-md-3">
-                    <button type="button" id="my_infomation_save_btn" class="btn-default">Save My Infomation</button>
+                    <button type="button" id="my_infomation_save_btn" class="btn-default">Save My Infomation Modal</button>
                 </div>
             </div>
         </div>
