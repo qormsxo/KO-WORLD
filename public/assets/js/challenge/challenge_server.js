@@ -111,10 +111,33 @@ let challengeServer = {
                     },
                 });
             });
+            $('.score-input').on('keyup', (e) => {
+                if (e.key == 'Enter') {
+                    let tr = $(e.target).parent().parent('tr');
+                    // console.log(id);
+                    let rowData = challengeServer.serverTable.row(tr).data();
+
+                    challengeServer.changeUrl($(e.target).val(), rowData.IDX);
+                }
+            });
         },
     },
     table: () => {
         challengeServer.serverTable = $('#serverTable').DataTable(challengeServer.tableOption);
+    },
+    changeUrl: (url, idx) => {
+        $.ajax({
+            type: 'put',
+            url: '/challenge/server/url',
+            data: { url: url, idx: idx },
+            success: function (response) {
+                challengeServer.serverTable.clear();
+                challengeServer.serverTable.ajax.url('/challenge/administrator').draw();
+            },
+            error: function (a, b, c) {
+                alert(a, b, c);
+            },
+        });
     },
     // server 최대 인원 증감 함수
     currConSet: (obj) => {

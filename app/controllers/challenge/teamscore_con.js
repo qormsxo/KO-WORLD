@@ -37,9 +37,7 @@ module.exports = {
 
         let { type, search_keyword, search_option } = req.query;
 
-        console.log(search_keyword, search_option)
-
-
+        console.log(search_keyword, search_option);
 
         //console.log(type == 'high' ? '0000' : '0001');
 
@@ -55,24 +53,24 @@ module.exports = {
         let where_condition = " WHERE tu.ACCEPT = '1' AND tu.GRADE_CODE  = ? ";
 
         if (search_option != undefined) {
-            console.log(search_option)
-            if (search_option == "all") {
-                where_condition += ``
-            } else if (search_option == "required") {
-                where_condition += ` AND ta.ANS_SCORE IS NULL `
-            } else if (search_option == "graded") {
-                where_condition += ` AND ta.ANS_SCORE IS NOT NULL `
+            console.log(search_option);
+            if (search_option == 'all') {
+                where_condition += ``;
+            } else if (search_option == 'required') {
+                where_condition += ` AND ta.ANS_SCORE IS NULL `;
+            } else if (search_option == 'graded') {
+                where_condition += ` AND ta.ANS_SCORE IS NOT NULL `;
             }
         }
 
         if (search_keyword != undefined && search_keyword != '') {
-            where_condition += ` AND ta.USER_ID LIKE '%${search_keyword}%'`
+            where_condition += ` AND ta.USER_ID LIKE '%${search_keyword}%'`;
         }
 
         //
         const { PERM_CODE, GRADE_CODE } = req.user;
         let isJug;
-        if (PERM_CODE == '0001' && GRADE_CODE == '0001') {
+        if ((PERM_CODE == '0001' && GRADE_CODE == '0001') || PERM_CODE == '0000') {
             isJug = 1;
         } else {
             isJug = 0;
@@ -192,4 +190,3 @@ module.exports = {
         });
     },
 };
-

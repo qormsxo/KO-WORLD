@@ -15,12 +15,8 @@ const challenge = {
                 res.render('./challenge/challenge_server');
                 res.end();
             } else {
-                user((ques, hosts) => {
-                    if (ques[0] != undefined) {
-                        res.render('./challenge/first_challenge', { hosts: hosts, ques: ques[0].ques_num });
-                    } else {
-                        res.send(404);
-                    }
+                user((hosts) => {
+                    res.render('./challenge/challenge', { hosts: hosts });
                 });
             }
         } else {
@@ -196,6 +192,24 @@ const challenge = {
             }
         });
     },
+    changeUrl: (req, res) => {
+        //console.log(req.body);
+        const { idx, url } = req.body;
+        let enableSql = `UPDATE tb_host SET HOST_ADDR = ?  WHERE IDX = ? `;
+        const enableData = {
+            query: enableSql,
+            params: [url, idx],
+        };
+        ///console.log(enableData);
+        crud.sql(enableData, (result) => {
+            console.log(result);
+            if (result['affectedRows'] == 1) {
+                res.status(200).send({ success: true });
+            } else {
+                res.status(404).send({ message: 'error' });
+            }
+        });
+    },
     answer: (req, res) => {
         const { USER_ID, USER_NM } = req.user;
 
@@ -279,18 +293,7 @@ const user = (func) => {
         query: hostQuery,
     };
     crud.sql(hostSelect, (hosts) => {
-        let quesQuery = 'SELECT ques_num FROM tb_grade WHERE perm_code = ? AND grade_code = ?';
-        let params = [PERM_CODE, GRADE_CODE];
-
-        let quesSelect = {
-            query: quesQuery,
-            params: params,
-        };
-
-        crud.sql(quesSelect, (ques) => {
-            //console.log(ques);
-            func(ques, hosts);
-        });
+        func(hosts);
     });
 };
 
