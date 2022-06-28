@@ -30,19 +30,37 @@ var pagefunction = function () {
             // stateSave: true,
             sDom: '<"top"if>rt<"bottom"p><"clear">',
             ajax: {
-                url: '/api/user_list',
+                url: '/api/committee_list',
             },
             columns: [
                 { data: 'IDX' },
                 { data: 'USER_ID' },
                 { data: 'USER_NM' },
-                { data: 'BIRTHDAY' },
-                { data: 'NATIONALITY' },
-                { data: 'SCH_NM' },
                 { data: 'EMAIL' },
                 { data: 'PERM_NM_KR' },
                 // { data: 'PERM_NM_EN' },
-                { data: 'GRADE_NM_KR' },
+                {
+                    data: 'GRADE_NM_KR',
+                    render: function (data, type, row) {
+                        if (row['PERM_NM_KR'] === '위원회') {
+                            let overseer = '';
+                            let judge = '';
+                            row['GRADE_NM_KR'] === '감독관' ? (overseer = 'selected') : (judge = 'selected');
+                            return (
+                                '<select id="committee_change_option" class="form-select committee_change_option" aria-label="Default select example"> ' +
+                                '<option value="0000" ' +
+                                overseer +
+                                '>감독관</option> ' +
+                                '<option value="0001" ' +
+                                judge +
+                                '>심사위원</option> ' +
+                                '</select>'
+                            );
+                        } else {
+                            return row['GRADE_NM_KR'];
+                        }
+                    },
+                },
                 // { data: 'GRADE_NM_EN' },
                 { data: 'REG_DTTM' },
                 {
@@ -97,24 +115,9 @@ var pagefunction = function () {
                 },
                 {
                     targets: 6,
-                    orderable: false,
-                    className: 'text-left',
                 },
                 {
                     targets: 7,
-                    orderable: false,
-                    className: 'text-left',
-                },
-                {
-                    targets: 8,
-                    orderable: false,
-                    className: 'text-left',
-                },
-                {
-                    targets: 9,
-                },
-                {
-                    targets: 10,
                     orderable: false,
                 },
             ],
@@ -133,6 +136,27 @@ var pagefunction = function () {
                     $.ajax({
                         type: 'patch',
                         url: '/user/accept',
+                        data: { qaidx: IDX, status: status },
+                        success: function (result) {
+                            if (result.status === true) {
+                                search();
+                            } else {
+                                alert('error');
+                            }
+                        },
+                        error: function (a, b, c) {
+                            alert(a + b + c);
+                        },
+                    });
+                });
+
+                $('.committee_change_option').on('change', function () {
+                    var status = $(this).val();
+                    var tr = $(this).parent().parent();
+                    var IDX = tr.children().eq(0).text();
+                    $.ajax({
+                        type: 'patch',
+                        url: '/user/committee/grade_code',
                         data: { qaidx: IDX, status: status },
                         success: function (result) {
                             if (result.status === true) {
@@ -172,7 +196,7 @@ function search() {
     var search_keyword = $('#search_keyword').val();
     var search_option = $('#select_option option:selected').val();
     var search_user_perm = $('input:radio[name="search_user_perm_option"]:checked').val();
-    var search_url = '/api/user_list?search_keyword=' + search_keyword + '&search_option=' + search_option + '&search_user_perm=' + search_user_perm;
+    var search_url = '/api/committee_list?search_keyword=' + search_keyword + '&search_option=' + search_option + '&search_user_perm=' + search_user_perm;
     user_list_table.clear();
     user_list_table.ajax.url(search_url).draw();
 }

@@ -104,22 +104,26 @@
     <body>
         <div class="container">
             <img src="/assets/images/icon_02.png" alt="question icon" />
-            <h2>Participant List</h2>
+            <h2>Committee and Admin List</h2>
             <!-- /.row -->
         </div>
         <div class="row" style="justify-content: flex-end">
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <div class="form-check search_user_perm_div form-check-inline">
                     <input class="form-check-input search_user_perm" type="radio" name="search_user_perm_option" id="inlineRadio1" value="all" checked />
                     <label class="form-check-label" for="inlineRadio1">All</label>
                 </div>
                 <div class="form-check search_user_perm_div form-check-inline">
-                    <input class="form-check-input search_user_perm" type="radio" name="search_user_perm_option" id="inlineRadio2" value="0000" />
-                    <label class="form-check-label" for="inlineRadio2">High School</label>
+                    <input class="form-check-input search_user_perm" type="radio" name="search_user_perm_option" id="inlineRadio2" value="0002" />
+                    <label class="form-check-label" for="inlineRadio2">Normal Administrator</label>
                 </div>
                 <div class="form-check search_user_perm_div form-check-inline">
-                    <input class="form-check-input search_user_perm" type="radio" name="search_user_perm_option" id="inlineRadio3" value="0001" />
-                    <label class="form-check-label" for="inlineRadio3">College School</label>
+                    <input class="form-check-input search_user_perm" type="radio" name="search_user_perm_option" id="inlineRadio3" value="0000" />
+                    <label class="form-check-label" for="inlineRadio3">Overseer</label>
+                </div>
+                <div class="form-check search_user_perm_div form-check-inline">
+                    <input class="form-check-input search_user_perm" type="radio" name="search_user_perm_option" id="inlineRadio4" value="0001" />
+                    <label class="form-check-label" for="inlineRadio4">Judge</label>
                 </div>
             </div>
             <div class="col-sm-2">
@@ -143,9 +147,6 @@
                     <th>IDX</th>
                     <th>userid</th>
                     <th>username</th>
-                    <th>birthday</th>
-                    <th>nationnality</th>
-                    <th>schoolname</th>
                     <th>email</th>
                     <th>perm_code_kr</th>
                     <!-- <th>perm_code_en</th> -->
@@ -161,5 +162,5 @@
     <script>
         const perm_code = '<%=perm_code%>';
     </script>
-    <script type="text/javascript" src="/assets/js/user/user_list.js"></script>
+    <script type="text/javascript" src="/assets/js/user/committee_list.js"></script>
 </html>
