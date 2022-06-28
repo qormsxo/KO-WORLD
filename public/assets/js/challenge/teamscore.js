@@ -87,7 +87,8 @@ let teamscore = {
             {
                 data: 'ANS_SCORE',
                 render: function (data, type, row) {
-                    if (data != null && (data == 'Grading required' || data.slice(-1) == '>')) {
+                    console.log(row);
+                    if (data != null && (data == 'Grading required' || row['isJug'] == 1)) {
                         return data;
                     } else {
                         return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;
@@ -166,7 +167,7 @@ let teamscore = {
                 data: { score: score, user: user },
                 success: function (response) {
                     if (response.status) {
-                        teamscore.search()
+                        teamscore.search();
                     }
                 },
             });
@@ -258,8 +259,8 @@ $(function () {
         }
     });
     $('#search_keyword').on('keyup', (e) => {
-        if (e.key == "Enter") {
+        if (e.key == 'Enter') {
             teamscore.search();
         }
-    })
+    });
 });
