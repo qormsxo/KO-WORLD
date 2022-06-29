@@ -34,6 +34,7 @@ let teamscore = {
         columns: [
             {
                 data: 'USER_ID',
+                className: 'USER_ID',
                 // render: function (data, type, row) {
                 //     return '<a href="#">' + row['QA_TITLE'] + '</a>';
                 // },
@@ -88,10 +89,18 @@ let teamscore = {
                 data: 'ANS_SCORE',
                 render: function (data, type, row) {
                     console.log(row);
-                    if (data != null && (data == 'Grading required' || row['isJug'] == 1)) {
-                        return data;
+                    if ((data != null && (data == 'Grading required' || row['isJug'] == 1)) || row['isJug'] == 0) {
+                        if (PERM_CODE === '0000') {
+                            return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;
+                        } else {
+                            return data;
+                        }
                     } else {
-                        return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;
+                        if (PERM_CODE === '0000') {
+                            return 'Grading required';
+                        } else {
+                            return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;
+                        }
                     }
                 },
             },
@@ -101,6 +110,49 @@ let teamscore = {
                 //     return `<input type="text" value= ${data} />`;
                 // },
             },
+            {
+                data: 'GRADING_RESULT',
+                render: function (data, type, row) {
+                    if (PERM_CODE === '0000') {
+                        if (data === null) {
+                            if (row['ANS_SCORE'] != null) {
+                                let Pass = '';
+                                let Fail = '';
+                                if (data === 'P') Pass = 'pass_class';
+                                else if (data === 'F') Fail = 'fail_class';
+                                return (
+                                    `<input type="button" class="grading_result btn-sm btn-default btn ${Pass}" style="font-size: 17px;" value="P"> ` +
+                                    `<input type="button" class="grading_result btn-sm btn-default btn ${Fail}" style="font-size: 17px;" value="F">`
+                                );
+                            } else {
+                                return 'Grading required';
+                            }
+                        } else {
+                            let Pass = '';
+                            let Fail = '';
+                            if (data === 'P') Pass = 'pass_class';
+                            else if (data === 'F') Fail = 'fail_class';
+                            return (
+                                `<input type="button" class="grading_result btn-sm btn-default btn ${Pass}" style="font-size: 17px;" value="P"> ` +
+                                `<input type="button" class="grading_result btn-sm btn-default btn ${Fail}" style="font-size: 17px;" value="F">`
+                            );
+                        }
+                    } else {
+                        if (data === null) {
+                            if (row['ANS_SCORE'] != null) {
+                                return 'waiting for pass';
+                            } else {
+                                return 'Grading required';
+                            }
+                        } else {
+                            if (data === 'P') return 'PASS';
+                            else return 'Fail';
+                        }
+                    }
+                },
+            },
+            { data: 'IDX', className: 'disabled GRADING_RESULT' },
+            { data: 'ROUND_ORD', className: 'disabled ROUND_STATUS' },
         ],
         rowCallback: function (row, data, index) {
             // $('.paginate_button ').removeClass('first last next prev');
@@ -110,7 +162,7 @@ let teamscore = {
         },
         columnDefs: [
             {
-                targets: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                 orderable: false,
             },
             // {
@@ -139,7 +191,7 @@ let teamscore = {
         ],
         order: [[8, 'asc']],
         paging: true, //paging 사용 여부
-        scrollY: 200, //표 세로 사이즈
+        scrollY: 538, //표 세로 사이즈
         scrollX: true,
         iDisplayLength: 10,
         language: language,
@@ -156,7 +208,7 @@ let teamscore = {
         teamscore.collegeTable = $('#collegeTable').DataTable(teamscore.tableOption);
     },
     // 점수 매기기
-    scoring: (score, user) => {
+    scoring: (score, IDX, ROUND, USER_ID) => {
         const check = /^[0-9]+$/;
         if (!check.test(score)) {
             alert('Please enter a number only');
@@ -164,10 +216,13 @@ let teamscore = {
             $.ajax({
                 type: 'POST',
                 url: '/answer/score',
-                data: { score: score, user: user },
+                data: { score: score, IDX: IDX, ROUND: ROUND, USER_ID: USER_ID },
                 success: function (response) {
                     if (response.status) {
                         teamscore.search();
+                    } else {
+                        alert(response.message);
+                        window.location.href = '/teamscore';
                     }
                 },
             });
@@ -176,8 +231,10 @@ let teamscore = {
     search: () => {
         let search_keyword = $('#search_keyword').val();
         let search_option = $('#select_option option:selected').val();
-        let hisearch_url = teamscore.url + '?type=high&search_keyword=' + search_keyword + '&search_option=' + search_option;
-        let cosearch_url = teamscore.url + '?type=college&search_keyword=' + search_keyword + '&search_option=' + search_option;
+        let select_round_option = $('#select_round_option option:selected').val();
+
+        let hisearch_url = teamscore.url + '?type=high&search_keyword=' + search_keyword + '&search_option=' + search_option + '&select_round_option=' + select_round_option;
+        let cosearch_url = teamscore.url + '?type=college&search_keyword=' + search_keyword + '&search_option=' + search_option + '&select_round_option=' + select_round_option;
         teamscore.highTable.clear();
         teamscore.collegeTable.clear();
         teamscore.highTable.ajax.url(hisearch_url).draw();
@@ -246,7 +303,9 @@ $(function () {
         if (e.key == 'Enter') {
             let tr = $(e.target).parent().parent('tr');
             let id = tr.parent().attr('id');
-            // console.log(id);
+            let IDX = $(e.target).parent().parent().find('.GRADING_RESULT').text();
+            let ROUND = $(e.target).parent().parent().find('.ROUND_STATUS').text();
+
             let rowData;
             if (id == 'highSchool') {
                 rowData = teamscore.highTable.row(tr).data();
@@ -255,8 +314,30 @@ $(function () {
             } else {
                 console.error('error');
             }
-            teamscore.scoring($(e.target).val(), rowData.USER_ID);
+
+            teamscore.scoring($(e.target).val(), IDX, ROUND);
         }
+    });
+    // Pass OR Fail
+    $(document).on('click', '.grading_result', function () {
+        let passOrFail = $(this).val();
+        let IDX = $(this).parent().parent().find('.GRADING_RESULT').text();
+        let ROUND = $(this).parent().parent().find('.ROUND_STATUS').text();
+        let USER_ID = $(this).parent().parent().find('.USER_ID').text();
+
+        $.ajax({
+            type: 'patch',
+            url: '/answer/grading_result',
+            data: { passdivi: passOrFail, IDX: IDX, ROUND: ROUND, USER_ID: USER_ID },
+            dataType: 'json',
+            success: function (response) {
+                if (response.status) {
+                    teamscore.search();
+                } else {
+                    window.location.href = `/teamscore`;
+                }
+            },
+        });
     });
     $('#search_keyword').on('keyup', (e) => {
         if (e.key == 'Enter') {
