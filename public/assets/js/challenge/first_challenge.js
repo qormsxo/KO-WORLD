@@ -26,16 +26,16 @@ let challenge = {
     registerAnswer: () => {
         let fd = new FormData($('#answerForm')[0]); // 현재 form 데이터
         let data = new FormData(); // 새로운 form 데이터
+        let nullCount = 0;
+        let keyCount = 0;
         for (let key of fd.keys()) {
             // null 체크
             if (key.slice(0, -1) == 'answer' && !$(`#${key}`).val().trim()) {
-                alert('Please enter answer');
-                return;
+                console.log('answer');
+                nullCount += 1;
             } else if (key.slice(0, -1) == 'file' && !$(`#${key}`).val()) {
-                //console.log(key);
-                //console.log($(`#${key}`).val());
-                alert('Please attach the file');
-                return;
+                console.log('file');
+                nullCount += 1;
             }
 
             if (key.slice(0, -1) == 'file') {
@@ -44,7 +44,13 @@ let challenge = {
             } else {
                 data.append(key, fd.get(key));
             }
+            keyCount += 1;
             //console.log(`${key}:${fd.get(key)}`);
+        }
+
+        if (nullCount == keyCount) {
+            alert('Please enter the answer');
+            return;
         }
 
         fetch('/challenge/answer', {
