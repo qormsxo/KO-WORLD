@@ -137,12 +137,12 @@ module.exports = {
         });
     },
     fileDownload: (req, res) => {
-        const { user } = req.query;
-        const sql = 'SELECT ANS_FILE_PATH , ANS_FILE_NAME FROM tb_answer WHERE USER_ID = ?';
+        const { IDX } = req.query;
+        const sql = 'SELECT ANS_FILE_PATH , ANS_FILE_NAME FROM tb_answer WHERE IDX = ?';
 
         const data = {
             query: sql,
-            params: [user],
+            params: [IDX],
         };
 
         crud.sql(data, (result) => {
@@ -212,13 +212,13 @@ module.exports = {
         });
     },
     getAnswer: (req, res) => {
-        let { user } = req.query;
+        let { IDX } = req.query;
 
-        const sql = 'SELECT ANSWER FROM tb_answer WHERE user_id = ?';
+        const sql = 'SELECT ANSWER FROM tb_answer WHERE IDX = ?';
 
         const data = {
             query: sql,
-            params: [user],
+            params: [IDX],
         };
 
         crud.sql(data, (result) => {

@@ -258,7 +258,7 @@ $(function () {
         } else {
             console.error('error');
         }
-        window.location.href = `/answer/file?user=${rowData.USER_ID}`;
+        window.location.href = `/answer/file?IDX=${rowData.IDX}`;
     });
     // 답 클릭시 모달 출력
     $(document).on('click', '.answer', function () {
@@ -276,7 +276,7 @@ $(function () {
         $.ajax({
             type: 'get',
             url: '/answer/user',
-            data: { user: rowData.USER_ID },
+            data: { IDX: rowData.IDX },
             dataType: 'json',
             success: function (response) {
                 //console.log(response);
