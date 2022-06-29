@@ -69,6 +69,7 @@ $('#my_answer').on('click', () => {
         success: function (response) {
             console.log(response);
             let html = '';
+            $('#user_answer_table').find('tbody').children().remove();
             for (let i = 0; i < response.length; i++) {
                 html +=
                     `<tr><td>${response[i].round_ord}</td><td>${response[i].user_nm}</td>` +
