@@ -5,7 +5,33 @@ const zipper = require('multer-zip').default;
 const fs = require('fs');
 
 const challenge = {
+    getRound: (gradeCode, func) => {
+        let today = new Date(+new Date() + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '');
+        let roundSql = `SELECT ROUND_ORD , QUES_NUM  , ROUND_NM_EN FROM tb_round WHERE GRADE_CODE = ${gradeCode} AND  ROUND_FROM  < '${today}' AND ROUND_TO >= '${today}'`;
+        let roundData = {
+            query: roundSql,
+        };
+        crud.sql(roundData, (result) => {
+            console.log(result[0]);
+            if (result[0] != null) {
+                func(true, result[0]);
+            } else {
+                func(false, 'It is not a challenge period');
+            }
+        });
+    },
     challenge: (req, res) => {
+        const user = (func) => {
+            let hostQuery = `SELECT IDX , HOST_NM_KR ,HOST_NM_EN, CURR_CON ,MAX_CON FROM tb_host WHERE enable = 1  `;
+
+            let hostSelect = {
+                query: hostQuery,
+            };
+            crud.sql(hostSelect, (hosts) => {
+                func(hosts);
+            });
+        };
+
         if (req.session.passport) {
             //console.log(req.user);
 
@@ -15,8 +41,19 @@ const challenge = {
                 res.render('./challenge/challenge_server');
                 res.end();
             } else {
-                user((hosts) => {
-                    res.render('./challenge/challenge', { hosts: hosts });
+                challenge.getRound(GRADE_CODE, (status, result) => {
+                    if (status) {
+                        // challenge.round = result['ROUND_ORD'];
+                        user((hosts) => {
+                            res.render('./challenge/challenge', {
+                                hosts: hosts,
+                                ques: result['QUES_NUM'],
+                                challengeName: result['ROUND_NM_EN'],
+                            });
+                        });
+                    } else {
+                        res.send(`<script> alert('${result}'); window.location.href = '/'; </script>`);
+                    }
                 });
             }
         } else {
@@ -211,92 +248,192 @@ const challenge = {
         });
     },
     answer: (req, res) => {
-        const { USER_ID, USER_NM } = req.user;
-
-        if (!USER_ID) {
+        if (!req.session.passport) {
             res.redirect('/');
         }
 
+        const { USER_ID, USER_NM, GRADE_CODE } = req.user;
+
         const { files } = req;
 
-        // console.log(files);
-        // console.log(req.body);
+        console.log(files);
+        console.log(files[0] == null);
+        console.log(req.body);
 
-        let answer = [];
+        let answer = '';
 
         for (var key in req.body) {
+            if (req.body[key] == '') continue; // null 이면
             answer += req.body[key] + ' |\\| ';
         }
-
         answer = answer.slice(0, -6);
-        // console.log(answer);
+        console.log('???', answer);
+        // 답변 insert 하는 함수
+        const answerInsert = (round, USER_ID, answer, uploadPath, zipname, func) => {
+            const answerSql =
+                'INSERT INTO tb_answer ( ROUND_ORD , USER_ID, ANSWER, ANS_FILE_PATH, ANS_FILE_NAME, REG_DTTM)' + ' VALUES(?,?,?,?,?,NOW())';
+            const answerReg = {
+                query: answerSql,
+                params: [round, USER_ID, answer, uploadPath, zipname],
+            };
 
-        const uploadPath = `uploadFiles/${USER_ID}`;
+            crud.sql(answerReg, (result) => {
+                if (result['affectedRows'] == 1) {
+                    func(true);
+                } else {
+                    func(false);
+                }
+            });
+        };
+        // 답변 업데이트
+        const answerUpdate = (round, USER_ID, answer, uploadPath, zipname, func) => {
+            let params = [];
+            if (uploadPath == null && zipname == null) {
+                params = [answer, round, USER_ID];
+            } else if (answer == '') {
+                params = [uploadPath, zipname, round, USER_ID];
+            } else {
+                params = [answer, uploadPath, zipname, round, USER_ID];
+            }
+            const answerUpdateSql = `UPDATE tb_answer SET  ${answer == '' ? '' : 'ANSWER = ?,'} ${
+                uploadPath == null ? '' : ' ANS_FILE_PATH = ?, ANS_FILE_NAME =?, '
+            }  REG_DTTM = NOW() WHERE ROUND_ORD  = ? AND USER_ID = ?`;
 
-        const dest = path.join(__dirname, `../../../${uploadPath}`); // zip 파일 담을 경로
+            const answerUpdateData = {
+                query: answerUpdateSql,
+                params: params,
+            };
+            console.log(answerUpdateData);
+            crud.sql(answerUpdateData, (result) => {
+                console.log(result);
+                if (result['affectedRows'] == 1) {
+                    func(true);
+                } else {
+                    func(false);
+                }
+            });
+        };
 
-        fs.mkdirSync(dest, { recursive: true });
+        // 답변 히스토리 insert 하는 함수
+        const historyInsert = (round, USER_ID, answer, uploadPath, zipname) => {
+            const hisSql =
+                'INSERT INTO tb_answer_his (ROUND_ORD , USER_ID ,ANSWER ,ANS_FILE_PATH, ANS_FILE_NAME, REG_DTTM)' + ' VALUES(?,?,?,?,?,NOW())';
 
-        const today = new Date().toISOString().substring(0, 10); // 오늘 날짜 yy-mm-dd
+            const hisInsertData = {
+                query: hisSql,
+                params: [round, USER_ID, answer, uploadPath, zipname],
+            };
+            crud.sql(hisInsertData, (result) => {
+                if (result['affectedRows'] == 1) {
+                    // func(true);
+                    res.status(200).send({ message: 'Good Luck!' });
+                } else {
+                    // func(false);
+                    res.status(404).send({ message: 'history error' });
+                }
+            });
+        };
+        // 업데이트 하는 로직 함수
+        const answerUpdateLogic = (round, USER_ID, answer, uploadPath, zipname) => {
+            answerUpdate(round, USER_ID, answer, uploadPath, zipname, (updateResult) => {
+                if (updateResult) {
+                    historyInsert(round, USER_ID, answer, uploadPath, zipname);
+                } else {
+                    res.status(404).send({ message: 'answer update error' });
+                }
+            });
+        };
+        // 새로 제출하는 로직 함수
+        const answerInsertLogic = (round, USER_ID, answer, uploadPath, zipname) => {
+            answerInsert(round, USER_ID, answer, uploadPath, zipname, (answerResult) => {
+                if (answerResult) {
+                    historyInsert(round, USER_ID, answer, uploadPath, zipname);
+                } else {
+                    res.status(404).send({ message: 'answer Insert error' });
+                }
+            });
+        };
 
-        const zipname = `${Math.ceil(Math.random() * 10)}_${today}_${USER_NM}.zip`; // zip 파일 이름
+        // 답변을 했는지 체크하는 함수
+        const isAnswered = (userId, round, func) => {
+            const answerCheckSql = 'SELECT USER_ID , ROUND_ORD , ANS_FILE_PATH, ANS_FILE_NAME FROM tb_answer WHERE USER_ID = ? AND ROUND_ORD = ?';
 
-        const filenamer = ({ originalname }) => `${today}_${originalname}`; // 파일 이름 짓기
+            const checkData = {
+                query: answerCheckSql,
+                params: [userId, round],
+            };
+            crud.sql(checkData, (result) => {
+                console.log(result);
+                if (result[0] == null) {
+                    func(false);
+                } else {
+                    func(true, result);
+                }
+            });
+        };
+        // 챌린지 기간인지 확인
+        challenge.getRound(GRADE_CODE, (status, result) => {
+            if (status) {
+                let round = result['ROUND_ORD'];
+                // 제출했는지 안했는지 확인
+                isAnswered(USER_ID, round, (answered) => {
+                    let uploadPath = null;
+                    let zipname = null;
 
-        //console.log(files, dest, zipname, filenamer);
-
-        zipper({ files, dest, zipname, filenamer })
-            .then(() => {
-                console.log('================zip=================');
-
-                const answerSql = 'INSERT INTO tb_answer (USER_ID, ANSWER, ANS_FILE_PATH, ANS_FILE_NAME, REG_DTTM)' + ' VALUES(?,?,?,?,NOW())';
-                const params = [USER_ID, answer, uploadPath, zipname];
-
-                const answerReg = {
-                    query: answerSql,
-                    params: params,
-                };
-                // 답변 insert
-                crud.sql(answerReg, (result) => {
-                    if (result['affectedRows'] == 1) {
-                        const userUpdate = `UPDATE tb_user SET answer = '1' WHERE user_id = ?`;
-
-                        const update = {
-                            query: userUpdate,
-                            params: [USER_ID],
-                        };
-
-                        crud.sql(update, (result) => {
-                            if (result['affectedRows'] == 1) {
-                                req.user.ANSWER = '1';
-                                res.status(200).send({ message: 'Good Luck!' });
-                            } else {
-                                res.status(404).send({ message: 'User Update Error' });
-                            }
-                        });
+                    // 파일업로드 안했을때
+                    if (files[0] == null) {
+                        if (answered) {
+                            // 이미 제출했을때
+                            console.log('==================== 정답 수정 , 파일 x ======================');
+                            answerUpdateLogic(round, USER_ID, answer, uploadPath, zipname);
+                        } else {
+                            // 새로 올릴때
+                            console.log('==================== 새로 제출 , 파일 x ======================');
+                            answerInsertLogic(round, USER_ID, answer, uploadPath, zipname);
+                        }
                     } else {
-                        res.status(404).send({ message: 'error' });
+                        // 파일 제출했을때
+                        uploadPath = `uploadFiles/${USER_ID}`;
+
+                        const dest = path.join(__dirname, `../../../${uploadPath}`); // zip 파일 담을 경로
+
+                        fs.mkdirSync(dest, { recursive: true });
+
+                        const today = new Date().toISOString().substring(0, 10); // 오늘 날짜 yy-mm-dd
+
+                        zipname = `${round}round_${today}_${USER_NM}.zip`; // zip 파일 이름 라운드 별로 바꿔야댐
+
+                        const filenamer = ({ originalname }) => `${originalname}`; // 파일 이름 짓기
+
+                        //console.log(files, dest, zipname, filenamer);
+
+                        //파일 압축해서 저장
+                        zipper({ files, dest, zipname, filenamer })
+                            .then(() => {
+                                //const params = [round, USER_ID, answer, uploadPath, zipname];
+                                console.log('================zip=================');
+                                if (answered) {
+                                    // 이미 제출했을때
+                                    console.log('==================== 수정 , 파일 O ======================');
+                                    answerUpdateLogic(round, USER_ID, answer, uploadPath, zipname);
+                                } else {
+                                    // 새로 올릴때
+                                    console.log('==================== 새로 제출 , 파일 O ======================');
+                                    answerInsertLogic(round, USER_ID, answer, uploadPath, zipname);
+                                }
+                            })
+                            .catch((error) => {
+                                console.log('=================error==============', error);
+                                res.status(404).send({ message: error });
+                            });
                     }
                 });
-            })
-            .catch((error) => {
-                console.log('=================error==============', error);
-                res.status(404).send({ message: error });
-            });
+            } else {
+                // 챌린지 기간이 아닐때
+                res.send(`<script> alert('${result}'); window.location.href = '/'; </script>`);
+            }
+        });
     },
 };
-
-const user = (func) => {
-    let hostQuery = `SELECT IDX , HOST_NM_KR ,HOST_NM_EN, CURR_CON ,MAX_CON FROM tb_host  `;
-
-    let hostSelect = {
-        query: hostQuery,
-    };
-    crud.sql(hostSelect, (hosts) => {
-        func(hosts);
-    });
-};
-
-// exports.challenge = challenge;
 
 module.exports = challenge;

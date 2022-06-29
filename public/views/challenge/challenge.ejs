@@ -12,7 +12,7 @@
     <body>
         <div class="container">
             <img src="../assets/images/icon_04.png" alt="login icon" />
-            <h2>Challenge</h2>
+            <h2><%= challengeName%></h2>
             <!-- Login form -->
             <div class="form">
                 <!-- <ul  style="padding-left: 0px">
@@ -36,8 +36,8 @@
 
             <!-- 등록버튼 -->
             <!-- form 여러개 생길 때 -->
-                <form class="mb100" id="answerForm" enctype="multipart/form-data" onsubmit="return false">
-
+            <form class="mb100" id="answerForm" enctype="multipart/form-data" onsubmit="return false">
+                <% for(var i =1; i<= ques; i++){ %>
                         <div class="mb40">
                             <label for="answer<%=i%>" class="label w200">Input your answer</label>
                             <input type="text" id="answer<%=i%>" name="answer<%=i%>" class="input-style" />
@@ -54,8 +54,9 @@
                             </span>
                         </div>
                    
-      
+                <% } %>      
                 </form>            
+    
                 <div class="btn-center">
                     <button class="btn-default" onclick="challenge.registerAnswer()" >Register</button>
                 </div>
@@ -65,3 +66,18 @@
     </body>
     <!-- // body -->
 </html>
+
+<!-- 
+                      
+                        <div class="mb40">
+                            <label for="answer<%=i%>" class="label w200">Input your answer</label>
+                            <input type="text" id="answer<%=i%>" name="answer<%=i%>" class="input-style" />
+                        </div>
+                        <div class="mb40">
+                            <label class="label w200">The file of solving</label>
+                            <input type="text" class="input-style" id="fileName<%=i%>" readonly/>
+                            <input type="file" id="file<%=i%>" name="file<%=i%>" class="file" />
+                            <span>
+                                <button class="btn-sm btn-default" ><label for="file<%=i%>">attatch</label> </button>
+                            </span>
+                        </div>  -->
