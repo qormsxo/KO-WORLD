@@ -266,11 +266,12 @@ const challenge = {
             if (req.body[key] == '') continue; // null 이면
             answer += req.body[key] + ' |\\| ';
         }
-        answer = answer.slice(0, -6);
-        console.log('???', answer);
+        answer = answer.slice(0, -5);
+        //console.log('???', answer);
         // 답변 insert 하는 함수
         const answerInsert = (round, USER_ID, answer, uploadPath, zipname, func) => {
-            const answerSql = 'INSERT INTO tb_answer ( ROUND_ORD , USER_ID, ANSWER, ANS_FILE_PATH, ANS_FILE_NAME, REG_DTTM)' + ' VALUES(?,?,?,?,?,NOW())';
+            const answerSql =
+                'INSERT INTO tb_answer ( ROUND_ORD , USER_ID, ANSWER, ANS_FILE_PATH, ANS_FILE_NAME, REG_DTTM)' + ' VALUES(?,?,?,?,?,NOW())';
             const answerReg = {
                 query: answerSql,
                 params: [round, USER_ID, answer, uploadPath, zipname],
@@ -315,7 +316,8 @@ const challenge = {
 
         // 답변 히스토리 insert 하는 함수
         const historyInsert = (round, USER_ID, answer, uploadPath, zipname) => {
-            const hisSql = 'INSERT INTO tb_answer_his (ROUND_ORD , USER_ID ,ANSWER ,ANS_FILE_PATH, ANS_FILE_NAME, REG_DTTM)' + ' VALUES(?,?,?,?,?,NOW());';
+            const hisSql =
+                'INSERT INTO tb_answer_his (ROUND_ORD , USER_ID ,ANSWER ,ANS_FILE_PATH, ANS_FILE_NAME, REG_DTTM)' + ' VALUES(?,?,?,?,?,NOW());';
             const updateUserAnswerSql = 'UPDATE tb_user SET ANSWER = ? WHERE USER_ID = ?;';
             const hisInsertData = {
                 query: hisSql + updateUserAnswerSql,

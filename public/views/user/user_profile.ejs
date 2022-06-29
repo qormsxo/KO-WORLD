@@ -9,36 +9,10 @@
                 text-align: center !important;
                 float: none !important;
             }
-            th {
-                display: none;
-            }
-            td {
-                height: 30px;
-            }
             .text-left {
                 text-align: left;
             }
-            table tbody tr td:nth-child(1) {
-                width: 100px;
-            }
-            table tbody tr td:nth-child(2) {
-                width: 800px;
-            }
-            table tbody tr td:nth-child(3) {
-                width: 250px;
-            }
-            table tbody tr td:nth-child(4) {
-                width: 170px;
-            }
-            table tbody tr td:nth-child(5) {
-                width: 100px;
-            }
-            table tbody tr td:nth-child(6) {
-                width: 100px;
-            }
-            table {
-                border-top: 1px solid #111 !important;
-            }
+
             .btn-default {
                 margin: 0px !important;
             }
@@ -196,6 +170,10 @@
                 <div class="col-sm-4 col-md-3">
                     <button type="button" id="create_admin_modal_btn" class="btn-default">Create Normal Admin Modal</button>
                 </div>
+                <%}%> <%if(perm_code === '0002') {%>
+                <div class="col-sm-4 col-md-3">
+                    <button type="button" class="btn-default" id="my_answer">My Challenge Answer</button>
+                </div>
                 <%}%>
                 <div class="col-sm-4 col-md-3">
                     <button type="button" id="password_change_modal_btn" class="btn-default">Password Change Modal</button>
@@ -310,6 +288,63 @@
             </div>
         </div>
         <!-- // my_infomation_save_modal-->
+        <!-- my Answer -->
+        <div class="modal fade" id="user_answer_modal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalToggleLabel">My Challenge Answer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table id="user_answer_table" class="table">
+                            <colgroup>
+                                <col width="10%" />
+                                <col width="20%" />
+                                <col width="10%" />
+                                <col width="20%" />
+                                <col width="20%" />
+                                <col width="20%" />
+                            </colgroup>
+                            <thead>
+                                <tr style="text-align: center">
+                                    <th>Round</th>
+                                    <th>User Name</th>
+                                    <th>Answer</th>
+                                    <th>File</th>
+                                    <th>Score</th>
+                                    <th>Pass OR Fail</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-bs-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="answerModal" tabindex="-1" aria-labelledby="answerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="answerModal">Answer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" id="userAnswer">
+                            <!-- <div class="col-12">1. 답1</div>
+                            <div class="col-12">2. 답2</div> -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
     <!-- // body -->
     <script>

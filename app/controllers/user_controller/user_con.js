@@ -72,7 +72,8 @@ exports.get_user_profile_view = (req, res) => {
         return res.send("<script> alert('do not have permission to answer'); window.location.href = '/'; </script>");
     }
     let user_id = req.user.USER_ID;
-    let query_select_column = "SELECT USER_ID,USER_NM,date_format(BIRTHDAY,'%Y-%m-%d') as BIRTHDAY,NATIONALITY,SCH_NM,EMAIL, tg.GRADE_NM_EN as GRADE, ANSWER, tg.GRADE_CODE ";
+    let query_select_column =
+        "SELECT USER_ID,USER_NM,date_format(BIRTHDAY,'%Y-%m-%d') as BIRTHDAY,NATIONALITY,SCH_NM,EMAIL, tg.GRADE_NM_EN as GRADE, ANSWER, tg.GRADE_CODE ";
     let query_table = 'FROM tb_user tu LEFT JOIN tb_grade tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
     let query_where = 'WHERE USER_ID = ?';
     let query_condition = query_select_column + query_table + query_where;
@@ -174,10 +175,16 @@ exports.update_user_info = (req, res) => {
     var crud_query;
 
     if (date !== undefined) {
-        update_query_conditon = 'update ' + 'tb_user ' + `set USER_NM = ?, EMAIL = ?, BIRTHDAY = ?, NATIONALITY = ?, SCH_NM = ? ${grade_code ? ', GRADE_CODE = ?' : ''} ` + 'where USER_ID = ?; ';
+        update_query_conditon =
+            'update ' +
+            'tb_user ' +
+            `set USER_NM = ?, EMAIL = ?, BIRTHDAY = ?, NATIONALITY = ?, SCH_NM = ? ${grade_code ? ', GRADE_CODE = ?' : ''} ` +
+            'where USER_ID = ?; ';
         crud_query = {
             query: update_query_conditon,
-            params: grade_code ? [name, email, date, nationality, schoolname, grade_code, user_id] : [name, email, date, nationality, schoolname, user_id],
+            params: grade_code
+                ? [name, email, date, nationality, schoolname, grade_code, user_id]
+                : [name, email, date, nationality, schoolname, user_id],
         };
     } else {
         update_query_conditon = 'update ' + 'tb_user ' + 'set USER_NM = ?, EMAIL = ? ' + 'where USER_ID = ?; ';
@@ -235,5 +242,19 @@ exports.post_normal_admin = async (req, res) => {
                 message: 'Account creation failed',
             });
         }
+    });
+};
+
+exports.user_answer = (req, res) => {
+    const { USER_ID } = req.user;
+    let sql =
+        'SELECT ta.round_ord , tu.user_nm , ta.answer , ta.idx , ta.ans_score , ta.grading_result ' +
+        ` FROM tb_user tu INNER JOIN tb_answer ta ON tu.user_id  = ta.user_id WHERE ta.user_id = '${USER_ID}' `;
+    let data = {
+        query: sql,
+    };
+    crud.sql(data, (answers) => {
+        console.log(answers);
+        res.send(answers);
     });
 };

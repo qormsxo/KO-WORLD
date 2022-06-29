@@ -62,6 +62,46 @@ $('#current_password_check').on('click', function () {
     }
 });
 
+$('#my_answer').on('click', () => {
+    $.ajax({
+        type: 'get',
+        url: '/user/answer',
+        success: function (response) {
+            console.log(response);
+            let html = '';
+            for (let i = 0; i < response.length; i++) {
+                html +=
+                    `<tr><td>${response[i].round_ord}</td><td>${response[i].user_nm}</td>` +
+                    `<td><a class="answer" value=${response[i].idx}>answer</a></td>` +
+                    `<td><a href="/answer/file?IDX=${response[i].idx}">download</a></td>` +
+                    `<td>${response[i].ans_score == null ? 'wait' : response[i].ans_score}</td>` +
+                    `<td><b>${response[i].grading_result == null ? 'wait' : response[i].grading_result}<b></td></tr> `;
+            }
+            $('#user_answer_table').find('tbody').append(html);
+            $('#user_answer_modal').modal('show');
+            $('#user_answer_table').find('th').css('display', 'table-cell');
+        },
+    });
+});
+$(document).on('click', '.answer', function (e) {
+    $.ajax({
+        type: 'get',
+        url: '/answer/user',
+        data: { IDX: $(e.target).attr('value') },
+        dataType: 'json',
+        success: function (response) {
+            //console.log(response);
+            $('#userAnswer').children().remove();
+            let html = '';
+            for (let i = 0; i < response.length; i++) {
+                html += `<div class='col-12'> ${i + 1}. ${response[i]} </div>`;
+            }
+            $('#userAnswer').append(html);
+            $('#answerModal').modal('show');
+        },
+    });
+});
+
 $('#save_info_current_password_check').on('click', function () {
     let save_info_current_password = $('#save_info_current_password').val();
     if (save_info_current_password === '') {
