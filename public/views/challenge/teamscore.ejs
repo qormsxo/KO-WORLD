@@ -1,59 +1,83 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-        /* .form {
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>
+            /* .form {
                 background-color: #e9e9e9;
                 border-radius: 10px;
                 padding: 10px 20px 10px 20px;
             } */
-        input[type='number']::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+            input[type='number']::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
 
-        .btn-default {
-            padding: 6px 18px !important;
-        }
+            .btn-default {
+                padding: 6px 18px !important;
+            }
 
-        .btn-default {
-            margin: 0px !important;
-        }
-    </style>
-    <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
-    <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
-    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css" />
-    <!--<link rel="stylesheet" href="/node_modules/bootstrap/dist/js/bootstrap.js" /> -->
-    <script type="text/javascript" src="../../assets/js/challenge/teamscore.js"></script>
-    <title>Ko-World | Team score</title>
-</head>
-<!-- body -->
+            .btn-default {
+                margin: 0px !important;
+            }
+            .pass_class {
+                background-color: blue !important;
+                color: white !important;
+            }
+            .fail_class {
+                background-color: firebrick !important;
+                color: white !important;
+            }
+            .disabled {
+                display: none;
+            }
+        </style>
+        <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
+        <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
+        <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css" />
+        <!--<link rel="stylesheet" href="/node_modules/bootstrap/dist/js/bootstrap.js" /> -->
+        <script>
+            const PERM_CODE = '<%=perm_code%>';
+        </script>
+        <script type="text/javascript" src="../../assets/js/challenge/teamscore.js"></script>
+        <title>Ko-World | Team score</title>
+    </head>
+    <!-- body -->
 
-<body>
-    <div class="container">
-        <img src="../assets/images/icon_05.png" alt="login icon" />
-        <h2>Team Score – 1st Round</h2>
-        <div class="row" style="justify-content: flex-end">
-            <div class="col-sm-2">
-                <select id="select_option" class="form-select" aria-label="Default select example">
-                    <option value="all" selected>all</option>
-                    <option value="graded">graded</option>
-                    <option value="required">grading required</option>
-                </select>
-            </div>
-            <div class="col-sm-2">
-                <div class="input-group">
-                    <input type="text" id="search_keyword" name="search_keyword" class="form-control"
-                        placeholder="User Name" />
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" onclick="teamscore.search();">
-                            <i class="fa fa-search" aria-hidden="true"></i>
-                        </button>
-                    </span>
+    <body>
+        <div class="container">
+            <img src="../assets/images/icon_05.png" alt="login icon" />
+            <h2>Team Score</h2>
+            <div class="row" style="justify-content: flex-end">
+                <div class="col-sm-3">
+                    <label>Select Round</label>
+                    <select id="select_round_option" class="form-select" style="display: inline; width: 57%" aria-label="Default select example">
+                        <option value="1" selected>1 Round</option>
+                        <option value="2">2 Round</option>
+                        <option value="3">3 Round</option>
+                        <option value="4">4 Round</option>
+                        <option value="5">5 Round</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <label>Grading Status</label>
+                    <select id="select_option" class="form-select" style="display: inline; width: 57%" aria-label="Default select example">
+                        <option value="all" selected>all</option>
+                        <option value="graded">graded</option>
+                        <option value="required">grading required</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <div class="input-group">
+                        <input type="text" id="search_keyword" name="search_keyword" class="form-control" placeholder="User Name" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="teamscore.search();">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -75,6 +99,9 @@
                     <col width="" />
                     <col width="" />
                     <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
                 </colgroup>
                 <thead>
                     <th>ID</th>
@@ -86,6 +113,9 @@
                     <th>File</th>
                     <th>Score</th>
                     <th>Ranking</th>
+                    <th>Pass OR Fail</th>
+                    <th>IDX</th>
+                    <th>ROUND</th>
                 </thead>
                 <tbody id="highSchool"></tbody>
             </table>
@@ -109,6 +139,9 @@
                     <col width="" />
                     <col width="" />
                     <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
                 </colgroup>
                 <thead>
                     <th>ID</th>
@@ -120,36 +153,37 @@
                     <th>File</th>
                     <th>Score</th>
                     <th>Ranking</th>
+                    <th>Pass or Fail</th>
+                    <th>IDX</th>
+                    <th>ROUND</th>
                 </thead>
                 <tbody id="college"></tbody>
             </table>
         </div>
-    </div>
-    <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#answerModal">
+
+        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#answerModal">
         Launch demo modal
     </button> -->
-    <div class="modal fade" id="answerModal" tabindex="-1" aria-labelledby="answerModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="answerModal">Answer</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row" id="userAnswer">
-                        <!-- <div class="col-12">1. 답1</div>
-                            <div class="col-12">2. 답2</div> -->
+        <div class="modal fade" id="answerModal" tabindex="-1" aria-labelledby="answerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="answerModal">Answer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+                    <div class="modal-body">
+                        <div class="row" id="userAnswer">
+                            <!-- <div class="col-12">1. 답1</div>
+                            <div class="col-12">2. 답2</div> -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</body>
-
-<!-- // body -->
-
+    </body>
+    <!-- // body -->
 </html>

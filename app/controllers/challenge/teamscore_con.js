@@ -3,6 +3,7 @@ const path = require('path'),
     crud = require('../../model/crud');
 const zipper = require('multer-zip').default;
 const fs = require('fs');
+const c = require('config');
 
 module.exports = {
     page: (req, res) => {
@@ -35,7 +36,7 @@ module.exports = {
         let table = {};
         let params = {};
 
-        let { type, search_keyword, search_option } = req.query;
+        let { type, search_keyword, search_option, select_round_option } = req.query;
 
         console.log(search_keyword, search_option);
 
@@ -51,6 +52,12 @@ module.exports = {
         //console.log('params: ', params);
 
         let where_condition = " WHERE tu.ACCEPT = '1' AND tu.GRADE_CODE  = ? ";
+
+        if (select_round_option != undefined) {
+            where_condition += ` AND ta.ROUND_ORD = ${select_round_option} `;
+        } else {
+            where_condition += ` AND ta.ROUND_ORD = 1 `;
+        }
 
         if (search_option != undefined) {
             console.log(search_option);
@@ -70,16 +77,16 @@ module.exports = {
         //
         const { PERM_CODE, GRADE_CODE } = req.user;
         let isJug;
-        if ((PERM_CODE == '0001' && GRADE_CODE == '0001') || PERM_CODE == '0000') {
-            isJug = 1;
-        } else {
+        if (PERM_CODE == '0001' && GRADE_CODE == '0000') {
             isJug = 0;
+        } else if (PERM_CODE == '0000' || (PERM_CODE == '0001' && GRADE_CODE == '0001')) {
+            isJug = 1;
         }
 
         //테이블 count
         let table_name = ' tb_answer ta  INNER JOIN tb_user tu ON ta.USER_ID = tu.USER_ID ';
         let column_select =
-            " tu.USER_ID, tu.USER_NM ,date_format(tu.BIRTHDAY , '%Y-%m-%d') as BIRTHDAY,tu.NATIONALITY , tu.EMAIL ," +
+            " ta.ROUND_ORD as ROUND_ORD, ta.IDX as IDX, tu.USER_ID, tu.USER_NM ,date_format(tu.BIRTHDAY , '%Y-%m-%d') as BIRTHDAY,tu.NATIONALITY , ta.GRADING_RESULT as GRADING_RESULT, tu.EMAIL ," +
             ` if(${isJug} = 1 , ta.ANS_SCORE ,IF( isnull(ta.ANS_SCORE)  , 'Grading required' , concat('<b>', ta.ANS_SCORE , '<b>' )))  as ANS_SCORE , ${isJug} as isJug , ` +
             'DENSE_RANK() OVER(ORDER BY ta.ANS_SCORE  DESC ) AS ranking ';
         let query_conditon = 'SELECT count(*) FROM ' + table_name + where_condition;
@@ -117,6 +124,7 @@ module.exports = {
                 params: [type == 'high' ? '0000' : '0001'],
             };
 
+            console.log(sql);
             console.log(filter_data);
 
             crud.sql(filter_data, (docs) => {
@@ -153,18 +161,53 @@ module.exports = {
         });
     },
     scoring: (req, res) => {
-        const { user, score } = req.body;
-        const sql = 'UPDATE tb_answer SET ANS_SCORE = ? WHERE USER_ID = ?';
+        // const { user, score } = req.body;
+        const { score, IDX, ROUND } = req.body;
+        const GRADING_USERID = req.user.USER_ID;
+        const PERM_CODE = req.user.PERM_CODE;
+        const GRADE_CODE = req.user.GRADE_CODE;
 
-        const data = {
-            query: sql,
-            params: [score, user],
+        const round_check_sql = 'select * from tb_round where ROUND_ORD = ? and now() >= JUDGMENT_FROM and now() < JUDGMENT_TO ';
+        const round_check_data = {
+            query: round_check_sql,
+            params: [ROUND],
         };
-        crud.sql(data, (result) => {
-            if (result['affectedRows'] == 1) {
-                res.send({ status: true });
+
+        crud.sql(round_check_data, (result) => {
+            //심사 기간일 경우 업데이트 가능
+            if (result[0]) {
+                const select_sql = 'select ANS_SCORE from tb_answer where IDX = ?';
+                const select_data = {
+                    query: select_sql,
+                    params: [IDX],
+                };
+
+                crud.sql(select_data, (result) => {
+                    //채점이 되었을 시 어드민만 점수 수정가능
+                    if (result[0].ANS_SCORE != null) {
+                        //어드민이 아닌데 update요청시 false 반환
+                        if (PERM_CODE !== '0000') return res.send({ status: false, message: 'Only admins can edit scoring' });
+                    }
+                    //채점이 안되어있을 시 심사위원만 점수 기입가능
+                    else {
+                        //심사위원 아닌데 update요청시 false 반환
+                        if (PERM_CODE !== '0001' && GRADE_CODE !== '0001') return res.send({ status: false, message: 'Only judges can enter scores' });
+                    }
+                    const sql = 'UPDATE tb_answer SET ANS_SCORE = ?, GRADING_ID = ? WHERE IDX = ?';
+                    const data = {
+                        query: sql,
+                        params: [score, GRADING_USERID, IDX],
+                    };
+                    crud.sql(data, (result) => {
+                        if (result['affectedRows'] == 1) {
+                            res.send({ status: true });
+                        } else {
+                            res.send({ status: false });
+                        }
+                    });
+                });
             } else {
-                res.send({ status: false });
+                res.send({ status: false, message: 'It is not the judging period for that round.' });
             }
         });
     },
@@ -186,6 +229,41 @@ module.exports = {
                 let array = result[0]['ANSWER'].split(' |\\| ');
                 console.log(array);
                 res.send(array);
+            }
+        });
+    },
+    grading_result: (req, res) => {
+        let { passdivi, IDX, ROUND, USER_ID } = req.body;
+
+        const USERID = req.user.USER_ID;
+
+        const round_check_sql = 'select * from tb_round where ROUND_ORD = ? and now() >= JUDGMENT_FROM and now() < JUDGMENT_TO ';
+        const round_check_data = {
+            query: round_check_sql,
+            params: [ROUND],
+        };
+
+        crud.sql(round_check_data, (result) => {
+            if (result[0]) {
+                const tb_answer_sql = 'UPDATE tb_answer set GRADING_RESULT = ?, MODIFIER_ID = ?, EDIT_DTTM = now() WHERE IDX = ?;';
+                const tb_user_sql = 'UPDATE tb_user set GRADING_RESULT = ? WHERE USER_ID = ?;';
+
+                console.log('@@@@@@@@@@@' + USER_ID);
+
+                const data = {
+                    query: tb_answer_sql + tb_user_sql,
+                    params: [passdivi, USERID, IDX, passdivi, USER_ID],
+                };
+
+                crud.sql(data, (result) => {
+                    if (result.affectedRows >= 1) {
+                        res.send({ status: true });
+                    } else {
+                        res.send({ status: false });
+                    }
+                });
+            } else {
+                res.send({ status: false, message: 'It is not the judging period for that round.' });
             }
         });
     },
