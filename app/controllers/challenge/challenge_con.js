@@ -270,8 +270,7 @@ const challenge = {
         console.log('???', answer);
         // 답변 insert 하는 함수
         const answerInsert = (round, USER_ID, answer, uploadPath, zipname, func) => {
-            const answerSql =
-                'INSERT INTO tb_answer ( ROUND_ORD , USER_ID, ANSWER, ANS_FILE_PATH, ANS_FILE_NAME, REG_DTTM)' + ' VALUES(?,?,?,?,?,NOW())';
+            const answerSql = 'INSERT INTO tb_answer ( ROUND_ORD , USER_ID, ANSWER, ANS_FILE_PATH, ANS_FILE_NAME, REG_DTTM)' + ' VALUES(?,?,?,?,?,NOW())';
             const answerReg = {
                 query: answerSql,
                 params: [round, USER_ID, answer, uploadPath, zipname],
@@ -316,15 +315,14 @@ const challenge = {
 
         // 답변 히스토리 insert 하는 함수
         const historyInsert = (round, USER_ID, answer, uploadPath, zipname) => {
-            const hisSql =
-                'INSERT INTO tb_answer_his (ROUND_ORD , USER_ID ,ANSWER ,ANS_FILE_PATH, ANS_FILE_NAME, REG_DTTM)' + ' VALUES(?,?,?,?,?,NOW())';
-
+            const hisSql = 'INSERT INTO tb_answer_his (ROUND_ORD , USER_ID ,ANSWER ,ANS_FILE_PATH, ANS_FILE_NAME, REG_DTTM)' + ' VALUES(?,?,?,?,?,NOW());';
+            const updateUserAnswerSql = 'UPDATE tb_user SET ANSWER = ? WHERE USER_ID = ?;';
             const hisInsertData = {
-                query: hisSql,
-                params: [round, USER_ID, answer, uploadPath, zipname],
+                query: hisSql + updateUserAnswerSql,
+                params: [round, USER_ID, answer, uploadPath, zipname, 1, USER_ID],
             };
             crud.sql(hisInsertData, (result) => {
-                if (result['affectedRows'] == 1) {
+                if (result[0].affectedRows === 1 && result[1].affectedRows === 1) {
                     // func(true);
                     res.status(200).send({ message: 'Good Luck!' });
                 } else {
@@ -333,6 +331,7 @@ const challenge = {
                 }
             });
         };
+
         // 업데이트 하는 로직 함수
         const answerUpdateLogic = (round, USER_ID, answer, uploadPath, zipname) => {
             answerUpdate(round, USER_ID, answer, uploadPath, zipname, (updateResult) => {
