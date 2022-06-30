@@ -15,6 +15,7 @@ let language = {
     //     previous: "<img src='/img/prev.png' style='width:30px'>",
     // },
 };
+
 let teamscore = {
     highTable: undefined,
     collegeTable: undefined,
@@ -88,10 +89,14 @@ let teamscore = {
             {
                 data: 'ANS_SCORE',
                 render: function (data, type, row) {
-                    console.log(row);
+                    console.log(row['judge_divi']);
                     if ((data != null && (data == 'Grading required' || row['isJug'] == 1)) || row['isJug'] == 0) {
                         if (PERM_CODE === '0000') {
-                            return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;
+                            if (row['judge_divi'] == null) {
+                                return data;
+                            } else {
+                                return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;
+                            }
                         } else {
                             return data;
                         }
@@ -113,29 +118,44 @@ let teamscore = {
             {
                 data: 'GRADING_RESULT',
                 render: function (data, type, row) {
+                    if (row['judge_divi'] == null) {
+                        $('#page_title').empty();
+                        $('#page_title').append('Team Score - <span style="color: red;">this round is not a review period..<span>');
+                    } else {
+                        $('#page_title').empty();
+                        $('#page_title').append('Team Score - <span>this round is the judging period<span>');
+                    }
                     if (PERM_CODE === '0000') {
                         if (data === null) {
-                            if (row['ANS_SCORE'] != null) {
-                                let Pass = '';
-                                let Fail = '';
+                            if (row['judge_divi'] == null) {
+                                return 'unprocessed participant';
+                            } else {
+                                if (row['ANS_SCORE'] != null) {
+                                    let Pass = '';
+                                    let Fail = '';
+                                    if (data === 'P') Pass = 'pass_class';
+                                    else if (data === 'F') Fail = 'fail_class';
+                                    return (
+                                        `<input type="button" class="grading_result btn-sm btn-default btn ${Pass}" style="font-size: 17px;" value="P"> ` +
+                                        `<input type="button" class="grading_result btn-sm btn-default btn ${Fail}" style="font-size: 17px;" value="F">`
+                                    );
+                                } else {
+                                    return 'Grading required';
+                                }
+                            }
+                        } else {
+                            let Pass = '';
+                            let Fail = '';
+                            if (row['judge_divi'] == null) {
+                                return data;
+                            } else {
                                 if (data === 'P') Pass = 'pass_class';
                                 else if (data === 'F') Fail = 'fail_class';
                                 return (
                                     `<input type="button" class="grading_result btn-sm btn-default btn ${Pass}" style="font-size: 17px;" value="P"> ` +
                                     `<input type="button" class="grading_result btn-sm btn-default btn ${Fail}" style="font-size: 17px;" value="F">`
                                 );
-                            } else {
-                                return 'Grading required';
                             }
-                        } else {
-                            let Pass = '';
-                            let Fail = '';
-                            if (data === 'P') Pass = 'pass_class';
-                            else if (data === 'F') Fail = 'fail_class';
-                            return (
-                                `<input type="button" class="grading_result btn-sm btn-default btn ${Pass}" style="font-size: 17px;" value="P"> ` +
-                                `<input type="button" class="grading_result btn-sm btn-default btn ${Fail}" style="font-size: 17px;" value="F">`
-                            );
                         }
                     } else {
                         if (data === null) {

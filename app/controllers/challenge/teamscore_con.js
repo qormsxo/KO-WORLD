@@ -40,6 +40,8 @@ module.exports = {
 
         console.log(search_keyword, search_option);
 
+        select_round_option = select_round_option == undefined ? 1 : select_round_option;
+
         //console.log(type == 'high' ? '0000' : '0001');
 
         table['draw'] = req.query.draw;
@@ -84,11 +86,13 @@ module.exports = {
         }
 
         //테이블 count
-        let table_name = ' tb_answer ta  INNER JOIN tb_user tu ON ta.USER_ID = tu.USER_ID ';
+        let table_name =
+            ` (select ROUND_ORD, 1 AS judge_divi from tb_round where ROUND_ORD = ${select_round_option} and now() >= JUDGMENT_FROM and now() < JUDGMENT_TO limit 1) A ` +
+            ' right join tb_answer ta on A.ROUND_ORD = ta.ROUND_ORD INNER JOIN tb_user tu ON ta.USER_ID = tu.USER_ID ';
         let column_select =
             " ta.ROUND_ORD as ROUND_ORD, ta.IDX as IDX, tu.USER_ID, tu.USER_NM ,date_format(tu.BIRTHDAY , '%Y-%m-%d') as BIRTHDAY,tu.NATIONALITY , ta.GRADING_RESULT as GRADING_RESULT, tu.EMAIL ," +
             ` if(${isJug} = 1 , ta.ANS_SCORE ,IF( isnull(ta.ANS_SCORE)  , 'Grading required' , concat('<b>', ta.ANS_SCORE , '<b>' )))  as ANS_SCORE , ${isJug} as isJug , ` +
-            'DENSE_RANK() OVER(ORDER BY ta.ANS_SCORE  DESC ) AS ranking ';
+            'DENSE_RANK() OVER(ORDER BY ta.ANS_SCORE  DESC ) AS ranking, A.judge_divi ';
         let query_conditon = 'SELECT count(*) FROM ' + table_name + where_condition;
         let filter_count = {
             query: query_conditon,
