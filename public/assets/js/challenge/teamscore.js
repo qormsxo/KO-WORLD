@@ -104,7 +104,11 @@ let teamscore = {
                         if (PERM_CODE === '0000') {
                             return 'Grading required';
                         } else {
-                            return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;
+                            if (row['judge_divi'] == null) {
+                                return 'unprocessed participant';
+                            } else {
+                                return `<input type="text"  style="width:50%;"  value= '${data == null ? '' : data}' class = "score-input" >`;
+                            }
                         }
                     }
                 },
