@@ -35,26 +35,30 @@ const challenge = {
         if (req.session.passport) {
             //console.log(req.user);
 
-            const { PERM_CODE, GRADE_CODE } = req.user;
+            const { PERM_CODE, GRADE_CODE, GRADING_RESULT } = req.user;
 
             if (PERM_CODE == 0000) {
                 res.render('./challenge/challenge_server');
                 res.end();
             } else {
-                challenge.getRound(GRADE_CODE, (status, result) => {
-                    if (status) {
-                        // challenge.round = result['ROUND_ORD'];
-                        user((hosts) => {
-                            res.render('./challenge/challenge', {
-                                hosts: hosts,
-                                ques: result['QUES_NUM'],
-                                challengeName: result['ROUND_NM_EN'],
+                if (GRADING_RESULT == 'F') {
+                    res.send("<script> alert('You do not have permission to challenge.'); window.location.href = '/'; </script>");
+                } else {
+                    challenge.getRound(GRADE_CODE, (status, result) => {
+                        if (status) {
+                            // challenge.round = result['ROUND_ORD'];
+                            user((hosts) => {
+                                res.render('./challenge/challenge', {
+                                    hosts: hosts,
+                                    ques: result['QUES_NUM'],
+                                    challengeName: result['ROUND_NM_EN'],
+                                });
                             });
-                        });
-                    } else {
-                        res.send(`<script> alert('${result}'); window.location.href = '/'; </script>`);
-                    }
-                });
+                        } else {
+                            res.send(`<script> alert('${result}'); window.location.href = '/'; </script>`);
+                        }
+                    });
+                }
             }
         } else {
             res.redirect('/');

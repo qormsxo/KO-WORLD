@@ -254,7 +254,7 @@ exports.user_answer = (req, res) => {
         query: sql,
     };
     crud.sql(data, (answers) => {
-        console.log(answers);
+        //console.log(answers);
         res.send(answers);
     });
 };
