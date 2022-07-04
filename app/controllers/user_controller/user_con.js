@@ -5,6 +5,7 @@ const { stringify } = require('querystring');
 const fetch = require('node-fetch');
 const bcrypt = require('bcrypt');
 const rounds = 10;
+const sanitizeHtml = require('sanitize-html');
 
 exports.update_user_accept = (req, res) => {
     const qaIdx = req.body.qaidx;
@@ -69,10 +70,11 @@ exports.update_committee_grade = (req, res) => {
 exports.get_user_profile_view = (req, res) => {
     // 로그인하지 않았을경우와 로그인 후 권한이 없는 유저가 접근하려 했을 시
     if (req.user === undefined) {
-        return res.send("<script> alert('do not have permission to answer'); window.location.href = '/'; </script>");
+        return res.send("<script> alert('You do not have permission to access the profile'); window.location.href = '/'; </script>");
     }
     let user_id = req.user.USER_ID;
-    let query_select_column = "SELECT USER_ID,USER_NM,date_format(BIRTHDAY,'%Y-%m-%d') as BIRTHDAY,NATIONALITY,SCH_NM,EMAIL, tg.GRADE_NM_EN as GRADE, ANSWER, tg.GRADE_CODE ";
+    let query_select_column =
+        "SELECT USER_ID,USER_NM,date_format(BIRTHDAY,'%Y-%m-%d') as BIRTHDAY,NATIONALITY,SCH_NM,EMAIL, tg.GRADE_NM_EN as GRADE, ANSWER, tg.GRADE_CODE ";
     let query_table = 'FROM tb_user tu LEFT JOIN tb_grade tg on tu.PERM_CODE = tg.PERM_CODE and tu.GRADE_CODE = tg.GRADE_CODE ';
     let query_where = 'WHERE USER_ID = ?';
     let query_condition = query_select_column + query_table + query_where;
@@ -159,14 +161,23 @@ exports.update_user_password = async (req, res) => {
 exports.update_user_info = (req, res) => {
     // 로그인하지 않았을경우와 로그인 후 권한이 없는 유저가 접근하려 했을 시
     if (req.user === undefined) {
-        return res.send("<script> alert('do not have permission to answer'); window.location.href = '/'; </script>");
+        return res.send("<script> alert('You do not have permission to access the profile'); window.location.href = '/'; </script>");
     }
-    let name = req.body.name;
-    let email = req.body.email;
-    let date = req.body.date;
-    let nationality = req.body.nationality;
-    let schoolname = req.body.schoolname;
-    let grade_code = req.body.grade_code;
+
+    console.log(req.body);
+    // xss
+    for (var key in req.body) {
+        if (req.body[key] == '') continue; // null 이면
+        req.body[key] = sanitizeHtml(req.body[key], { allowedTags: [] });
+        console.log(req.body[key]);
+    }
+    let { name, email, date, nationality, schoolname, grade_code } = req.body;
+    // let name = req.body.name;
+    // let email = req.body.email;
+    // let date = req.body.date;
+    // let nationality = req.body.nationality;
+    // let schoolname = req.body.schoolname;
+    // let grade_code = req.body.grade_code;
 
     const user_id = req.user.USER_ID;
 
@@ -174,12 +185,30 @@ exports.update_user_info = (req, res) => {
     var crud_query;
 
     if (date !== undefined) {
-        update_query_conditon = 'update ' + 'tb_user ' + `set USER_NM = ?, EMAIL = ?, BIRTHDAY = ?, NATIONALITY = ?, SCH_NM = ? ${grade_code ? ', GRADE_CODE = ?' : ''} ` + 'where USER_ID = ?; ';
+        if (name == '' || email == '' || date == '' || nationality == '' || schoolname == '' || user_id == '') {
+            return res.json({
+                status: false,
+                message: 'Failed to change information',
+            });
+        }
+        update_query_conditon =
+            'update ' +
+            'tb_user ' +
+            `set USER_NM = ?, EMAIL = ?, BIRTHDAY = ?, NATIONALITY = ?, SCH_NM = ? ${grade_code ? ', GRADE_CODE = ?' : ''} ` +
+            'where USER_ID = ?; ';
         crud_query = {
             query: update_query_conditon,
-            params: grade_code ? [name, email, date, nationality, schoolname, grade_code, user_id] : [name, email, date, nationality, schoolname, user_id],
+            params: grade_code
+                ? [name, email, date, nationality, schoolname, grade_code, user_id]
+                : [name, email, date, nationality, schoolname, user_id],
         };
     } else {
+        if (name == '' || email == '' || user_id == '') {
+            return res.json({
+                status: false,
+                message: 'Failed to change information',
+            });
+        }
         update_query_conditon = 'update ' + 'tb_user ' + 'set USER_NM = ?, EMAIL = ? ' + 'where USER_ID = ?; ';
         crud_query = {
             query: update_query_conditon,

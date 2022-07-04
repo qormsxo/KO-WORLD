@@ -274,13 +274,13 @@ const challenge = {
         let answer = '';
 
         for (var key in req.body) {
-            if (req.body[key] == '') continue; // null 이면
             req.body[key] = sanitizeHtml(req.body[key], { allowedTags: [] });
+            if (req.body[key] == '') continue; // null 이면
             answer += req.body[key] + ' |\\| ';
         }
 
         answer = answer.slice(0, -5);
-        console.log('???', answer);
+        //console.log('???', answer);
         // 답변 insert 하는 함수
         const answerInsert = (round, USER_ID, answer, uploadPath, zipname, func) => {
             const answerSql =

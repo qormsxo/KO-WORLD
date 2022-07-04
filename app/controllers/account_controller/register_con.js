@@ -81,40 +81,38 @@ module.exports = {
                 if (state == 'commitee') {
                     // xss 검사 이후에 아래항목들이 비었을때
                     if (name == '' || id == '' || email == '') {
-                        res.json({
+                        return res.json({
                             success: false,
                             message: 'Please enter without empty value',
                         });
-                    } else {
-                        sql += '(USER_ID, USER_PWD, USER_NM, EMAIL, PERM_CODE , GRADE_CODE ,  REG_DTTM, ACCEPT)' + `VALUES(?,?,?,?,?,?,NOW(),'0')`;
-                        params.push(id, encryptedPW, name, email, permCode[state], '0000');
-                        regFunc(sql, params);
                     }
+                    sql += '(USER_ID, USER_PWD, USER_NM, EMAIL, PERM_CODE , GRADE_CODE ,  REG_DTTM, ACCEPT)' + `VALUES(?,?,?,?,?,?,NOW(),'0')`;
+                    params.push(id, encryptedPW, name, email, permCode[state], '0000');
+                    regFunc(sql, params);
                 } else {
                     // 참가자의 경우
                     // xss 검사 이후에  아래 항목들이 비었을때
                     if ((name == '' || id == '' || email == '' || birth == '', nationality == '', schoolName == '')) {
-                        res.json({
+                        return res.json({
                             success: false,
                             message: 'Please enter without empty value',
                         });
-                    } else {
-                        sql +=
-                            '(USER_ID, USER_PWD, USER_NM, BIRTHDAY, NATIONALITY, SCH_NM, EMAIL, PERM_CODE, GRADE_CODE, REG_DTTM, ACCEPT)' +
-                            `VALUES(?,?,?,?,?,?,?,?,?,NOW(),'1')`;
-                        params.push(
-                            id,
-                            encryptedPW,
-                            name,
-                            birth,
-                            nationality,
-                            schoolName,
-                            email,
-                            permCode[state],
-                            state == 'highschool' ? '0000' : '0001'
-                        );
-                        regFunc(sql, params);
                     }
+                    sql +=
+                        '(USER_ID, USER_PWD, USER_NM, BIRTHDAY, NATIONALITY, SCH_NM, EMAIL, PERM_CODE, GRADE_CODE, REG_DTTM, ACCEPT)' +
+                        `VALUES(?,?,?,?,?,?,?,?,?,NOW(),'1')`;
+                    params.push(
+                        id,
+                        encryptedPW,
+                        name,
+                        birth,
+                        nationality,
+                        schoolName,
+                        email,
+                        permCode[state],
+                        state == 'highschool' ? '0000' : '0001'
+                    );
+                    regFunc(sql, params);
                 }
                 //console.log(sql, params);
             } else {
