@@ -19,9 +19,10 @@ require(path.join(__dirname, 'app/pages/router.js'))(app);
 
 //정의된 경로 중 아무것도 타지 않았을때
 app.get('*', function (req, res) {
-    var main_path = path.join(__dirname, '/public/views/404.ejs');
+    // var main_path = path.join(__dirname, '/public/views/404.ejs');
 
-    res.render(main_path);
+    // res.render(main_path);
+    return res.send("<script> alert('Page not found.'); window.location.href = '/'; </script>");
 });
 
 app.put('/products', function (req, res) {

@@ -1,17 +1,17 @@
-const mariadb = require("mariadb");
-const config = require("config");
+const mariadb = require('mariadb');
+const config = require('config');
 
-const pool = mariadb.createPool(config.get("mariadb_option"));
+const pool = mariadb.createPool(config.get('mariadb_option'));
 
 // select
 //mariadb select
-const db_name = "ko_world"; // 스키마이름
+const db_name = 'ko_world'; // 스키마이름
 
 async function db_select(Model, db_query, db_params, callback) {
     let conn, rows;
     try {
         conn = await Model.getConnection();
-        conn.query("USE " + db_name);
+        conn.query('USE ' + db_name);
         rows = await conn.query(db_query, db_params);
         await conn.commit();
     } catch (err) {

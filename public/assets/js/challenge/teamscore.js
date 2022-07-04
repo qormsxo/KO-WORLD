@@ -70,7 +70,8 @@ let teamscore = {
                 data: 'isJug',
                 render: function (data, type, row) {
                     if (data == 1) {
-                        return '<a class="answer">answer</a>';
+                        if (row['ANSWER'] != 0) return '<a class="answer">answer</a>';
+                        else return 'no answer have been submitted';
                     } else {
                         return 'answered';
                     }
@@ -80,7 +81,8 @@ let teamscore = {
                 data: 'isJug',
                 render: function (data, type, row) {
                     if (data == 1) {
-                        return `<a class="download">download</a>`;
+                        if (row['ANS_FILE'] != 0) return `<a class="download">download</a>`;
+                        else return 'No files have been submitted';
                     } else {
                         return 'submitted';
                     }

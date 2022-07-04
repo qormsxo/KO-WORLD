@@ -92,7 +92,8 @@ module.exports = {
         let column_select =
             " ta.ROUND_ORD as ROUND_ORD, ta.IDX as IDX, tu.USER_ID, tu.USER_NM ,date_format(tu.BIRTHDAY , '%Y-%m-%d') as BIRTHDAY,tu.NATIONALITY , ta.GRADING_RESULT as GRADING_RESULT, tu.EMAIL ," +
             ` if(${isJug} = 1 , ta.ANS_SCORE ,IF( isnull(ta.ANS_SCORE)  , 'Grading required' , concat('<b>', ta.ANS_SCORE , '<b>' )))  as ANS_SCORE , ${isJug} as isJug , ` +
-            'DENSE_RANK() OVER(ORDER BY ta.ANS_SCORE  DESC ) AS ranking, A.judge_divi ';
+            `DENSE_RANK() OVER(ORDER BY ta.ANS_SCORE  DESC ) AS ranking, A.judge_divi, IF(isnull(ta.ANSWER), 0, ta.ANSWER) AS ANSWER, ` +
+            `IF(isnull(ta.ANS_FILE_PATH), 0, ta.ANS_FILE_PATH) as ANS_FILE `;
         let query_conditon = 'SELECT count(*) FROM ' + table_name + where_condition;
         let filter_count = {
             query: query_conditon,
