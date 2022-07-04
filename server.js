@@ -1,4 +1,5 @@
 // 사용 모듈 참조
+const helmet = require('helmet');
 const express = require('express'),
     //, routes = require('./routes')
     //, user = require('./routes/user')
@@ -13,7 +14,30 @@ const express = require('express'),
 //서버 생성
 var app = express();
 var server = http.createServer(app);
-
+// app.use(
+//     helmet.contentSecurityPolicy({
+//         directives: {
+//             defaultSrc: ["'self'"],
+//             'script-src': ["'self'"],
+//             'style-src': null,
+//         },
+//     })
+// );
+app.use(helmet.dnsPrefetchControl());
+app.use(helmet.expectCt());
+app.use(helmet.frameguard());
+app.use(helmet.hidePoweredBy());
+app.use(helmet.hsts());
+app.use(helmet.ieNoOpen());
+app.use(helmet.noSniff());
+app.use(helmet.permittedCrossDomainPolicies());
+app.use(helmet.referrerPolicy());
+app.use(helmet.xssFilter());
+// app.use(
+//     helmet({
+//       frameguard: false,
+//     })
+//   );
 // 서버 접속 시 연결 page 관련
 require(path.join(__dirname, 'app/pages/router.js'))(app);
 

@@ -34,7 +34,7 @@ let qaWritePage = {
                 alert(responseData.message);
             }
         } catch (err) {
-            console.error(new Error('error'));
+            console.error(err);
         }
     },
 };

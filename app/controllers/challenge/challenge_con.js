@@ -3,8 +3,10 @@ const path = require('path'),
     crud = require('../../model/crud');
 const zipper = require('multer-zip').default;
 const fs = require('fs');
+const sanitizeHtml = require('sanitize-html');
 
 const challenge = {
+    // 현재 라운드 가지고오기
     getRound: (gradeCode, func) => {
         let today = new Date(+new Date() + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '');
         let roundSql = `SELECT ROUND_ORD , QUES_NUM  , ROUND_NM_EN FROM tb_round WHERE GRADE_CODE = ${gradeCode} AND  ROUND_FROM  < '${today}' AND ROUND_TO >= '${today}'`;
@@ -20,6 +22,7 @@ const challenge = {
             }
         });
     },
+    // 챌린지 페이지
     challenge: (req, res) => {
         const user = (func) => {
             let hostQuery = `SELECT IDX , HOST_NM_KR ,HOST_NM_EN, CURR_CON ,MAX_CON FROM tb_host WHERE enable = 1  `;
@@ -64,6 +67,7 @@ const challenge = {
             res.redirect('/');
         }
     },
+    // 어드민 페이지 데이터 테이블
     administrator: (req, res) => {
         let offset = req.query.start; //db 검색 시작
         let limit = req.query.length; //페이지에 띄울 row 갯수
@@ -139,6 +143,7 @@ const challenge = {
             });
         });
     },
+    // 어드민 유저 접속수 바꾸기
     curConSet: (req, res) => {
         let { PERM_CODE } = req.user;
         if (PERM_CODE != 0000) {
@@ -173,7 +178,7 @@ const challenge = {
             }
         });
     },
-
+    //서버 클릭시 url 이동
     serverClick: (req, res) => {
         //console.log(req.body);
 
@@ -215,6 +220,7 @@ const challenge = {
             }
         });
     },
+    // 서버 enable 함수
     enable: (req, res) => {
         //console.log(req.body);
         const { idx, status } = req.body;
@@ -251,6 +257,7 @@ const challenge = {
             }
         });
     },
+    // 정답 제출 함수
     answer: (req, res) => {
         if (!req.session.passport) {
             res.redirect('/');
@@ -268,10 +275,12 @@ const challenge = {
 
         for (var key in req.body) {
             if (req.body[key] == '') continue; // null 이면
+            req.body[key] = sanitizeHtml(req.body[key], { allowedTags: [] });
             answer += req.body[key] + ' |\\| ';
         }
+
         answer = answer.slice(0, -5);
-        //console.log('???', answer);
+        console.log('???', answer);
         // 답변 insert 하는 함수
         const answerInsert = (round, USER_ID, answer, uploadPath, zipname, func) => {
             const answerSql =

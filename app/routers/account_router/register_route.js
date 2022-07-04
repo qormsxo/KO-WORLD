@@ -12,5 +12,5 @@ module.exports = function (app) {
     });
 
     app.post('/register', controller.register);
-    app.get('/id/check', controller.idChk);
+    // app.get('/id/check', controller.idChk);
 };
