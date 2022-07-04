@@ -70,11 +70,15 @@ $('#my_answer').on('click', () => {
             console.log(response);
             let html = '';
             $('#user_answer_table').find('tbody').children().remove();
+            var answer_file_status = '';
             for (let i = 0; i < response.length; i++) {
+                if (response[i].ANS_FILE == 0) answer_file_status = `<td>No files have been submitted.</td>`;
+                else answer_file_status = `<td><a href="/answer/file?IDX=${response[i].idx}">download</a></td>`;
+                console.log(answer_file_status);
                 html +=
                     `<tr><td>${response[i].round_ord}</td><td>${response[i].user_nm}</td>` +
                     `<td><a class="answer" value=${response[i].idx}>answer</a></td>` +
-                    `<td><a href="/answer/file?IDX=${response[i].idx}">download</a></td>` +
+                    answer_file_status +
                     `<td>${response[i].ans_score == null ? 'wait' : response[i].ans_score}</td>` +
                     `<td><b>${response[i].grading_result == null ? 'wait' : response[i].grading_result}<b></td></tr> `;
             }
