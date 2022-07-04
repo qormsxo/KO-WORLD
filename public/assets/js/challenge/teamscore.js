@@ -91,7 +91,6 @@ let teamscore = {
             {
                 data: 'ANS_SCORE',
                 render: function (data, type, row) {
-                    console.log(row['judge_divi']);
                     if ((data != null && (data == 'Grading required' || row['isJug'] == 1)) || row['isJug'] == 0) {
                         if (PERM_CODE === '0000') {
                             if (row['judge_divi'] == null) {
@@ -259,8 +258,22 @@ let teamscore = {
         let search_option = $('#select_option option:selected').val();
         let select_round_option = $('#select_round_option option:selected').val();
 
-        let hisearch_url = teamscore.url + '?type=high&search_keyword=' + search_keyword + '&search_option=' + search_option + '&select_round_option=' + select_round_option;
-        let cosearch_url = teamscore.url + '?type=college&search_keyword=' + search_keyword + '&search_option=' + search_option + '&select_round_option=' + select_round_option;
+        let hisearch_url =
+            teamscore.url +
+            '?type=high&search_keyword=' +
+            search_keyword +
+            '&search_option=' +
+            search_option +
+            '&select_round_option=' +
+            select_round_option;
+        let cosearch_url =
+            teamscore.url +
+            '?type=college&search_keyword=' +
+            search_keyword +
+            '&search_option=' +
+            search_option +
+            '&select_round_option=' +
+            select_round_option;
         teamscore.highTable.clear();
         teamscore.collegeTable.clear();
         teamscore.highTable.ajax.url(hisearch_url).draw();

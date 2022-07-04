@@ -97,7 +97,7 @@ let challengeServer = {
                 const status = $(this).prop('checked') ? true : false;
                 const tr = $(this).parent().parent().parent('tr');
                 const IDX = challengeServer.serverTable.row(tr).data().IDX;
-                console.log(IDX, status);
+                //console.log(IDX, status);
                 $.ajax({
                     type: 'put',
                     url: '/challenge/server/enable',
@@ -164,7 +164,7 @@ $(function () {
     challengeServer.table();
     // 관리자가 증감 버튼 클릭
     $(document).on('click', '.btn', (event) => {
-        console.log(event.target);
+        //console.log(event.target);
         const tr = $(event.target).parent().parent('tr');
         let rowData = challengeServer.serverTable.row(tr).data();
         const num = rowData.IDX;

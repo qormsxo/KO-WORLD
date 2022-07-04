@@ -19,7 +19,6 @@ let registerPage = {
             if (registerPage.fd.get(key) === '') {
                 // commitee면 제외되는 항목
                 if ($('input:radio[name=state]:checked').val() == 'commitee' && (key == 'birth' || key == 'nationality' || key == 'schoolName')) {
-                    //console.log(key);
                     continue;
                 }
 
@@ -75,21 +74,4 @@ let registerPage = {
                 console.error(error);
             });
     },
-    // idCheck: (id, func) => {
-    //     fetch('/id/check?' + new URLSearchParams({ id: id }))
-    //         .then((response) => response.json())
-    //         .then((response) => {
-    //             // console.log(response);
-    //             console.log(response.able);
-    //             if (response.able) {
-    //                 return func(true);
-    //             } else {
-    //                 return func(false);
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             //console.log(error);
-    //             return func(false);
-    //         });
-    // },
 };

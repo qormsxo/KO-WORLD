@@ -31,10 +31,8 @@ let challenge = {
         for (let key of fd.keys()) {
             // null 체크
             if (key.slice(0, -1) == 'answer' && !$(`#${key}`).val().trim()) {
-                console.log('answer');
                 nullCount += 1;
             } else if (key.slice(0, -1) == 'file' && !$(`#${key}`).val()) {
-                console.log('file');
                 nullCount += 1;
             }
 
