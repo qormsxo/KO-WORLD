@@ -110,7 +110,7 @@ var pagefunction = function () {
             language: language,
             drawCallback: function (settings) {
                 $('.text-left a').on('click', function () {
-                    // 현재 클릭된 Row(<tr>)
+                    //현재 클릭된 Row(<tr>)
                     var tr = $(this).parent().parent();
                     var IDX = tr.children().eq(0).text();
                     $.ajax({
