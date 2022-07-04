@@ -3,6 +3,7 @@ const path = require('path'),
     crud = require('../../model/crud');
 const { stringify } = require('querystring');
 const fetch = require('node-fetch');
+const sanitizeHtml = require('sanitize-html');
 
 exports.get_qa_view = function (req, res) {
     let qaId = req.query.id;
@@ -63,37 +64,44 @@ exports.get_qa_view = function (req, res) {
 
 exports.post_qa_view = function (req, res) {
     if (req.user === undefined) {
-        return res.send("<script> alert('do not have permission to answer'); window.location.href = '/sub/qa'; </script>");
+        return res.send("<script> alert('do not have permission to writing'); window.location.href = '/sub/qa'; </script>");
     }
-    let title = req.body.title;
-    let content = req.body.content;
+    let { title, content } = req.body;
     const qaAnswerUserId = req.user.USER_ID;
+    // console.log(title, content);
+    title = sanitizeHtml(title, { allowedTags: [] });
+    content = sanitizeHtml(content, { allowedTags: [] });
+    // console.log(title);
+    // console.log(content);
+    if (title.trim() == '' || content.trim() == '') {
+        res.status(404).send({ message: 'Please enter without empty value' });
+    } else {
+        let sql = 'insert into ';
+        let table = 'tb_qa ';
+        let column = '(qa_title, QA_TEXT, QA_UR_ID, QA_VWS, QA_STS, REG_DTTM) ';
+        let values = "values(?, ?, ?, 0, 'NO', now()) ";
 
-    let sql = 'insert into ';
-    let table = 'tb_qa ';
-    let column = '(qa_title, QA_TEXT, QA_UR_ID, QA_VWS, QA_STS, REG_DTTM) ';
-    let values = "values(?, ?, ?, 0, 'NO', now()) ";
+        let query_conditon = sql + table + column + values;
 
-    let query_conditon = sql + table + column + values;
+        var crud_query = {
+            query: query_conditon,
+            params: [title, content, qaAnswerUserId],
+        };
 
-    var crud_query = {
-        query: query_conditon,
-        params: [title, content, qaAnswerUserId],
-    };
-
-    crud.sql(crud_query, function (calldata) {
-        if (calldata['affectedRows'] == 1) {
-            return res.json({
-                success: true,
-                message: 'request success!',
-            });
-        } else {
-            return res.json({
-                success: false,
-                message: 'error',
-            });
-        }
-    });
+        crud.sql(crud_query, function (calldata) {
+            if (calldata['affectedRows'] == 1) {
+                return res.json({
+                    success: true,
+                    message: 'request success!',
+                });
+            } else {
+                return res.json({
+                    success: false,
+                    message: 'error',
+                });
+            }
+        });
+    }
 };
 
 exports.get_qa_answer_view = function (req, res) {

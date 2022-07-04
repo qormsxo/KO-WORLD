@@ -42,9 +42,6 @@ let registerPage = {
         // 아이디검사
         if (!idReg.test(id)) {
             alert('ID must be at least 6 to 20 characters and must be lowercase.');
-        } else if (registerPage.idCheck(id)) {
-            //아이디 중복확인
-            alert('ID is already taken');
         } else if (!passwordReg.test(pw)) {
             alert('Password must be 8 to 16 characters and contain special characters.');
         } else if (pw !== pwChk) {
@@ -78,21 +75,21 @@ let registerPage = {
                 console.error(error);
             });
     },
-    idCheck: (id) => {
-        fetch('/id/check?' + new URLSearchParams({ id: id }))
-            .then((response) => response.json())
-            .then((response) => {
-                // console.log(response);
-                // console.log(response.able);
-                if (response.able) {
-                    return true;
-                } else {
-                    return false;
-                }
-            })
-            .catch((error) => {
-                //console.log(error);
-                return false;
-            });
-    },
+    // idCheck: (id, func) => {
+    //     fetch('/id/check?' + new URLSearchParams({ id: id }))
+    //         .then((response) => response.json())
+    //         .then((response) => {
+    //             // console.log(response);
+    //             console.log(response.able);
+    //             if (response.able) {
+    //                 return func(true);
+    //             } else {
+    //                 return func(false);
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             //console.log(error);
+    //             return func(false);
+    //         });
+    // },
 };
