@@ -123,13 +123,6 @@ let teamscore = {
             {
                 data: 'GRADING_RESULT',
                 render: function (data, type, row) {
-                    if (row['judge_divi'] == null) {
-                        $('#page_title').empty();
-                        $('#page_title').append('Team Score - <span style="color: red;">this round is not a review period..<span>');
-                    } else {
-                        $('#page_title').empty();
-                        $('#page_title').append('Team Score - <span>this round is the judging period<span>');
-                    }
                     if (PERM_CODE === '0000') {
                         if (data === null) {
                             if (row['judge_divi'] == null) {
@@ -221,7 +214,7 @@ let teamscore = {
         iDisplayLength: 10,
         language: language,
         drawCallback: function (settings) {
-            //console.log(teamscore.tableOption.downloadType);
+            teamscore.teamscoreTitle();
         },
     },
     highSchool: () => {
@@ -258,26 +251,33 @@ let teamscore = {
         let search_option = $('#select_option option:selected').val();
         let select_round_option = $('#select_round_option option:selected').val();
 
-        let hisearch_url =
-            teamscore.url +
-            '?type=high&search_keyword=' +
-            search_keyword +
-            '&search_option=' +
-            search_option +
-            '&select_round_option=' +
-            select_round_option;
-        let cosearch_url =
-            teamscore.url +
-            '?type=college&search_keyword=' +
-            search_keyword +
-            '&search_option=' +
-            search_option +
-            '&select_round_option=' +
-            select_round_option;
+        let hisearch_url = teamscore.url + '?type=high&search_keyword=' + search_keyword + '&search_option=' + search_option + '&select_round_option=' + select_round_option;
+        let cosearch_url = teamscore.url + '?type=college&search_keyword=' + search_keyword + '&search_option=' + search_option + '&select_round_option=' + select_round_option;
         teamscore.highTable.clear();
         teamscore.collegeTable.clear();
         teamscore.highTable.ajax.url(hisearch_url).draw();
         teamscore.collegeTable.ajax.url(cosearch_url).draw();
+        teamscore.teamscoreTitle();
+    },
+    teamscoreTitle: () => {
+        $.ajax({
+            type: 'get',
+            url: '/teamscore/checkRound',
+            data: { select_round_option: $('#select_round_option').val() },
+            dataType: 'json',
+            success: function (response) {
+                if (!response) {
+                    $('#page_title').empty();
+                    $('#page_title').append('Team Score - <span style="color: red;">this round is not a review period..<span>');
+                } else if (response) {
+                    $('#page_title').empty();
+                    $('#page_title').append('Team Score - <span>this round is the judging period<span>');
+                }
+            },
+            error: function () {
+                alert('error');
+            },
+        });
     },
 };
 

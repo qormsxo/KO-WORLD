@@ -3,6 +3,7 @@ const fs = require('fs');
 
 module.exports = function (app) {
     app.get('/teamscore', controller.page);
+    app.get('/teamscore/checkRound', controller.checkRound);
     app.get('/answer', controller.score);
     app.get('/answer/file', controller.fileDownload);
     app.get('/answer/user', controller.getAnswer);

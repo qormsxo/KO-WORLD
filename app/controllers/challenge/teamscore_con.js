@@ -24,6 +24,21 @@ module.exports = {
         //     'FROM tb_answer ta  INNER JOIN tb_user tu ON ta.USER_ID = tu.USER_ID '+
         //     `WHERE  tu.ACCEPT = '1' AND tu.GRADE_CODE  = ?  ORDER BY ANS_SCORE DESC, IDX `;
     },
+    checkRound: (req, res) => {
+        let { select_round_option } = req.query;
+
+        const sql = `select 1 AS check_round from tb_round where ROUND_ORD = ${select_round_option} and now() >= JUDGMENT_FROM and now() < JUDGMENT_TO limit 1`;
+
+        const data = {
+            query: sql,
+            params: [select_round_option],
+        };
+
+        crud.sql(data, (result) => {
+            if (result[0] === undefined) return res.send(false);
+            else return res.send(true);
+        });
+    },
     score: (req, res) => {
         //console.log('get_assets_table_list --------', req);
 
