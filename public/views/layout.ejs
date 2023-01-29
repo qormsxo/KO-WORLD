@@ -35,8 +35,7 @@
             <% if(isLogin) { %>
             <button class="phill blue" onclick="location.href = '/user/user_profile'"><%=username %></button>
             <button class="phill blue" onclick="location.href = '/logout'">LogOut</button>
-            <%} else {%>
-            <button class="phill blue" onclick="location.href = '/account/register'">Register</button>
+            <%} else {%> <%#<button class="phill blue" onclick="location.href = '/account/register'">Register</button>%>
             <button class="phill blue" onclick="location.href = '/account/login'">Login</button>
             <%}%>
         </div>

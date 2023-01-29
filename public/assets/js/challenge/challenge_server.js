@@ -26,6 +26,7 @@ let challengeServer = {
         pagingType: 'full_numbers',
         responsive: true,
         lengthChange: false,
+        stateSave: true,
         // sDom: '<"top"if>rt<"bottom"p><"clear">',
         ajax: {
             url: '/challenge/administrator',
@@ -151,7 +152,7 @@ let challengeServer = {
             .then((response) => response.json())
             .then((response) => {
                 //console.log(response);
-                challengeServer.serverTable.clear();
+                // challengeServer.serverTable.clear();
                 challengeServer.serverTable.ajax.url('/challenge/administrator').draw();
             })
             .catch((error) => {
