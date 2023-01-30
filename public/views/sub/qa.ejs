@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            .dataTables_paginate {
+                text-align: center !important;
+                float: none !important;
+            }
+            th {
+                display: none;
+            }
+            td {
+                height: 30px;
+            }
+            .text-left {
+                text-align: left;
+            }
+            table tbody tr td:nth-child(1) {
+                width: 100px;
+            }
+            table tbody tr td:nth-child(2) {
+                width: 700px;
+            }
+            table tbody tr td:nth-child(3) {
+                width: 250px;
+            }
+            table tbody tr td:nth-child(4) {
+                width: 170px;
+            }
+            table tbody tr td:nth-child(5) {
+                width: 100px;
+            }
+            table tbody tr td:nth-child(6) {
+                width: 200px;
+            }
+            table {
+                border-top: 1px solid #111 !important;
+            }
+            #qa_table_wrapper {
+                bottom: 25px;
+            }
+            body {
+                overflow: hidden;
+            }
+            .btn_group {
+                position: relative;
+                float: right;
+                bottom: 40px;
+            }
+            h2 {
+                margin-bottom: 20px !important;
+            }
+            .btn-default {
+                padding: 6px 18px !important;
+            }
+            #qa_search_option {
+                justify-content: flex-end !important;
+                position: relative;
+                z-index: 30;
+            }
+        </style>
+        <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
+        <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
+        <title>Ko-World | Q&A</title>
+    </head>
+    <!-- body -->
+    <body>
+        <div class="container">
+            <img src="/assets/images/icon_02.png" alt="question icon" />
+            <h2>Q&A</h2>
+            <div class="row" id="qa_search_option">
+                <div class="col-sm-2">
+                    <select id="search_option" class="form-select" aria-label="Default select example">
+                        <option value="TaC" selected>Title and Content</option>
+                        <option value="Writer">Writer</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <input type="text" id="search_keyword" name="search_keyword" class="form-control" placeholder="Write Keyword" />
+                        <span class="input-group-btn">
+                            <button class="btn-default" style="margin: 0px" type="button" onclick="serarch();"><i class="fa fa-search" aria-hidden="true"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <table id="qa_table" class="table">
+                <thead>
+                    <tr>
+                        <th>qa번호</th>
+                        <th>qa제목</th>
+                        <th>qa등록자</th>
+                        <th>qa등록일</th>
+                        <th>조회수</th>
+                        <th>답변상태</th>
+                    </tr>
+                </thead>
+            </table>
+            <%if(isLogin){%>
+            <div class="btn_group" role="group" aria-label="Basic example">
+                <button type="button" class="btn-default" onclick="window.location.href='/sub/qa/write'"><i class="fa fa-pencil me-lg-2" aria-hidden="true"></i>Writing</button>
+                <button type="button" class="btn-default" id="myqa_btn"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>My Q&A</button>
+                <button type="button" class="btn-default" style="display: none" id="total_btn"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>All Q&A</button>
+            </div>
+            <%}%>
+        </div>
+    </body>
+    <!-- // body -->
+    <script>
+        const perm_code = '<%=perm_code%>';
+    </script>
+    <script type="text/javascript" src="/assets/js/sub/qa.js"></script>
+</html>

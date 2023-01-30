@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            .qa-box-content {
+                min-height: 300px;
+                padding: 50px 70px 70px;
+                line-height: 100%;
+                border-bottom: 1px solid #333;
+            }
+            .qa-answer-box-content {
+                min-height: 300px;
+                padding: 50px 70px 70px;
+                line-height: 100%;
+                border-bottom: 1px solid;
+            }
+            .btn_group {
+                position: relative;
+                float: right;
+                margin-top: 30px;
+            }
+            #qa_header {
+                padding: 70px;
+                padding-top: 30px;
+                padding-bottom: 30px;
+                border-top: 1px solid #333;
+                border-bottom: 1px solid #c4c4c4;
+            }
+            #qa_answer_header {
+                padding: 70px;
+                padding-top: 30px;
+                padding-bottom: 30px;
+                border-bottom: 1px solid #c4c4c4;
+            }
+            .qa-answer-form {
+                padding: 70px;
+                padding-top: 30px;
+                padding-bottom: 30px;
+            }
+            #content {
+                margin-top: 20px;
+            }
+        </style>
+        <title>Ko-World | Q&A</title>
+    </head>
+    <!-- body -->
+    <body>
+        <div class="container">
+            <img src="/assets/images/icon_02.png" alt="question icon" />
+            <h2>Q&A - Modify</h2>
+            <input type="hidden" value="<%=data.qaData.IDX%>" id="IDX" />
+            <div id="qa_header">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div><h3><%=data.qaData.QA_TITLE%></h3></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div>Writer : <%=data.qaData.USER_NM%></div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div>Date Created : <i class="fa fa-clock-o me-lg-2" aria-hidden="true"></i><%=data.qaData.REG_DTTM%></div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div>Views : <i class="fa fa-eye me-lg-2" aria-hidden="true"></i><%=data.qaData.QA_VWS%></div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div>Answer Status : <%if(data.qaData.QA_STS === "YES") {%> Answer complete <%} else {%> Answer pending <%}%></div>
+                    </div>
+                </div>
+            </div>
+            <div class="qa-box-content"><%=data.qaData.QA_TEXT%></div>
+            <div class="qa-answer-form">
+                <form id="qaAnswerModifyForm">
+                    <input type="hidden" value="<%=data.qaData.IDX%>" id="qaIdx" name="qaIdx" />
+                    <!-- content -->
+                    <div class="mb40">
+                        <label for="Text" class="label w200">Modify Content</label>
+                        <textarea class="form-control col-sm-5" rows="5" id="content" name="content"><%=data.qaAnswerData.QA_ASR_TEXT%></textarea>
+                    </div>
+                    <!-- // content -->
+                </form>
+            </div>
+            <div class="btn_group" role="group" aria-label="Basic example">
+                <button type="button" class="btn-default" onclick="window.location.href='/sub/qa'"><i class="fa fa-file-text me-lg-2" aria-hidden="true"></i>Q&A List</button>
+                <button type="button" class="btn-default" onclick="qaModifyViewPage.qaAnswerModifyRequest();"><i class="fa fa-comments me-lg-2" aria-hidden="true"></i>Q&A Modify</button>
+            </div>
+        </div>
+    </body>
+    <!-- // body -->
+    <script type="text/javascript" src="/assets/js/sub/qa_modify_view.js"></script>
+</html>

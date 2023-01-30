@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- <link rel="stylesheet" href="../assets/css/style.css" /> -->
+        <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
+        <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css" />
+        <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="../../assets/js/challenge/challenge_server.js"></script>
+        <style>
+            #flexSwitchCheckDefault {
+                width: 4em;
+                height: 1.5em;
+                margin-left: 1rem;
+            }
+        </style>
+        <title>Ko-World | register</title>
+    </head>
+    <!-- body -->
+    <body>
+        <div class="container">
+            <img src="../assets/images/icon_04.png" alt="login icon" />
+            <h2>Challenge Server</h2>
+            <!-- Login form -->
+            <div class="form">
+                <!-- <ul style="padding-left: 0px">
+                    <li><b>· Please, choose the one of the mirror servers to join 1st round challenge</b></li>
+                </ul> -->
+                <% if(perm_code != 0000) {%> <%} else if(perm_code == 0000 ) {%>
+                <table class="table" id="serverTable">
+                    <colgroup>
+                        <col width="5%" />
+                        <col width="10%" />
+                        <col width="20%" />
+                        <col width="20%" />
+                        <col width="5%" />
+                        <col width="5%" />
+                        <col width="20%" />
+                        <col width="20%" />
+                    </colgroup>
+                    <thead>
+                        <th>IDX</th>
+                        <th>Name(kor)</th>
+                        <th>Name(eng)</th>
+                        <th>Server Url</th>
+                        <th>Current</th>
+                        <th>Max</th>
+                        <th>Current Set</th>
+                        <th>Enable</th>
+                    </thead>
+                    <tbody id="serverTbody"></tbody>
+                </table>
+                <% } %>
+                <!-- <button class="server active">Server01(12/30)</button> -->
+            </div>
+            <!-- // 등록버튼 -->
+        </div>
+    </body>
+    <!-- // body -->
+</html>

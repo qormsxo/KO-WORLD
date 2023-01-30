@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            .dataTables_paginate {
+                text-align: center !important;
+                float: none !important;
+            }
+            .text-left {
+                text-align: left;
+            }
+
+            .btn-default {
+                margin: 0px !important;
+            }
+            #qa_table_wrapper {
+                bottom: 25px;
+            }
+            .btn_group {
+                position: relative;
+                float: right;
+                bottom: 40px;
+            }
+            h2 {
+                margin-bottom: 20px !important;
+            }
+            .btn-default {
+                padding: 6px 18px !important;
+            }
+            #qa_search_option {
+                justify-content: flex-end !important;
+                position: relative;
+                z-index: 30;
+            }
+            .profile_center_div {
+                justify-content: center !important;
+            }
+            #profile_info_div > .col-md-5 {
+                margin-right: 10%;
+                margin-bottom: 10px;
+            }
+            #profile_info_div > #studentItem > .row > .col-md-5 {
+                margin-right: 10%;
+                margin-bottom: 10px;
+            }
+            .profile_info_disabled_off_btn {
+                justify-content: end !important;
+            }
+            .container > #regsiterForm > .profile_center_div > .col-md-5 > .form-control {
+                display: inline !important;
+                width: 50% !important;
+            }
+            .container > #regsiterForm > .profile_center_div > #studentItem > .profile_center_div > .col-md-5 > .form-control,
+            .form-select {
+                display: inline !important;
+                width: 50% !important;
+            }
+
+            .profile_info_disabled_off_btn > .col-md-3 > button {
+                float: right;
+            }
+        </style>
+        <link rel="stylesheet" href="/node_modules/datatables/media/css/jquery.dataTables.css" />
+        <script type="text/javascript" src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="/node_modules/datatables/media/js/jquery.dataTables.js"></script>
+        <title>Ko-World | Q&A</title>
+    </head>
+    <!-- body -->
+    <body>
+        <div class="container">
+            <img src="/assets/images/icon_02.png" alt="question icon" />
+            <h2>User ProFile</h2>
+            <div class="row profile_center_div">
+                <!-- <div class="col-sm-12 col-md-4">
+                    <img src="/assets/images/profile_image.jpg" alt="question icon" />
+                </div> -->
+            </div>
+            <form id="regsiterForm">
+                <div class="row profile_center_div" id="profile_info_div">
+                    <!-- Id -->
+                    <div class="col-md-5">
+                        <label for="id" class="label w200">Id</label>
+                        <h4 style="display: inline-block"><%=data.USER_ID%></h4>
+                    </div>
+                    <!-- // Id -->
+                    <!-- Name -->
+                    <div class="col-md-5">
+                        <label for="name" class="label w200">Name</label>
+                        <input type="text" id="user_name" name="name" class="form-control" value="<%=data.USER_NM%>" />
+                        <!-- <h4 style="display: inline-block"><%=data.USER_NM%></h4> -->
+                    </div>
+                    <!-- // Name -->
+                    <!-- Email -->
+                    <div class="col-md-5">
+                        <label for="email" class="label w200">Email</label>
+                        <input type="text" id="user_eamil" name="email" class="form-control" value="<%=data.EMAIL%>" />
+                        <!-- <h4 style="display: inline-block"><%=data.EMAIL%></h4> -->
+                    </div>
+                    <%if(perm_code === '0002') {%>
+                    <!-- // Email -->
+                    <div id="studentItem">
+                        <!-- Date of birth -->
+                        <div class="row profile_center_div">
+                            <div class="col-md-5">
+                                <label for="birth" class="label w200">Date of birth</label>
+                                <input type="date" id="user_date" name="date" class="form-control" value="<%=data.BIRTHDAY%>" />
+                                <!-- <h4 style="display: inline-block"><%=data.BIRTHDAY%></h4> -->
+                            </div>
+                            <!-- // Date of birth -->
+                            <!-- Nationality -->
+                            <div class="col-md-5">
+                                <label for="nationality" class="label w200">Nationality</label>
+                                <input type="text" id="user_nationality" name="nationality" class="form-control" value="<%=data.NATIONALITY%>" />
+                                <!-- <h4 style="display: inline-block"><%=data.NATIONALITY%></h4> -->
+                            </div>
+                            <!-- // Nationality -->
+                            <!-- School Name -->
+                            <div class="col-md-5">
+                                <label for="schoolName" class="label w200">School Name</label>
+                                <input type="text" id="user_school_name" name="schoolname" class="form-control" value="<%=data.SCH_NM%>" />
+                                <!-- <h4 style="display: inline-block"><%=data.SCH_NM%></h4> -->
+                            </div>
+                            <!-- // School Name -->
+                            <!-- //user grade_code -->
+                            <div class="col-md-5">
+                                <label for="grade_code" class="label w200">Grade</label>
+                                <%if(data.ANSWER === "1"){%>
+                                <h4 style="display: inline-block"><%=data.GRADE%></h4>
+                                <%} else {%>
+                                <select id="user_grade_code" name="grade_code" class="form-select">
+                                    <%if(data.GRADE_CODE === "0000") {%>
+                                    <option value="0000" selected>High School Student</option>
+                                    <option value="0001">College Student</option>
+                                    <%} else {%>
+                                    <option value="0000">High School Student</option>
+                                    <option value="0001" selected>College Student</option>
+                                    <%}%>
+                                </select>
+                                <%}%>
+                            </div>
+                            <!-- user grade_code -->
+                        </div>
+                    </div>
+                    <%} else {%>
+                    <!-- grade_code -->
+                    <div class="col-md-5">
+                        <label for="grade_code" class="label w200">Grade</label>
+                        <!-- <input type="text" id="user_grade" class="form-control" value="<%=data.GRADE%>" /> -->
+                        <h4 style="display: inline-block"><%=data.GRADE%></h4>
+                    </div>
+                    <!-- // grade_code -->
+                    <%}%>
+                </div>
+            </form>
+            <div class="row profile_info_disabled_off_btn" style="margin-bottom: 30px">
+                <%if(perm_code === '0000') {%>
+                <div class="col-sm-4 col-md-3">
+                    <button type="button" class="btn-default" onclick="location.href = '/user/user_list'">Participant List Page</button>
+                </div>
+                <div class="col-sm-4 col-md-3">
+                    <button type="button" class="btn-default" onclick="location.href = '/user/committee_list'">Committee and Admin List Page</button>
+                </div>
+                <%}%>
+            </div>
+            <div class="row profile_info_disabled_off_btn">
+                <%if(perm_code === '0000' && grade_code === '0000') {%>
+                <div class="col-sm-4 col-md-3">
+                    <button type="button" id="create_admin_modal_btn" class="btn-default">Create Normal Admin</button>
+                </div>
+                <%}%> <%if(perm_code === '0002') {%>
+                <div class="col-sm-4 col-md-3">
+                    <button type="button" class="btn-default" id="my_answer">My Challenge Answer</button>
+                </div>
+                <%}%>
+                <div class="col-sm-4 col-md-3">
+                    <button type="button" id="password_change_modal_btn" class="btn-default">Password Change</button>
+                </div>
+                <div class="col-sm-4 col-md-3">
+                    <button type="button" id="my_infomation_save_btn" class="btn-default">Save My Infomation</button>
+                </div>
+            </div>
+        </div>
+        <!-- password_change_modal -->
+        <div class="modal fade" id="password_change_modal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalToggleLabel">Password Change</h5>
+                        <button type="button" class="btn-close modal_close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="name" class="label w200">Current Password</label>
+                                <div class="input-group mb-3">
+                                    <input type="password" id="current_password" name="current_password" class="form-control" />
+                                    <div class="input-group-append">
+                                        <button id="current_password_check" class="btn btn-outline-secondary" type="button">Check</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="name" class="label w200">Modify Password</label>
+                                <input type="password" id="modify_password" name="modify_password" class="form-control" />
+                            </div>
+                            <div class="col-md-12">
+                                <label for="name" style="width: 400px" class="label">Modify Password Check</label>
+                                <input type="password" id="modify_password_check" name="modify_password_check" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="modify_password_btn">Change Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- // password_change_modal-->
+        <!-- create_normal_admin_modal -->
+        <div class="modal fade" id="create_admin_modal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalToggleLabel">Create Normal Admin</h5>
+                        <button type="button" class="btn-close modal_close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="createForm">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="name" class="label w200">User Id</label>
+                                    <input type="text" id="id" name="id" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="name" class="label w200">User Password</label>
+                                    <input type="password" id="password" name="password" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="name" style="width: 400px" class="label">User Password Check</label>
+                                    <input type="password" id="password_check" name="password_check" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="name" class="label w200">User Name</label>
+                                    <input type="text" id="name" name="name" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="name" class="label w200">User Email</label>
+                                    <input type="text" id="email" name="email" class="form-control" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="create_normal_admin_btn">Create Normal Admin</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- // create_normal_admin_modal-->
+        <!-- my_infomation_save_modal -->
+        <div class="modal fade" id="my_infomation_save_modal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalToggleLabel">Save My Infomation</h5>
+                        <button type="button" class="btn-close modal_close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="name" class="label w200">Current Password</label>
+                                <div class="input-group mb-3">
+                                    <input type="password" id="save_info_current_password" name="current_password" class="form-control" />
+                                    <div class="input-group-append">
+                                        <button id="save_info_current_password_check" class="btn btn-outline-secondary" type="button">Check</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="my_infomation_save_request_btn">Save My Infomation</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- // my_infomation_save_modal-->
+        <!-- my Answer -->
+        <div class="modal fade" id="user_answer_modal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalToggleLabel">My Challenge Answer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table id="user_answer_table" class="table">
+                            <colgroup>
+                                <col width="10%" />
+                                <col width="20%" />
+                                <col width="10%" />
+                                <col width="20%" />
+                                <col width="20%" />
+                                <col width="20%" />
+                            </colgroup>
+                            <thead>
+                                <tr style="text-align: center">
+                                    <th>Round</th>
+                                    <th>User Name</th>
+                                    <th>Answer</th>
+                                    <th>File</th>
+                                    <th>Score</th>
+                                    <th>Pass OR Fail</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-bs-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="answerModal" tabindex="-1" aria-labelledby="answerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="answerModal">Answer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" id="userAnswer">
+                            <!-- <div class="col-12">1. 답1</div>
+                            <div class="col-12">2. 답2</div> -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <!-- // body -->
+    <script>
+        const perm_code = '<%=perm_code%>';
+    </script>
+    <script type="text/javascript" src="/assets/js/user/user_profile.js"></script>
+</html>

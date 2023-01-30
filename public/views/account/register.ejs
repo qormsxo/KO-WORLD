@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ko-World | register</title>
+    </head>
+    <!-- body -->
+    <body>
+        <div class="container">
+            <img src="../assets/images/icon_03.png" alt="Check icon" />
+            <h2>Register - Personal Information Agreement</h2>
+            <!-- Personal Information Agreement for joining Ko-World 2022 -->
+            <div class="form">
+                <h3>Personal Information Agreement for joining Ko-World 2022</h3>
+                <ul>
+                    <li>
+                        <b>· Personal /Information Agreement</b>
+                        <ul class="pl20">
+                            <li>· collected personal Information : Name, Nationality, High school Name, College Name, Date of Birth, Email</li>
+                            <li>
+                                · purpose of collecting personal information
+                                <ul>
+                                    <li class="pl20">· The collected information will be used to pick out prize-winner.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                Period of retention
+                                <ul>
+                                    <li class="pl20">· During the Ko-World 2022</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="mt20">
+                        <b>· &lt;disadvantage in case of refusal &gt;</b>
+                        <ul class="pl20">
+                            <li>· If you refuse agreement to collect and use private information, we may not be able to join Ko-World 2022</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!--  // Personal Information Agreement for joining Ko-World 2022 -->
+            <!-- subtext -->
+            <div class="form">
+                <ul>
+                    <li>※ The teams advancing to the finals should accept request for identification.</li>
+                    <li>
+                        ※ If the personal information does not match the student in the identification process after the final, that team will be
+                        automatically disqualified.
+                    </li>
+                </ul>
+            </div>
+            <!--  // subtext -->
+            <!-- 동의버튼 -->
+            <div class="btn-center">
+                <button class="btn-default" onclick="location.href = '/account/register_creataccount'">I agree</button>
+                <button class="btn-default" onclick="javascript:btn()">I disagree</button>
+            </div>
+            <!-- // 동의버튼 -->
+        </div>
+        <!-- 미동의 시 알림창 -->
+        <script>
+            function btn() {
+                alert('If you refuse agreement to collect and use private information, we may not be able to join Ko-World 2022');
+            }
+        </script>
+        <!-- // 미동의 시 알림창 -->
+    </body>
+    <!-- // body -->
+</html>
